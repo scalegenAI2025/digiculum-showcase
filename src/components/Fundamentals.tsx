@@ -174,6 +174,140 @@ const Fundamentals = () => {
           </div>
         </div>
 
+        {/* Fundamental 3: AI Role v AI Job */}
+        <div className="mb-20">
+          <h3 className="text-2xl font-semibold mb-8">3. AI Role v AI Job</h3>
+          
+          <div className="grid md:grid-cols-2 gap-12 max-w-4xl mx-auto">
+            {/* AI Role */}
+            <div className="text-center">
+              <div className="diagram-box py-8 px-6 mb-6">
+                <h4 className="font-bold text-lg mb-4 text-primary">AI Role</h4>
+                <ul className="text-left space-y-2 text-sm">
+                  <li className="flex items-start gap-2">
+                    <span className="text-primary mt-1">•</span>
+                    <span>A set of responsibilities within a job</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-primary mt-1">•</span>
+                    <span>Can be performed alongside existing duties</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-primary mt-1">•</span>
+                    <span>Requires AI skills as part of broader skillset</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-primary mt-1">•</span>
+                    <span>Examples: AI Champion, AI Advocate</span>
+                  </li>
+                </ul>
+              </div>
+              <p className="text-sm text-foreground/70">
+                <span className="text-primary font-medium">Role</span> is what you do within your current position
+              </p>
+            </div>
+            
+            {/* AI Job */}
+            <div className="text-center">
+              <div className="diagram-box py-8 px-6 mb-6">
+                <h4 className="font-bold text-lg mb-4 text-primary">AI Job</h4>
+                <ul className="text-left space-y-2 text-sm">
+                  <li className="flex items-start gap-2">
+                    <span className="text-primary mt-1">•</span>
+                    <span>A full-time position dedicated to AI</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-primary mt-1">•</span>
+                    <span>Primary focus is AI-related work</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-primary mt-1">•</span>
+                    <span>Requires deep AI expertise</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-primary mt-1">•</span>
+                    <span>Examples: AI Engineer, ML Specialist</span>
+                  </li>
+                </ul>
+              </div>
+              <p className="text-sm text-foreground/70">
+                <span className="text-primary font-medium">Job</span> is your entire professional identity
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Fundamental 4: AI Skill v AI Competence */}
+        <div className="mb-20">
+          <h3 className="text-2xl font-semibold mb-8">4. AI Skill v AI Competence</h3>
+          
+          <div className="max-w-4xl mx-auto">
+            <div className="grid md:grid-cols-2 gap-8">
+              {/* AI Skill */}
+              <div className="relative">
+                <div className="diagram-box py-8 px-6">
+                  <h4 className="font-bold text-lg mb-4 text-center text-primary">AI Skill</h4>
+                  <div className="space-y-3">
+                    <div className="flex items-center gap-3 p-3 bg-background/50 rounded-lg">
+                      <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold text-sm">1</div>
+                      <span className="text-sm">Specific ability or technique</span>
+                    </div>
+                    <div className="flex items-center gap-3 p-3 bg-background/50 rounded-lg">
+                      <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold text-sm">2</div>
+                      <span className="text-sm">Can be learned in isolation</span>
+                    </div>
+                    <div className="flex items-center gap-3 p-3 bg-background/50 rounded-lg">
+                      <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold text-sm">3</div>
+                      <span className="text-sm">Prompt writing, tool usage</span>
+                    </div>
+                  </div>
+                </div>
+                <p className="text-center text-sm text-foreground/70 mt-4">
+                  Building block of expertise
+                </p>
+              </div>
+              
+              {/* Arrow */}
+              <div className="hidden md:flex items-center justify-center absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2">
+                <svg width="60" height="20" viewBox="0 0 60 20" fill="none" className="text-primary">
+                  <path d="M0 10H50M50 10L43 3M50 10L43 17" stroke="currentColor" strokeWidth="2" />
+                </svg>
+              </div>
+              
+              {/* AI Competence */}
+              <div className="relative">
+                <div className="diagram-box py-8 px-6 border-primary/40">
+                  <h4 className="font-bold text-lg mb-4 text-center text-primary">AI Competence</h4>
+                  <div className="space-y-3">
+                    <div className="flex items-center gap-3 p-3 bg-background/50 rounded-lg">
+                      <div className="w-8 h-8 rounded-full bg-primary/30 flex items-center justify-center text-primary font-bold text-sm">★</div>
+                      <span className="text-sm">Combination of multiple skills</span>
+                    </div>
+                    <div className="flex items-center gap-3 p-3 bg-background/50 rounded-lg">
+                      <div className="w-8 h-8 rounded-full bg-primary/30 flex items-center justify-center text-primary font-bold text-sm">★</div>
+                      <span className="text-sm">Applied knowledge + judgment</span>
+                    </div>
+                    <div className="flex items-center gap-3 p-3 bg-background/50 rounded-lg">
+                      <div className="w-8 h-8 rounded-full bg-primary/30 flex items-center justify-center text-primary font-bold text-sm">★</div>
+                      <span className="text-sm">Solving real-world problems</span>
+                    </div>
+                  </div>
+                </div>
+                <p className="text-center text-sm text-foreground/70 mt-4">
+                  Mastery through application
+                </p>
+              </div>
+            </div>
+            
+            <div className="mt-8 text-center p-6 border border-dashed border-foreground/20 rounded-xl">
+              <p className="text-sm text-foreground/70">
+                <span className="text-primary font-medium">Skills</span> are the individual pieces you learn. 
+                <span className="text-primary font-medium"> Competence</span> is when you combine them to deliver results.
+              </p>
+            </div>
+          </div>
+        </div>
+
         {/* Fundamental 5: Upskilling v Reskilling */}
         <div className="mb-20">
           <h3 className="text-2xl font-semibold mb-12">5. Upskilling v AI Reskilling</h3>
