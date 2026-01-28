@@ -1,10 +1,8 @@
-import {
-  FundamentalTypesOfAI,
-  FundamentalAgentsVsBots,
-  FundamentalRoleVsJob,
-  FundamentalSkillVsCompetence,
-  FundamentalUpskillVsReskill,
-} from './fundamentals';
+import FundamentalTypesOfAI from "./fundamentals/FundamentalTypesOfAI";
+import FundamentalAgentsVsBots from "./fundamentals/FundamentalAgentsVsBots";
+import FundamentalRoleVsJob from "./fundamentals/FundamentalRoleVsJob";
+import FundamentalSkillVsCompetence from "./fundamentals/FundamentalSkillVsCompetence";
+import FundamentalUpskillVsReskill from "./fundamentals/FundamentalUpskillVsReskill";
 
 const Fundamentals = () => {
   return (
