@@ -136,7 +136,7 @@ const JourneyFlowchart = () => {
 
         {/* Desktop View - Original Flow */}
         <div className="hidden lg:block overflow-x-auto pb-8">
-          <div className="min-w-[1000px]">
+          <div className="diagram-container min-w-[1000px]">
             {/* Top Row - Main Journey Steps */}
             <div className="flex items-start justify-between gap-4 mb-8">
               {/* Step 1: Interviews */}

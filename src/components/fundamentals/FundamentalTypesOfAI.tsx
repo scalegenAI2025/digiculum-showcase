@@ -9,7 +9,7 @@ const FundamentalTypesOfAI = () => {
         <span className="text-foreground/70 italic">of each AI</span>
       </p>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+      <div className="diagram-container grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
         {/* Traditional AI */}
         <div className="text-center">
           <div className="grid grid-cols-2 gap-2 mb-4">

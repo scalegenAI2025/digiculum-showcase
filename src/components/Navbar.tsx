@@ -14,8 +14,8 @@ const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-b border-border/30">
-      <div className="container mx-auto px-6 py-4">
+    <nav className="sticky top-4 z-50 mx-4 md:mx-8 lg:mx-16 bg-background/80 backdrop-blur-md border border-border/30 rounded-2xl">
+      <div className="px-6 py-4">
         <div className="flex items-center justify-between">
           {/* Logo */}
           <a href="/" className="flex items-center">

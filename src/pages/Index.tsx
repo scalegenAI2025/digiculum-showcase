@@ -9,7 +9,7 @@ import SectionSeparator from "@/components/SectionSeparator";
 
 const Index = () => {
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background pt-4">
       <Navbar />
       <Hero />
       <SectionSeparator />
