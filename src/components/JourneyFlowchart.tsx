@@ -2,18 +2,140 @@ import { Award } from "lucide-react";
 
 const JourneyFlowchart = () => {
   return (
-    <section className="py-24 bg-background" id="courses">
-      <div className="container mx-auto px-6">
-        <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-light">
+    <section className="py-16 md:py-24 bg-background" id="courses">
+      <div className="container mx-auto px-4 md:px-6">
+        <div className="text-center mb-12 md:mb-16">
+          <h2 className="text-2xl md:text-3xl lg:text-5xl font-light">
             Your Personalized, Continuous, Collaborative AI{" "}
             <span className="text-primary font-bold italic">Reskilling</span>
           </h2>
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-light mt-2">Journey</h2>
+          <h2 className="text-2xl md:text-3xl lg:text-5xl font-light mt-2">Journey</h2>
         </div>
 
-        {/* Main Flow */}
-        <div className="overflow-x-auto pb-8">
+        {/* Mobile View - Stacked Cards */}
+        <div className="lg:hidden space-y-6">
+          {/* Step 1 */}
+          <JourneyCard
+            title="1:1 Interviews"
+            duration="30 minutes"
+            description="Meeting with each cohort member to set individual targets"
+            step={1}
+          />
+          
+          <ArrowDownMobile />
+          
+          {/* Step 2 */}
+          <JourneyCard
+            title="AI Inspiration"
+            duration="1 hour"
+            description="Warm-up workshop. A day before cohort kick-off"
+            step={2}
+          />
+          
+          <ArrowDownMobile />
+          
+          {/* Step 3 */}
+          <JourneyCard
+            title="AI Practitioner Bootcamp"
+            duration="21 Days"
+            description="For individuals with all types of background: technical, non-technical or absolute beginners"
+            step={3}
+            highlight
+          />
+          
+          <ArrowDownMobile />
+          
+          {/* Step 4 */}
+          <JourneyCard
+            title="Action Planning"
+            duration="1 hour"
+            description="Individual session with each cohort member to plan practical application"
+            step={4}
+          />
+          
+          <ArrowDownMobile />
+          
+          {/* Certificate */}
+          <div className="border border-foreground/20 rounded-xl p-6 text-center bg-primary/5">
+            <Award className="w-10 h-10 text-primary mx-auto mb-3" />
+            <h3 className="font-semibold text-lg">AI Practitioner Certificate</h3>
+          </div>
+          
+          <ArrowDownMobile />
+          
+          {/* Post-Bootcamp */}
+          <div className="border border-dashed border-foreground/30 rounded-xl p-4">
+            <p className="text-xs text-foreground/60 italic mb-4 text-center">
+              Common for graduates of both programs
+            </p>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="text-center">
+                <h3 className="font-semibold mb-2 text-sm">Coaching</h3>
+                <p className="text-xs text-foreground/70">Regular check-ins</p>
+                <p className="text-primary text-xs font-medium mt-1">3 months</p>
+              </div>
+              <div className="text-center">
+                <h3 className="font-semibold mb-2 text-sm">Ecosystem</h3>
+                <p className="text-xs text-foreground/70">Collaboration</p>
+                <p className="text-primary text-xs font-medium mt-1">perpetual</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Divider */}
+          <div className="flex items-center gap-4 py-4">
+            <div className="flex-1 h-px bg-foreground/20" />
+            <span className="text-foreground/50 text-xs">Specialization Track</span>
+            <div className="flex-1 h-px bg-foreground/20" />
+          </div>
+
+          {/* Specialization */}
+          <JourneyCard
+            title="AI Specialization Program"
+            duration="1 month"
+            description="Select specialized track: Consulting, Compliance, Domain, or Creative"
+            step={5}
+            highlight
+          />
+          
+          <ArrowDownMobile />
+          
+          {/* Specialization Certificate */}
+          <div className="border border-foreground/20 rounded-xl p-6 text-center bg-primary/5">
+            <Award className="w-10 h-10 text-primary mx-auto mb-3" />
+            <h3 className="font-semibold text-lg mb-3">Completion Certificates</h3>
+            <div className="grid grid-cols-2 gap-2 text-sm">
+              <span>AI Consultant</span>
+              <span>Compliance Guardian</span>
+              <span>Domain Visionary</span>
+              <span>VITA Creator</span>
+            </div>
+          </div>
+          
+          <ArrowDownMobile />
+          
+          {/* Post-Specialization */}
+          <div className="border border-dashed border-foreground/30 rounded-xl p-4">
+            <p className="text-xs text-foreground/60 italic mb-4 text-center">
+              Only for graduates of AI Specialization Program
+            </p>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="text-center">
+                <h3 className="font-semibold mb-2 text-sm">Skill Building</h3>
+                <p className="text-xs text-foreground/70">Relevant to current job</p>
+                <p className="text-primary text-xs font-medium mt-1">1 year</p>
+              </div>
+              <div className="text-center">
+                <h3 className="font-semibold mb-2 text-sm">Feeds</h3>
+                <p className="text-xs text-foreground/70">Regular AI updates</p>
+                <p className="text-primary text-xs font-medium mt-1">1 year</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Desktop View - Original Flow */}
+        <div className="hidden lg:block overflow-x-auto pb-8">
           <div className="min-w-[1000px]">
             {/* Top Row - Main Journey Steps */}
             <div className="flex items-start justify-between gap-4 mb-8">
@@ -179,6 +301,22 @@ const JourneyFlowchart = () => {
   );
 };
 
+interface JourneyCardProps {
+  title: string;
+  duration: string;
+  description: string;
+  step: number;
+  highlight?: boolean;
+}
+
+const JourneyCard = ({ title, duration, description, highlight }: JourneyCardProps) => (
+  <div className={`border rounded-xl p-4 text-center ${highlight ? 'border-primary/50 bg-primary/5' : 'border-foreground/20'}`}>
+    <h3 className="font-semibold text-base mb-2">{title}</h3>
+    <p className="text-primary text-sm font-medium mb-2">{duration}</p>
+    <p className="text-xs text-foreground/70">{description}</p>
+  </div>
+);
+
 const Arrow = () => (
   <svg width="40" height="20" viewBox="0 0 40 20" fill="none" className="text-foreground/50">
     <path d="M0 10H35M35 10L28 3M35 10L28 17" stroke="currentColor" strokeWidth="2" />
@@ -189,6 +327,14 @@ const ArrowDown = () => (
   <svg width="20" height="40" viewBox="0 0 20 40" fill="none" className="text-foreground/50">
     <path d="M10 0V35M10 35L3 28M10 35L17 28" stroke="currentColor" strokeWidth="2" />
   </svg>
+);
+
+const ArrowDownMobile = () => (
+  <div className="flex justify-center">
+    <svg width="20" height="30" viewBox="0 0 20 30" fill="none" className="text-foreground/50">
+      <path d="M10 0V25M10 25L3 18M10 25L17 18" stroke="currentColor" strokeWidth="2" />
+    </svg>
+  </div>
 );
 
 export default JourneyFlowchart;
