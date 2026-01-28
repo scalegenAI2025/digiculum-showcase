@@ -3,7 +3,7 @@ const FundamentalAgentsVsBots = () => {
     <div className="mb-20">
       <h3 className="text-xl md:text-2xl font-semibold mb-8 text-center md:text-left">2. Agents v Bots</h3>
 
-      <div className="max-w-5xl mx-auto">
+      <div className="diagram-container max-w-5xl mx-auto">
         {/* Mobile/Tablet View - Stacked Cards */}
         <div className="lg:hidden space-y-6">
           {/* Blue Zone */}

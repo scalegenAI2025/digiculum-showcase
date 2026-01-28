@@ -3,7 +3,7 @@ const FundamentalSkillVsCompetence = () => {
     <div className="mb-20">
       <h3 className="text-xl md:text-2xl font-semibold mb-8 text-center md:text-left">4. AI Skill v AI Competence</h3>
       
-      <div className="max-w-6xl mx-auto">
+      <div className="diagram-container max-w-6xl mx-auto">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
           {/* Left Side - Skill */}
           <div>
@@ -22,15 +22,17 @@ const FundamentalSkillVsCompetence = () => {
                 <div className="diagram-box px-3 md:px-6 py-2 text-xs md:text-sm">Role N</div>
               </div>
 
-              {/* Connection Lines */}
+              {/* Connection Lines - Many-to-many cross pattern */}
               <svg width="280" height="60" viewBox="0 0 280 60" className="text-foreground/50 my-2">
-                {/* Cross-connections showing many-to-many relationship */}
+                {/* Role 1 to all Skills */}
                 <line x1="50" y1="0" x2="50" y2="60" stroke="currentColor" strokeWidth="1" />
                 <line x1="50" y1="0" x2="140" y2="60" stroke="currentColor" strokeWidth="1" />
                 <line x1="50" y1="0" x2="230" y2="60" stroke="currentColor" strokeWidth="1" />
+                {/* Role 2 to all Skills */}
                 <line x1="140" y1="0" x2="50" y2="60" stroke="currentColor" strokeWidth="1" />
                 <line x1="140" y1="0" x2="140" y2="60" stroke="currentColor" strokeWidth="1" />
                 <line x1="140" y1="0" x2="230" y2="60" stroke="currentColor" strokeWidth="1" />
+                {/* Role N to all Skills */}
                 <line x1="230" y1="0" x2="50" y2="60" stroke="currentColor" strokeWidth="1" />
                 <line x1="230" y1="0" x2="140" y2="60" stroke="currentColor" strokeWidth="1" />
                 <line x1="230" y1="0" x2="230" y2="60" stroke="currentColor" strokeWidth="1" />
@@ -68,13 +70,16 @@ const FundamentalSkillVsCompetence = () => {
                 <div className="diagram-box px-3 md:px-6 py-2 text-xs md:text-sm">Job N</div>
               </div>
 
-              {/* Connection Lines - Jobs to Competence */}
+              {/* Connection Lines - Jobs to Competence - Cross pattern */}
               <svg width="280" height="40" viewBox="0 0 280 40" className="text-foreground/50 my-1">
+                {/* Job 1 to Competence 1 and 2 */}
                 <line x1="50" y1="0" x2="50" y2="40" stroke="currentColor" strokeWidth="1" />
                 <line x1="50" y1="0" x2="140" y2="40" stroke="currentColor" strokeWidth="1" />
+                {/* Job 2 to all Competences */}
                 <line x1="140" y1="0" x2="50" y2="40" stroke="currentColor" strokeWidth="1" />
                 <line x1="140" y1="0" x2="140" y2="40" stroke="currentColor" strokeWidth="1" />
                 <line x1="140" y1="0" x2="230" y2="40" stroke="currentColor" strokeWidth="1" />
+                {/* Job N to Competence 2 and N */}
                 <line x1="230" y1="0" x2="140" y2="40" stroke="currentColor" strokeWidth="1" />
                 <line x1="230" y1="0" x2="230" y2="40" stroke="currentColor" strokeWidth="1" />
               </svg>
@@ -87,13 +92,16 @@ const FundamentalSkillVsCompetence = () => {
                 <div className="diagram-box px-2 md:px-4 py-2 text-xs md:text-sm border-primary/50">Competence N</div>
               </div>
 
-              {/* Connection Lines - Competence to Skills */}
+              {/* Connection Lines - Competence to Skills - Cross pattern */}
               <svg width="280" height="40" viewBox="0 0 280 40" className="text-foreground/50 my-1">
+                {/* Competence 1 to Skill 1 and 2 */}
                 <line x1="50" y1="0" x2="50" y2="40" stroke="currentColor" strokeWidth="1" />
                 <line x1="50" y1="0" x2="140" y2="40" stroke="currentColor" strokeWidth="1" />
+                {/* Competence 2 to all Skills */}
                 <line x1="140" y1="0" x2="50" y2="40" stroke="currentColor" strokeWidth="1" />
                 <line x1="140" y1="0" x2="140" y2="40" stroke="currentColor" strokeWidth="1" />
                 <line x1="140" y1="0" x2="230" y2="40" stroke="currentColor" strokeWidth="1" />
+                {/* Competence N to Skill 2 and N */}
                 <line x1="230" y1="0" x2="140" y2="40" stroke="currentColor" strokeWidth="1" />
                 <line x1="230" y1="0" x2="230" y2="40" stroke="currentColor" strokeWidth="1" />
               </svg>
