@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Calendar } from "lucide-react";
-import heroBg from "@/assets/hero-bg.jpg";
+import leaderbg from "@/assets/leader-bg.png";
 
 const LeadersHero = () => {
   const handleConsultation = () => {
@@ -13,7 +13,7 @@ const LeadersHero = () => {
       {/* Background Image */}
       <div
         className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-        style={{ backgroundImage: `url(${heroBg})` }}
+        style={{ backgroundImage: `url(${leaderbg})` }}
       />
       {/* Dark Overlay */}
       <div className="absolute inset-0 bg-background/85" />

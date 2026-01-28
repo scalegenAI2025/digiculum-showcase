@@ -71,7 +71,7 @@ const Footer = () => {
           <div>
             <p className="text-foreground/70 mb-4">Follow us on</p>
             <a
-              href="https://linkedin.com"
+              href="https://www.linkedin.com/company/digiculum/"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 text-foreground hover:text-primary transition-colors font-semibold text-xl"
@@ -81,7 +81,8 @@ const Footer = () => {
             </a>
             <p className="mt-6 text-foreground/70">
               <a
-                href="mailto:info@digiculum.com"
+                href="https://mail.google.com/mail/?view=cm&fs=1&to=info@digiculum.com"
+                target="_blank"
                 className="hover:text-foreground transition-colors"
               >
                 info@digiculum.com
