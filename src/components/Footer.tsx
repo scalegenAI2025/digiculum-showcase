@@ -79,22 +79,15 @@ const Footer = () => {
               <Linkedin className="w-6 h-6" />
               LinkedIn
             </a>
-            <p className="mt-6 text-foreground/70">
-              <a
-                href="https://mail.google.com/mail/?view=cm&fs=1&to=info@digiculum.com"
-                target="_blank"
-                className="hover:text-foreground transition-colors"
-              >
-                info@digiculum.com
-              </a>
-            </p>
+            
           </div>
 
           {/* Column 4: CTA */}
           <div className="flex items-center justify-end">
             <a
-              href="#contact"
+              href="https://mail.google.com/mail/?view=cm&fs=1&to=info@digiculum.com"
               className="btn-primary text-center"
+              target="_blank"
             >
               Contact Us
             </a>
