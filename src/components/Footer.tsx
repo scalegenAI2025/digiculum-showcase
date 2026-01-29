@@ -9,7 +9,7 @@ const Footer = () => {
           <div>
             <ul className="space-y-3">
               <li>
-                <a href="#individuals" className="text-foreground hover:text-primary transition-colors">
+                <a href="/individuals" className="text-foreground hover:text-primary transition-colors">
                   Individuals
                 </a>
               </li>

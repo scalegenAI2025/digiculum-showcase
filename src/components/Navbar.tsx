@@ -4,7 +4,7 @@ import digiLogo from "@/assets/digi-logo.png";
 
 
 const navLinks = [
-  { label: "Individuals", href: "#individuals" },
+  { label: "Individuals", href: "/individuals" },
   { label: "Leaders", href: "/leaders" },
   { label: "Courses", href: "#courses" },
   { label: "Ecosystem", href: "#ecosystem" },
