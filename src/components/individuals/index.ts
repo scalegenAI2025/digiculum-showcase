@@ -1,0 +1,12 @@
+export { default as IndividualsHero } from "./IndividualsHero";
+export { default as BrochureDialog } from "./BrochureDialog";
+export { default as GettingStarted } from "./GettingStarted";
+export { default as WhoIsAIPractitioner } from "./WhoIsAIPractitioner";
+export { default as BootcampFAQ } from "./BootcampFAQ";
+export { default as KnowHackBuild } from "./KnowHackBuild";
+export { default as AISpecialization } from "./AISpecialization";
+export { default as WhatYouWillLearn } from "./WhatYouWillLearn";
+export { default as HackVITA } from "./HackVITA";
+export { default as BuildProject } from "./BuildProject";
+export { default as ToolsUsed } from "./ToolsUsed";
+export { default as FinalCTA } from "./FinalCTA";
