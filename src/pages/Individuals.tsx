@@ -27,8 +27,6 @@ const Individuals = () => {
       <SectionSeparator />
       <KnowHackBuild />
       <SectionSeparator />
-      <BootcampFAQ />
-      <SectionSeparator />
       <AISpecialization />
       <SectionSeparator />
       <WhatYouWillLearn />
@@ -41,6 +39,7 @@ const Individuals = () => {
       <SectionSeparator />
       <FinalCTA />
       <SectionSeparator />
+      <BootcampFAQ />
       <Footer />
     </div>
   );

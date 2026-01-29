@@ -1,4 +1,4 @@
-import { Lightbulb, Target, BookOpen } from "lucide-react";
+import { Lightbulb, Target, BookOpen, Code, Layers } from "lucide-react";
 
 const cards = [
   {
@@ -15,6 +15,51 @@ const cards = [
     icon: BookOpen,
     question: "Who is this bootcamp for?",
     answer: "For technical, non-technical or absolute beginners who want practical AI skills and knowledge.",
+  },
+  {
+    icon: Code,
+    question: "Do I need to know coding before I enroll for the bootcamp?",
+    answer: "No. Coding skills are helpful but not required. Even if you’ve never written a single line of code, you can join and succeed in this bootcamp.",
+  },
+  {
+    icon: Layers,
+    question: "What will you learn in the 21 day bootcamp ?",
+    answer: "You will learn essential AI concepts, important AI tools, and work on practical AI projects, based on our unique Know-Hack-Build model.",
+  },
+  {
+    icon: Layers,
+    question: "What will you learn in the 21 day bootcamp ?",
+    answer: "You will learn essential AI concepts, important AI tools, and work on practical AI projects, based on our unique Know-Hack-Build model.",
+  },
+  {
+    icon: Layers,
+    question: "What will you learn in the 21 day bootcamp ?",
+    answer: "You will learn essential AI concepts, important AI tools, and work on practical AI projects, based on our unique Know-Hack-Build model.",
+  },
+  {
+    icon: Layers,
+    question: "What will you learn in the 21 day bootcamp ?",
+    answer: "You will learn essential AI concepts, important AI tools, and work on practical AI projects, based on our unique Know-Hack-Build model.",
+  },
+  {
+    icon: Layers,
+    question: "What will you learn in the 21 day bootcamp ?",
+    answer: "You will learn essential AI concepts, important AI tools, and work on practical AI projects, based on our unique Know-Hack-Build model.",
+  },
+  {
+    icon: Layers,
+    question: "What will you learn in the 21 day bootcamp ?",
+    answer: "You will learn essential AI concepts, important AI tools, and work on practical AI projects, based on our unique Know-Hack-Build model.",
+  },
+  {
+    icon: Layers,
+    question: "What will you learn in the 21 day bootcamp ?",
+    answer: "You will learn essential AI concepts, important AI tools, and work on practical AI projects, based on our unique Know-Hack-Build model.",
+  },
+  {
+    icon: Layers,
+    question: "What will you learn in the 21 day bootcamp ?",
+    answer: "You will learn essential AI concepts, important AI tools, and work on practical AI projects, based on our unique Know-Hack-Build model.",
   },
 ];
 
