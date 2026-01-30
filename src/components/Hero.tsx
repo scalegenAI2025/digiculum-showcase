@@ -1,4 +1,4 @@
-import heroBg from "@/assets/hero-bg.png";
+import homebg from "@/assets/hero-img.png";
 
 const Hero = () => {
   return (
@@ -6,7 +6,7 @@ const Hero = () => {
       {/* Background Image */}
       <div
         className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-        style={{ backgroundImage: `url(${heroBg})` }}
+        style={{ backgroundImage: `url(${homebg})` }}
       >
         <div className="absolute inset-0 bg-background/70" />
       </div>
