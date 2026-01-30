@@ -1,7 +1,7 @@
 import { Lightbulb, Search, Rocket } from "lucide-react";
-import thinkAi from "@/assets/think-ai.png"
-import evaluateAi from "@/assets/evaluate-ai.jpg"
-import scaleAi from "@/assets/scale-ai.jpg"
+import thinkAi from "@/assets/think_ai.png"
+import evaluateAi from "@/assets/evaluate_ai.png"
+import scaleAi from "@/assets/scale_ai.png"
 
 const challengeData = [
   {

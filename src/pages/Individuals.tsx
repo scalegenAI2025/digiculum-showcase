@@ -39,7 +39,6 @@ const Individuals = () => {
       <SectionSeparator />
       <FinalCTA />
       <SectionSeparator />
-      <BootcampFAQ />
       <Footer />
     </div>
   );

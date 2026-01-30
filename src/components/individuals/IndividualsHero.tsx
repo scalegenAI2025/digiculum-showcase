@@ -2,86 +2,96 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Calendar, Clock, Users } from "lucide-react";
 import BrochureDialog from "./BrochureDialog";
+import individualsBg from "@/assets/individuals.png";
 
 const IndividualsHero = () => {
   const [brochureOpen, setBrochureOpen] = useState(false);
 
   return (
-    <section className="relative py-20 md:py-28">
-      {/* Background gradient */}
-      <div className="absolute inset-0 bg-gradient-to-b from-primary/10 via-background to-background" />
+    <section className="relative min-h-screen flex items-center justify-center overflow-hidden -mt-20 pt-24 pb-8">
       
-      <div className="container mx-auto px-6 relative z-10">
-        <div className="max-w-4xl mx-auto text-center">
-          <span className="inline-block px-4 py-2 bg-primary/20 border border-primary/30 rounded-full text-primary text-sm font-medium mb-6">
-            Cohort #1
-          </span>
-          
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6">
-            <span className="text-gradient">AI Practitioner</span> Bootcamp
-          </h1>
-          
-          <p className="text-xl md:text-2xl text-foreground/80 mb-4">
-            Personalized Continuous Collaborative Learning Experience through our unique{" "}
-            <span className="text-primary font-semibold">Know-Hack-Build</span> Framework
-          </p>
-          
-          <p className="text-lg text-primary font-medium mb-10">
-            Don't miss out the unbeatable Early Joiner offer
-          </p>
+      {/* Background Image */}
+      <div
+        className="absolute inset-0 bg-cover bg-center"
+        style={{ backgroundImage: `url(${individualsBg})` }}
+      />
 
-          {/* Info Cards */}
-          <div className="grid md:grid-cols-3 gap-6 mb-10">
-            <div className="glass-card p-6 text-center">
-              <Calendar className="w-8 h-8 text-primary mx-auto mb-3" />
-              <h3 className="text-lg font-semibold mb-2">21 Days</h3>
-              <p className="text-foreground/70 text-sm">Start Date: 16th Feb 2026</p>
-            </div>
-            
-            <div className="glass-card p-6 text-center">
-              <Clock className="w-8 h-8 text-primary mx-auto mb-3" />
-              <h3 className="text-lg font-semibold mb-2">Live Learning</h3>
-              <p className="text-foreground/70 text-sm">Time: 8:30 pm IST / 4 PM CET</p>
-            </div>
-            
-            <div className="glass-card p-6 text-center">
-              <Users className="w-8 h-8 text-primary mx-auto mb-3" />
-              <h3 className="text-lg font-semibold mb-2">Practical Application</h3>
-              <p className="text-foreground/70 text-sm">1:1 Consultation Included</p>
-            </div>
-          </div>
+      {/* Dark + Pink Overlay */}
+      <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/70 to-pink-900/40" />
 
-          {/* Pricing */}
-          <div className="glass-card p-8 mb-10 max-w-md mx-auto">
-            <div className="flex items-center justify-center gap-4">
-              <span className="text-2xl text-foreground/50 line-through">INR 3,00,000</span>
-              <span className="text-3xl md:text-4xl font-bold text-primary">INR 30,000</span>
-            </div>
-            <span className="inline-block mt-2 px-3 py-1 bg-primary/20 text-primary text-sm font-medium rounded-full">
-              90% DISCOUNT
-            </span>
-          </div>
+      {/* Content */}
+      <div className="relative z-10 h-full container mx-auto px-6 flex items-center">
+        <div className="grid lg:grid-cols-2 gap-12 w-full text-white">
 
-          {/* CTAs */}
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <a
-              href="https://calendly.com"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <Button size="lg" className="btn-primary w-full sm:w-auto">
+          {/* LEFT SIDE */}
+          <div>
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-4">
+              AI Practitioner <br /> Bootcamp
+            </h1>
+
+            <p className="text-xl font-semibold mb-6">Cohort #1</p>
+
+            <p className="text-lg text-white/80 mb-8 max-w-xl">
+              Personalized Continuous Collaborative Learning Experience
+              through our unique <span className="text-primary font-semibold">
+              Know-Hack-Build</span> Framework
+            </p>
+
+            {/* Info Row */}
+            <div className="flex flex-wrap gap-6 mb-10 text-sm">
+              <div>
+                <p className="font-semibold">21 Days</p>
+                <p className="text-white/70">Start Date: 16th Feb 2026</p>
+              </div>
+
+              <div>
+                <p className="font-semibold">Live Learning</p>
+                <p className="text-white/70">8:30 PM IST / 4 PM CET</p>
+              </div>
+
+              <div>
+                <p className="font-semibold">Practical</p>
+                <p className="text-white/70">1:1 Consultation</p>
+              </div>
+            </div>
+
+            {/* CTA */}
+            <div className="flex gap-4">
+              <Button size="lg" className="bg-primary hover:bg-primary/90">
                 1:1 Consultation
               </Button>
-            </a>
-            <Button 
-              size="lg" 
-              variant="outline" 
-              className="border-primary/50 hover:bg-primary/10"
-              onClick={() => setBrochureOpen(true)}
-            >
-              Download Brochure
-            </Button>
+
+              <Button
+                size="lg"
+                variant="outline"
+                className="border-white/40 text-white hover:bg-white/10"
+                onClick={() => setBrochureOpen(true)}
+              >
+                Download Brochure
+              </Button>
+            </div>
           </div>
+
+          {/* RIGHT SIDE */}
+          <div className="flex items-center lg:justify-end">
+            <div className="bg-black/70 backdrop-blur-xl p-8 rounded-2xl max-w-md w-full">
+              <h2 className="text-2xl font-bold mb-6">
+                Don’t miss out the unbeatable <br />
+                <span className="text-primary">Early Joiner offer</span>
+              </h2>
+
+              <p className="text-sm text-white/60 mb-2">90% DISCOUNT</p>
+
+              <p className="text-lg line-through text-white/40">
+                INR 3,00,000
+              </p>
+
+              <p className="text-3xl font-bold text-primary mb-6">
+                INR 30,000 only
+              </p>
+            </div>
+          </div>
+
         </div>
       </div>
 
