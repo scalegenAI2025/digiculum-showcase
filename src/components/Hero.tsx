@@ -79,22 +79,7 @@ const Hero = () => {
           </div>
         </div>
       </div>
-
-      {/* Decorative element */}
-      <div className="absolute bottom-6 right-6 opacity-40">
-        <svg
-          width="32"
-          height="32"
-          viewBox="0 0 40 40"
-          fill="none"
-          className="text-primary"
-        >
-          <path
-            d="M20 0L24.4903 15.5097L40 20L24.4903 24.4903L20 40L15.5097 24.4903L0 20L15.5097 15.5097L20 0Z"
-            fill="currentColor"
-          />
-        </svg>
-      </div>
+      
     </section>
   );
 };
