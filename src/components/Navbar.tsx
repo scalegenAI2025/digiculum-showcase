@@ -22,7 +22,7 @@ const Navbar = () => {
             <img
               src={digiLogo}
               alt="Digiculum Logo"
-              className="h-8 w-auto md:h-10 object-contain"
+              className="h-8 w-auto md:h-10 object-contain h-8 w-auto md:h-10 object-contain mix-blend-screen brightness-110 contrast-125 drop-shadow(0 0 0 white)"
             />
           </a>
 
