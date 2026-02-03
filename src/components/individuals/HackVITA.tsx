@@ -4,7 +4,7 @@ const categories = [
   {
     icon: Video,
     title: "Video",
-    color: "from-red-500/20 to-pink-500/20",
+    color: "bg-primary/50",
     borderColor: "hover:border-red-500/50",
     items: [
       "Turn text or slides into short videos",
@@ -17,7 +17,7 @@ const categories = [
   {
     icon: Image,
     title: "Image",
-    color: "from-purple-500/20 to-indigo-500/20",
+    color: "bg-primary/50",
     borderColor: "hover:border-purple-500/50",
     items: [
       "Creating photo-realistic, artistic, abstract images",
@@ -29,7 +29,7 @@ const categories = [
   {
     icon: FileText,
     title: "Text",
-    color: "from-blue-500/20 to-cyan-500/20",
+    color: "bg-primary/50",
     borderColor: "hover:border-blue-500/50",
     items: [
       "Create, summarize, augment text",
@@ -42,7 +42,7 @@ const categories = [
   {
     icon: Music,
     title: "Audio",
-    color: "from-green-500/20 to-teal-500/20",
+    color: "bg-primary/50",
     borderColor: "hover:border-green-500/50",
     items: [
       "Create your own music",

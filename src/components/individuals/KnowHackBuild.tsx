@@ -4,7 +4,7 @@ const pillars = [
   {
     icon: Brain,
     title: "Know",
-    color: "from-blue-500/20 to-primary/20",
+    color: "bg-primary/50",
     description: "Understand core AI concepts, trends, and use cases that matter for your role.",
     items: [
       "What type of technology is AI?",
@@ -18,7 +18,7 @@ const pillars = [
   {
     icon: Zap,
     title: "Hack",
-    color: "from-yellow-500/20 to-orange-500/20",
+    color: "bg-primary/50",
     description: "Apply AI tools to automate everyday tasks and boost productivity—without coding.",
     items: [
       "Video: Turn text into videos, derive insights",
@@ -30,7 +30,7 @@ const pillars = [
   {
     icon: Wrench,
     title: "Build",
-    color: "from-green-500/20 to-emerald-500/20",
+    color: "bg-primary/50",
     description: "Create practical AI apps that improve your work and give you an edge.",
     items: [
       "Create your personal AI projects",
