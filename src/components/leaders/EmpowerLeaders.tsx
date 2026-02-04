@@ -4,9 +4,9 @@ const empowermentData = [
   {
     stage: "Think AI",
     icon: Lightbulb,
-    color: "text-blue-400",
-    bgColor: "bg-blue-500/10",
-    borderColor: "border-blue-400/30",
+    color: "text-primary",
+    bgColor: "bg-primary/10",
+    borderColor: "border-primary/30",
     outcomes: [
       "Establish a pragmatic mindset toward balancing profits and ethics",
       "Identify where AI is relevant in their organization",
@@ -27,9 +27,9 @@ const empowermentData = [
   {
     stage: "Scale AI",
     icon: Rocket,
-    color: "text-green-400",
-    bgColor: "bg-green-500/10",
-    borderColor: "border-green-400/30",
+    color: "text-primary",
+    bgColor: "bg-primary/10",
+    borderColor: "border-primary/30",
     outcomes: [
       "Prepare scaled adoption strategy for enterprise-wide transformation",
       "Achieve operational readiness",

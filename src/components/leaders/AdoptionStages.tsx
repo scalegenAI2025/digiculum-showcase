@@ -5,19 +5,19 @@ const stages = [
     title: "Think AI",
     description: "Early stage. Few/No pilots.",
     icon: Lightbulb,
-    gradient: "from-blue-500/20 to-blue-600/10",
+    gradient: "bg-primary/50",
   },
   {
     title: "Evaluate",
     description: "Intermediate stage. Considerable AI pilots and Agents. Not ready to scale.",
     icon: Search,
-    gradient: "from-primary/20 to-primary/10",
+    gradient: "bg-primary/50",
   },
   {
     title: "Scale AI",
     description: "Advanced stage. Considerable AI pilots and Agents. Almost ready to scale.",
     icon: Rocket,
-    gradient: "from-green-500/20 to-green-600/10",
+    gradient: "bg-primary/50",
   },
 ];
 

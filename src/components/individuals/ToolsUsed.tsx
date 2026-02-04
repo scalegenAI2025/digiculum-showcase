@@ -1,11 +1,12 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import BrochureDialog from "./BrochureDialog";
-import gptLogo from '@/assets/gpt.jpg'
+import gptLogo from '@/assets/AI-logos/ChatGPT.png'
+import claudeLogo from '@/assets/AI-logos/Claude.png'
 
 const tools = [
   { name: "ChatGPT", logo: gptLogo },
-  { name: "Claude", logo: "https://logo.clearbit.com/anthropic.com" },
+  { name: "Claude", logo: claudeLogo },
   { name: "Gemini", logo: "https://logo.clearbit.com/google.com" },
   { name: "Perplexity", logo: "https://logo.clearbit.com/perplexity.ai" },
   { name: "NotebookLM", logo: "https://logo.clearbit.com/google.com" },
@@ -45,7 +46,7 @@ const ToolsUsed = () => {
                 src={tool.logo}
                 alt={tool.name}
                 loading="lazy"
-                className="h-10 md:h-12 object-contain grayscale hover:grayscale-0 transition duration-300"
+                className="h-10 md:h-12 object-contain transition duration-300"
               />
             </div>
           ))}
