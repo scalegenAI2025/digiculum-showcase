@@ -275,7 +275,7 @@ const EcosystemForm = () => {
     };
 
     try {
-      const GOOGLE_SHEETS_URL = "https://script.google.com/macros/s/AKfycbyIb9RU53QyZJi9-4gza1qlNK-AWrWrtlvuvfVf55wpOIwMMcvjMf_ayKxY3NgtKD8s/exec";
+      const GOOGLE_SHEETS_URL = import.meta.env.VITE_GOOGLE_SHEETS_URL;
       
       await fetch(GOOGLE_SHEETS_URL, {
         method: 'POST',
@@ -368,7 +368,7 @@ const EcosystemForm = () => {
                   value={formData.firstName}
                   onChange={handleChange}
                   className={`w-full px-4 py-3 bg-white/5 rounded-lg text-white placeholder-gray-400 focus:outline-none border transition-all ${
-                    errors.firstName ? 'border-red-500' : 'border-white/10 focus:border-purple-500'
+                    errors.firstName ? 'border-red-500' : 'border-white/10 focus:border-primary/50'
                   }`}
                   placeholder="Enter your first name"
                 />
@@ -386,7 +386,7 @@ const EcosystemForm = () => {
                   value={formData.lastName}
                   onChange={handleChange}
                   className={`w-full px-4 py-3 bg-white/5 rounded-lg text-white placeholder-gray-400 focus:outline-none border transition-all ${
-                    errors.lastName ? 'border-red-500' : 'border-white/10 focus:border-purple-500'
+                    errors.lastName ? 'border-red-500' : 'border-white/10 focus:border-primary/50'
                   }`}
                   placeholder="Enter your last name"
                 />
@@ -406,7 +406,7 @@ const EcosystemForm = () => {
                 value={formData.email}
                 onChange={handleChange}
                 className={`w-full px-4 py-3 bg-white/5 rounded-lg text-white placeholder-gray-400 focus:outline-none border transition-all ${
-                  errors.email ? 'border-red-500' : 'border-white/10 focus:border-purple-500'
+                  errors.email ? 'border-red-500' : 'border-white/10 focus:border-primary/50'
                 }`}
                 placeholder="your.email@example.com"
               />
@@ -425,7 +425,7 @@ const EcosystemForm = () => {
                 value={formData.phone}
                 onChange={handleChange}
                 className={`w-full px-4 py-3 bg-white/5 rounded-lg text-white placeholder-gray-400 focus:outline-none border transition-all ${
-                  errors.phone ? 'border-red-500' : 'border-white/10 focus:border-purple-500'
+                  errors.phone ? 'border-red-500' : 'border-white/10 focus:border-primary/50'
                 }`}
                 placeholder="+91 "
               />
@@ -443,7 +443,7 @@ const EcosystemForm = () => {
                 value={formData.occupation}
                 onChange={handleChange}
                 className={`w-full px-4 py-3 bg-white/5 rounded-lg text-white focus:outline-none border transition-all ${
-                  errors.occupation ? 'border-red-500' : 'border-white/10 focus:border-purple-500'
+                  errors.occupation ? 'border-red-500' : 'border-white/10 focus:border-primary/50'
                 }`}
               >
                 <option value="" className="bg-slate-800">Select your occupation</option>
@@ -466,7 +466,7 @@ const EcosystemForm = () => {
                   value={formData.otherOccupation}
                   onChange={handleChange}
                   className={`w-full px-4 py-3 bg-white/5 rounded-lg text-white placeholder-gray-400 focus:outline-none border transition-all ${
-                    errors.otherOccupation ? 'border-red-500' : 'border-white/10 focus:border-purple-500'
+                    errors.otherOccupation ? 'border-red-500' : 'border-white/10 focus:border-primary/50'
                   }`}
                   placeholder="Enter your occupation"
                 />
@@ -485,7 +485,7 @@ const EcosystemForm = () => {
                 value={formData.ecosystem}
                 onChange={handleChange}
                 className={`w-full px-4 py-3 bg-white/5 rounded-lg text-white focus:outline-none border transition-all ${
-                  errors.ecosystem ? 'border-red-500' : 'border-white/10 focus:border-purple-500'
+                  errors.ecosystem ? 'border-red-500' : 'border-white/10 focus:border-primary/50'
                 }`}
               >
                 <option value="" className="bg-slate-800">Choose an ecosystem</option>
@@ -507,7 +507,7 @@ const EcosystemForm = () => {
                 onChange={handleChange}
                 rows={5}
                 className={`w-full px-4 py-3 bg-white/5 rounded-lg text-white placeholder-gray-400 focus:outline-none border transition-all resize-none ${
-                  errors.reason ? 'border-red-500' : 'border-white/10 focus:border-purple-500'
+                  errors.reason ? 'border-red-500' : 'border-white/10 focus:border-primary/50'
                 }`}
                 placeholder="Tell us why you're interested in joining this ecosystem..."
               />
@@ -540,7 +540,7 @@ const EcosystemForm = () => {
                   value={captchaAnswer}
                   onChange={handleCaptchaChange}
                   className={`w-24 px-4 py-3 bg-white/5 rounded-lg text-white text-center focus:outline-none border transition-all ${
-                    errors.captcha ? 'border-red-500' : 'border-white/10 focus:border-purple-500'
+                    errors.captcha ? 'border-red-500' : 'border-white/10 focus:border-primary/50'
                   }`}
                   placeholder="Answer"
                 />
