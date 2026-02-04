@@ -45,7 +45,7 @@ const Footer = () => {
           <div>
             <ul className="space-y-3">
               <li>
-                <a href="#privacy" className="text-foreground/70 hover:text-foreground transition-colors">
+                <a href="/privacy" className="text-foreground/70 hover:text-foreground transition-colors">
                   Privacy Policy
                 </a>
               </li>
