@@ -8,12 +8,15 @@ import Leaders from "./pages/Leaders";
 import Individuals from "./pages/Individuals";
 import Courses from "./pages/Courses";
 import Ecosystem from "./pages/Ecosystem";
+<<<<<<< HEAD
 import PrivacyPolicy from "./components/PrivacyPolicy";
 import CookiePolicy from "./components/CookiePolicy";
 import GeneralTerms from "./components/GeneralTerms";
 import RefundPolicy from "./components/RefundPolicy";
+=======
+import PrivacyPolicy from "./pages/PrivacyPolicy";
+>>>>>>> bc2e04f67b3055a72f96bff1b247e10050bc4ef3
 import NotFound from "./pages/NotFound";
-
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -29,9 +32,12 @@ const App = () => (
           <Route path="/courses" element={<Courses />} />
           <Route path="/ecosystem" element={<Ecosystem />} />
           <Route path="/privacy" element={<PrivacyPolicy />} />
+<<<<<<< HEAD
           <Route path="/cookie" element={<CookiePolicy />} />
           <Route path="/general" element={<GeneralTerms />} />
           <Route path="/refund" element={<RefundPolicy />} />
+=======
+>>>>>>> bc2e04f67b3055a72f96bff1b247e10050bc4ef3
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
