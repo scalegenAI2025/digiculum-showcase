@@ -1,22 +1,35 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import BrochureDialog from "./BrochureDialog";
-import gptLogo from '@/assets/AI-logos/ChatGPT.png'
+import gptLogo from '@/assets/AI-logos/openai.png'
 import claudeLogo from '@/assets/AI-logos/Claude.png'
+import GeminiLogo from '@/assets/AI-logos/Gemini.png'
+import aiStudioLogo from '@/assets/AI-logos/aistudio.png'
+import runwayLogo from '@/assets/AI-logos/runway.png'
+import perplexityLogo from '@/assets/AI-logos/perplexity.png'
+import notebookLmLogo from '@/assets/AI-logos/notebooklm.png'
+import n8nLogo from '@/assets/AI-logos/n8n.png'
+import huggingFaceLogo from '@/assets/AI-logos/huggingface.png'
+import elevenLabsLogo from '@/assets/AI-logos/elevenlabs.png'
+import happenStanceLogo from '@/assets/AI-logos/happenstance.png'
+import heygenLogo from '@/assets/AI-logos/heygen.png'
+import gammaLogo from '@/assets/AI-logos/gamma.png'
+
 
 const tools = [
   { name: "ChatGPT", logo: gptLogo },
   { name: "Claude", logo: claudeLogo },
-  { name: "Gemini", logo: "https://logo.clearbit.com/google.com" },
-  { name: "Perplexity", logo: "https://logo.clearbit.com/perplexity.ai" },
-  { name: "NotebookLM", logo: "https://logo.clearbit.com/google.com" },
-  { name: "Runway", logo: "https://logo.clearbit.com/runwayml.com" },
-  { name: "HeyGen", logo: "https://logo.clearbit.com/heygen.com" },
-  { name: "ElevenLabs", logo: "https://logo.clearbit.com/elevenlabs.io" },
-  { name: "Hugging Face", logo: "https://logo.clearbit.com/huggingface.co" },
-  { name: "Google AI Studio", logo: "https://logo.clearbit.com/google.com" },
-  { name: "Deep Research", logo: "https://logo.clearbit.com/openai.com" },
-  { name: "Gamma", logo: "https://logo.clearbit.com/gamma.app" },
+  { name: "Gemini Deep Research", logo: GeminiLogo },
+  { name: "Perplexity", logo: perplexityLogo },
+  { name: "NotebookLM", logo: notebookLmLogo},
+  { name: "Runway", logo: runwayLogo },
+  { name: "HeyGen", logo: heygenLogo },
+  { name: "ElevenLabs", logo: elevenLabsLogo },
+  { name: "Hugging Face", logo: huggingFaceLogo },
+  { name: "Google AI Studio", logo: aiStudioLogo },
+  { name: "Gamma", logo: gammaLogo },
+  { name: "Happenstance", logo: happenStanceLogo },
+  { name: "n8n", logo: n8nLogo }
 ];
 
 const ToolsUsed = () => {

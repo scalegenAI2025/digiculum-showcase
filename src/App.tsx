@@ -12,6 +12,7 @@ import PrivacyPolicy from "./components/PrivacyPolicy";
 import CookiePolicy from "./components/CookiePolicy";
 import GeneralTerms from "./components/GeneralTerms";
 import RefundPolicy from "./components/RefundPolicy";
+import EcosystemForm from "./components/ecosystem/EcosystemForm";
 import NotFound from "./pages/NotFound";
 const queryClient = new QueryClient();
 
@@ -31,6 +32,7 @@ const App = () => (
           <Route path="/cookie" element={<CookiePolicy />} />
           <Route path="/general" element={<GeneralTerms />} />
           <Route path="/refund" element={<RefundPolicy />} />
+          <Route path="/ecosystemform" element={<EcosystemForm />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

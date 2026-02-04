@@ -1,0 +1,381 @@
+import React, { useState } from 'react';
+import { Mail, User, Phone, Briefcase, Target, Shield } from 'lucide-react';
+
+const EcosystemForm = () => {
+  const [formData, setFormData] = useState({
+    firstName: '',
+    lastName: '',
+    email: '',
+    phone: '',
+    occupation: '',
+    otherOccupation: '',
+    ecosystem: '',
+    reason: ''
+  });
+
+  const [captchaVerified, setCaptchaVerified] = useState(false);
+  const [captchaAnswer, setCaptchaAnswer] = useState('');
+  const [submitted, setSubmitted] = useState(false);
+  const [errors, setErrors] = useState<Record<string, string>>({});
+
+  // Simple math captcha
+  const num1 = Math.floor(Math.random() * 100) + 1;
+  const num2 = Math.floor(Math.random() * 100) + 1;
+  const correctAnswer = num1 + num2;
+
+  const occupations = [
+    'Technical Professional',
+    'Non-Technical Professional',
+    'Student',
+    'Job Seeker',
+    'Entrepreneur',
+    'Other'
+  ];
+
+  const ecosystems = [
+    'AI Practitioner',
+    'AI Leader',
+    'AI Consultant',
+    'AI Creative',
+    'AI Compliance',
+    'AI for Finance',
+    'AI for Healthcare',
+    'AI for HR',
+    'AI for Product/Project/Program Managers',
+    'Data and AI Experts',
+    'AI Engineer',
+    'AI for Entrepreneurs'
+  ];
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+    // Clear error when user starts typing
+    if (errors[name]) {
+      setErrors(prev => ({ ...prev, [name]: '' }));
+    }
+  };
+
+  const handleCaptchaChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setCaptchaAnswer(value);
+    setCaptchaVerified(parseInt(value) === correctAnswer);
+  };
+
+  const validateForm = () => {
+    const newErrors: Record<string, string> = {};
+
+    if (!formData.firstName.trim()) newErrors.firstName = 'First name is required';
+    if (!formData.lastName.trim()) newErrors.lastName = 'Last name is required';
+    if (!formData.email.trim()) {
+      newErrors.email = 'Email is required';
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+      newErrors.email = 'Invalid email format';
+    }
+    if (!formData.phone.trim()) newErrors.phone = 'Phone number is required';
+    if (!formData.occupation) newErrors.occupation = 'Occupation is required';
+    if (formData.occupation === 'Other' && !formData.otherOccupation.trim()) {
+      newErrors.otherOccupation = 'Please specify your occupation';
+    }
+    if (!formData.ecosystem) newErrors.ecosystem = 'Ecosystem selection is required';
+    if (!formData.reason.trim()) {
+      newErrors.reason = 'Reason is required';
+    } else if (formData.reason.trim().split(/\s+/).length > 200) {
+      newErrors.reason = 'Reason must be 200 words or less';
+    }
+    if (!captchaVerified) newErrors.captcha = 'Please solve the captcha correctly';
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!validateForm()) {
+      return;
+    }
+
+    // Prepare data for Google Sheets
+    const submissionData = {
+      timestamp: new Date().toISOString(),
+      firstName: formData.firstName,
+      lastName: formData.lastName,
+      email: formData.email,
+      phone: formData.phone,
+      occupation: formData.occupation === 'Other' ? formData.otherOccupation : formData.occupation,
+      ecosystem: formData.ecosystem,
+      reason: formData.reason,
+      status: 'Pending Review'
+    };
+
+    try {
+      // IMPORTANT: Replace this with your Google Apps Script Web App URL
+      const GOOGLE_SHEETS_URL = "https://script.google.com/macros/s/AKfycbyIb9RU53QyZJi9-4gza1qlNK-AWrWrtlvuvfVf55wpOIwMMcvjMf_ayKxY3NgtKD8s/exec";
+      
+      // Send to Google Sheets using no-cors mode
+      const response = await fetch(GOOGLE_SHEETS_URL, {
+        method: 'POST',
+        mode: 'no-cors', // This is required for Google Apps Script
+        headers: {
+          'Content-Type': 'text/plain', // Changed from application/json
+        },
+        body: JSON.stringify(submissionData)
+      });
+
+      // Note: With no-cors, we can't read the response, but the request will go through
+      // The script will handle email notification automatically
+
+      setSubmitted(true);
+      
+      // Reset form
+      setFormData({
+        firstName: '',
+        lastName: '',
+        email: '',
+        phone: '',
+        occupation: '',
+        otherOccupation: '',
+        ecosystem: '',
+        reason: ''
+      });
+      setCaptchaAnswer('');
+      setCaptchaVerified(false);
+    } catch (error) {
+      console.error('Submission error:', error);
+      alert('There was an error submitting your application. Please try again.');
+    }
+  };
+
+  if (submitted) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center p-4">
+        <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-8 max-w-md w-full text-center border border-white/20">
+          <div className="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-4">
+            <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+            </svg>
+          </div>
+          <h2 className="text-2xl font-bold text-white mb-2">Application Submitted!</h2>
+          <p className="text-gray-300 mb-6">
+            Thank you for your interest in joining our ecosystem. Your application is under review and we'll get back to you soon.
+          </p>
+          <button
+            onClick={() => setSubmitted(false)}
+            className="bg-gradient-to-r from-purple-600 to-blue-600 text-white px-6 py-2 rounded-lg hover:from-purple-700 hover:to-blue-700 transition-all"
+          >
+            Submit Another Application
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-black py-12 px-4">
+      <div className="max-w-3xl mx-auto">
+        <div className="bg-white/10 backdrop-blur-lg rounded-2xl shadow-2xl border border-white/20 overflow-hidden">
+          {/* Header */}
+          <div className="bg-primary/50 p-8 text-center">
+            <h1 className="text-3xl font-bold text-white mb-2">Join Our Ecosystem</h1>
+            <p className="text-purple-100">Complete the form below to start your onboarding journey</p>
+          </div>
+
+          {/* Form */}
+          <form onSubmit={handleSubmit} className="p-8 space-y-6">
+            {/* Name Fields */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label className="flex items-center text-sm font-medium text-gray-200 mb-2">
+                  <User className="w-4 h-4 mr-2" />
+                  First Name *
+                </label>
+                <input
+                  type="text"
+                  name="firstName"
+                  value={formData.firstName}
+                  onChange={handleChange}
+                  className="w-full px-4 py-3 bg-white/5 rounded-lg text-white placeholder-gray-400 focus:outline-none border focus:border-primary/50 transition-all"
+                  placeholder="Enter your first name"
+                />
+                {errors.firstName && <p className="text-red-400 text-sm mt-1">{errors.firstName}</p>}
+              </div>
+
+              <div>
+                <label className="flex items-center text-sm font-medium text-gray-200 mb-2">
+                  <User className="w-4 h-4 mr-2" />
+                  Last Name *
+                </label>
+                <input
+                  type="text"
+                  name="lastName"
+                  value={formData.lastName}
+                  onChange={handleChange}
+                  className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-primary/50 transition-all"
+                  placeholder="Enter your last name"
+                />
+                {errors.lastName && <p className="text-red-400 text-sm mt-1">{errors.lastName}</p>}
+              </div>
+            </div>
+
+            {/* Email */}
+            <div>
+              <label className="flex items-center text-sm font-medium text-gray-200 mb-2">
+                <Mail className="w-4 h-4 mr-2" />
+                Email *
+              </label>
+              <input
+                type="email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-primary/50 transition-all"
+                placeholder="your.email@example.com"
+              />
+              {errors.email && <p className="text-red-400 text-sm mt-1">{errors.email}</p>}
+            </div>
+
+            {/* Phone */}
+            <div>
+              <label className="flex items-center text-sm font-medium text-gray-200 mb-2">
+                <Phone className="w-4 h-4 mr-2" />
+                Phone *
+              </label>
+              <input
+                type="tel"
+                name="phone"
+                value={formData.phone}
+                onChange={handleChange}
+                className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-primary/50 transition-all"
+                placeholder="+91 "
+              />
+              {errors.phone && <p className="text-red-400 text-sm mt-1">{errors.phone}</p>}
+            </div>
+
+            {/* Occupation */}
+            <div>
+              <label className="flex items-center text-sm font-medium text-gray-200 mb-2">
+                <Briefcase className="w-4 h-4 mr-2" />
+                Occupation *
+              </label>
+              <select
+                name="occupation"
+                value={formData.occupation}
+                onChange={handleChange}
+                className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white focus:outline-none focus:border-primary/50 transition-all"
+              >
+                <option value="" className="bg-slate-800">Select your occupation</option>
+                {occupations.map(occ => (
+                  <option key={occ} value={occ} className="bg-slate-800">{occ}</option>
+                ))}
+              </select>
+              {errors.occupation && <p className="text-red-400 text-sm mt-1">{errors.occupation}</p>}
+            </div>
+
+            {/* Other Occupation (conditional) */}
+            {formData.occupation === 'Other' && (
+              <div>
+                <label className="text-sm font-medium text-gray-200 mb-2 block">
+                  Please Specify *
+                </label>
+                <input
+                  type="text"
+                  name="otherOccupation"
+                  value={formData.otherOccupation}
+                  onChange={handleChange}
+                  className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-primary/50 transition-all"
+                  placeholder="Enter your occupation"
+                />
+                {errors.otherOccupation && <p className="text-red-400 text-sm mt-1">{errors.otherOccupation}</p>}
+              </div>
+            )}
+
+            {/* Ecosystem Selection */}
+            <div>
+              <label className="flex items-center text-sm font-medium text-gray-200 mb-2">
+                <Target className="w-4 h-4 mr-2" />
+                Select the Ecosystem You Want to Join *
+              </label>
+              <select
+                name="ecosystem"
+                value={formData.ecosystem}
+                onChange={handleChange}
+                className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white focus:outline-none focus:border-primary/50 transition-all"
+              >
+                <option value="" className="bg-slate-800">Choose an ecosystem</option>
+                {ecosystems.map(eco => (
+                  <option key={eco} value={eco} className="bg-slate-800">{eco}</option>
+                ))}
+              </select>
+              {errors.ecosystem && <p className="text-red-400 text-sm mt-1">{errors.ecosystem}</p>}
+            </div>
+
+            {/* Reason */}
+            <div>
+              <label className="text-sm font-medium text-gray-200 mb-2 block">
+                Why Do You Want to Join the Above Ecosystem? * (Max 200 words)
+              </label>
+              <textarea
+                name="reason"
+                value={formData.reason}
+                onChange={handleChange}
+                rows={5}
+                className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-primary/50 transition-all resize-none"
+                placeholder="Tell us why you're interested in joining this ecosystem..."
+              />
+              <div className="flex justify-between items-center mt-1">
+                {errors.reason && <p className="text-red-400 text-sm">{errors.reason}</p>}
+                <p className="text-gray-400 text-sm ml-auto">
+                  {formData.reason.trim().split(/\s+/).filter(w => w).length} / 200 words
+                </p>
+              </div>
+            </div>
+
+            {/* Captcha */}
+            <div className="bg-white/5 border border-white/10 rounded-lg p-6">
+              <label className="flex items-center text-sm font-medium text-gray-200 mb-3">
+                <Shield className="w-4 h-4 mr-2" />
+                Security Verification *
+              </label>
+              <div className="flex items-center gap-4">
+                <div className="bg-primary/50 text-white px-6 py-3 rounded-lg font-mono text-lg">
+                  {num1} + {num2} = ?
+                </div>
+                <input
+                  type="text"
+                  value={captchaAnswer}
+                  onChange={handleCaptchaChange}
+                  className="w-24 px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white text-center focus:outline-none focus:border-primary/50 transition-all"
+                  placeholder="Answer"
+                />
+                {captchaVerified && (
+                  <svg className="w-6 h-6 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  </svg>
+                )}
+              </div>
+              {errors.captcha && <p className="text-red-400 text-sm mt-2">{errors.captcha}</p>}
+            </div>
+
+            {/* Submit Button */}
+            <button
+              type="submit"
+              className="w-full bg-primary/50 text-white py-4 rounded-lg font-semibold text-lg hover:from-purple-700 hover:to-blue-700 transform hover:scale-[1.02] transition-all shadow-lg hover:shadow-xl"
+            >
+              Submit Application
+            </button>
+
+            <p className="text-center text-gray-400 text-sm">
+              Your application will be reviewed manually. You'll receive a response at your registered email address.
+            </p>
+          </form>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default EcosystemForm;
