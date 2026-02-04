@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Mail, User, Phone, Briefcase, Target, Shield } from 'lucide-react';
+import { Mail, User, Phone, Briefcase, Target, Shield, Loader2 } from 'lucide-react';
 
 const EcosystemForm = () => {
   const [formData, setFormData] = useState({
@@ -16,12 +16,13 @@ const EcosystemForm = () => {
   const [captchaVerified, setCaptchaVerified] = useState(false);
   const [captchaAnswer, setCaptchaAnswer] = useState('');
   const [submitted, setSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
-
-  // Simple math captcha
-  const num1 = Math.floor(Math.random() * 100) + 1;
-  const num2 = Math.floor(Math.random() * 100) + 1;
-  const correctAnswer = num1 + num2;
+  const [captcha, setCaptcha] = useState(() => {
+    const n1 = Math.floor(Math.random() * 100) + 1;
+    const n2 = Math.floor(Math.random() * 100) + 1;
+    return { n1, n2, answer: n1 + n2 };
+  });
 
   const occupations = [
     'Technical Professional',
@@ -53,40 +54,195 @@ const EcosystemForm = () => {
       ...prev,
       [name]: value
     }));
-    // Clear error when user starts typing
-    if (errors[name]) {
-      setErrors(prev => ({ ...prev, [name]: '' }));
+    
+    // Real-time validation
+    validateField(name, value);
+  };
+
+  const validateField = (name: string, value: string) => {
+    const newErrors = { ...errors };
+
+    switch (name) {
+      case 'firstName':
+        if (!value.trim()) {
+          newErrors.firstName = 'First name is required';
+        } else if (!/^[a-zA-Z\s'-]+$/.test(value)) {
+          newErrors.firstName = 'First name can only contain letters, spaces, hyphens and apostrophes';
+        } else if (value.trim().length < 2) {
+          newErrors.firstName = 'First name must be at least 2 characters';
+        } else {
+          delete newErrors.firstName;
+        }
+        break;
+
+      case 'lastName':
+        if (!value.trim()) {
+          newErrors.lastName = 'Last name is required';
+        } else if (!/^[a-zA-Z\s'-]+$/.test(value)) {
+          newErrors.lastName = 'Last name can only contain letters, spaces, hyphens and apostrophes';
+        } else if (value.trim().length < 2) {
+          newErrors.lastName = 'Last name must be at least 2 characters';
+        } else {
+          delete newErrors.lastName;
+        }
+        break;
+
+      case 'email':
+        if (!value.trim()) {
+          newErrors.email = 'Email is required';
+        } else if (!/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(value)) {
+          newErrors.email = 'Please enter a valid email address (e.g., user@example.com)';
+        } else {
+          delete newErrors.email;
+        }
+        break;
+
+      case 'phone':
+        if (!value.trim()) {
+          newErrors.phone = 'Phone number is required';
+        } else {
+          // Remove all non-digit characters for validation
+          const digitsOnly = value.replace(/\D/g, '');
+          if (digitsOnly.length < 10) {
+            newErrors.phone = 'Phone number must be at least 10 digits';
+          } else if (digitsOnly.length > 15) {
+            newErrors.phone = 'Phone number cannot exceed 15 digits';
+          } else if (!/^[\d\s\-+()]+$/.test(value)) {
+            newErrors.phone = 'Phone number can only contain digits, spaces, +, -, and ()';
+          } else {
+            delete newErrors.phone;
+          }
+        }
+        break;
+
+      case 'occupation':
+        if (!value) {
+          newErrors.occupation = 'Please select your occupation';
+        } else {
+          delete newErrors.occupation;
+        }
+        break;
+
+      case 'otherOccupation':
+        if (formData.occupation === 'Other' && !value.trim()) {
+          newErrors.otherOccupation = 'Please specify your occupation';
+        } else if (formData.occupation === 'Other' && value.trim().length < 3) {
+          newErrors.otherOccupation = 'Occupation must be at least 3 characters';
+        } else {
+          delete newErrors.otherOccupation;
+        }
+        break;
+
+      case 'ecosystem':
+        if (!value) {
+          newErrors.ecosystem = 'Please select an ecosystem';
+        } else {
+          delete newErrors.ecosystem;
+        }
+        break;
+
+      case 'reason':
+        if (!value.trim()) {
+          newErrors.reason = 'Please provide a reason for joining';
+        } else if (value.trim().length < 20) {
+          newErrors.reason = 'Reason must be at least 20 characters';
+        } else {
+          const wordCount = value.trim().split(/\s+/).filter(w => w).length;
+          if (wordCount > 200) {
+            newErrors.reason = 'Reason must be 200 words or less';
+          } else {
+            delete newErrors.reason;
+          }
+        }
+        break;
     }
+
+    setErrors(newErrors);
   };
 
   const handleCaptchaChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setCaptchaAnswer(value);
-    setCaptchaVerified(parseInt(value) === correctAnswer);
+    
+    const isCorrect = Number(value) === captcha.answer;
+    setCaptchaVerified(isCorrect);
+    
+    const newErrors = { ...errors };
+    if (value && !isCorrect) {
+      newErrors.captcha = 'Incorrect answer. Please try again.';
+    } else if (isCorrect) {
+      delete newErrors.captcha;
+    }
+    setErrors(newErrors);
   };
 
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
 
-    if (!formData.firstName.trim()) newErrors.firstName = 'First name is required';
-    if (!formData.lastName.trim()) newErrors.lastName = 'Last name is required';
+    // Validate all fields
+    if (!formData.firstName.trim()) {
+      newErrors.firstName = 'First name is required';
+    } else if (!/^[a-zA-Z\s'-]+$/.test(formData.firstName)) {
+      newErrors.firstName = 'First name can only contain letters, spaces, hyphens and apostrophes';
+    } else if (formData.firstName.trim().length < 2) {
+      newErrors.firstName = 'First name must be at least 2 characters';
+    }
+
+    if (!formData.lastName.trim()) {
+      newErrors.lastName = 'Last name is required';
+    } else if (!/^[a-zA-Z\s'-]+$/.test(formData.lastName)) {
+      newErrors.lastName = 'Last name can only contain letters, spaces, hyphens and apostrophes';
+    } else if (formData.lastName.trim().length < 2) {
+      newErrors.lastName = 'Last name must be at least 2 characters';
+    }
+
     if (!formData.email.trim()) {
       newErrors.email = 'Email is required';
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      newErrors.email = 'Invalid email format';
+    } else if (!/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(formData.email)) {
+      newErrors.email = 'Please enter a valid email address (e.g., user@example.com)';
     }
-    if (!formData.phone.trim()) newErrors.phone = 'Phone number is required';
-    if (!formData.occupation) newErrors.occupation = 'Occupation is required';
+
+    if (!formData.phone.trim()) {
+      newErrors.phone = 'Phone number is required';
+    } else {
+      const digitsOnly = formData.phone.replace(/\D/g, '');
+      if (digitsOnly.length < 10) {
+        newErrors.phone = 'Phone number must be at least 10 digits';
+      } else if (digitsOnly.length > 15) {
+        newErrors.phone = 'Phone number cannot exceed 15 digits';
+      } else if (!/^[\d\s\-+()]+$/.test(formData.phone)) {
+        newErrors.phone = 'Phone number can only contain digits, spaces, +, -, and ()';
+      }
+    }
+
+    if (!formData.occupation) {
+      newErrors.occupation = 'Please select your occupation';
+    }
+
     if (formData.occupation === 'Other' && !formData.otherOccupation.trim()) {
       newErrors.otherOccupation = 'Please specify your occupation';
+    } else if (formData.occupation === 'Other' && formData.otherOccupation.trim().length < 3) {
+      newErrors.otherOccupation = 'Occupation must be at least 3 characters';
     }
-    if (!formData.ecosystem) newErrors.ecosystem = 'Ecosystem selection is required';
+
+    if (!formData.ecosystem) {
+      newErrors.ecosystem = 'Please select an ecosystem';
+    }
+
     if (!formData.reason.trim()) {
-      newErrors.reason = 'Reason is required';
-    } else if (formData.reason.trim().split(/\s+/).length > 200) {
-      newErrors.reason = 'Reason must be 200 words or less';
+      newErrors.reason = 'Please provide a reason for joining';
+    } else if (formData.reason.trim().length < 20) {
+      newErrors.reason = 'Reason must be at least 20 characters';
+    } else {
+      const wordCount = formData.reason.trim().split(/\s+/).filter(w => w).length;
+      if (wordCount > 200) {
+        newErrors.reason = 'Reason must be 200 words or less';
+      }
     }
-    if (!captchaVerified) newErrors.captcha = 'Please solve the captcha correctly';
+
+    if (!captchaVerified) {
+      newErrors.captcha = 'Please solve the captcha correctly';
+    }
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -96,10 +252,16 @@ const EcosystemForm = () => {
     e.preventDefault();
 
     if (!validateForm()) {
+      // Scroll to first error
+      const firstError = document.querySelector('.text-red-400');
+      if (firstError) {
+        firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
       return;
     }
 
-    // Prepare data for Google Sheets
+    setIsSubmitting(true);
+
     const submissionData = {
       timestamp: new Date().toISOString(),
       firstName: formData.firstName,
@@ -113,21 +275,19 @@ const EcosystemForm = () => {
     };
 
     try {
-      // IMPORTANT: Replace this with your Google Apps Script Web App URL
       const GOOGLE_SHEETS_URL = "https://script.google.com/macros/s/AKfycbyIb9RU53QyZJi9-4gza1qlNK-AWrWrtlvuvfVf55wpOIwMMcvjMf_ayKxY3NgtKD8s/exec";
       
-      // Send to Google Sheets using no-cors mode
-      const response = await fetch(GOOGLE_SHEETS_URL, {
+      await fetch(GOOGLE_SHEETS_URL, {
         method: 'POST',
-        mode: 'no-cors', // This is required for Google Apps Script
+        mode: 'no-cors',
         headers: {
-          'Content-Type': 'text/plain', // Changed from application/json
+          'Content-Type': 'text/plain',
         },
         body: JSON.stringify(submissionData)
       });
 
-      // Note: With no-cors, we can't read the response, but the request will go through
-      // The script will handle email notification automatically
+      // Small delay to ensure the request completes
+      await new Promise(resolve => setTimeout(resolve, 1000));
 
       setSubmitted(true);
       
@@ -144,17 +304,26 @@ const EcosystemForm = () => {
       });
       setCaptchaAnswer('');
       setCaptchaVerified(false);
+      setErrors({});
+      
+      // Generate new captcha
+      const n1 = Math.floor(Math.random() * 100) + 1;
+      const n2 = Math.floor(Math.random() * 100) + 1;
+      setCaptcha({ n1, n2, answer: n1 + n2 });
+      
     } catch (error) {
       console.error('Submission error:', error);
       alert('There was an error submitting your application. Please try again.');
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
   if (submitted) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center p-4">
+      <div className="min-h-screen bg-black flex items-center justify-center p-4">
         <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-8 max-w-md w-full text-center border border-white/20">
-          <div className="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-4">
+          <div className="w-16 h-16 bg-primary/50 rounded-full flex items-center justify-center mx-auto mb-4">
             <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
             </svg>
@@ -165,7 +334,7 @@ const EcosystemForm = () => {
           </p>
           <button
             onClick={() => setSubmitted(false)}
-            className="bg-gradient-to-r from-purple-600 to-blue-600 text-white px-6 py-2 rounded-lg hover:from-purple-700 hover:to-blue-700 transition-all"
+            className="bg-primary/50 text-white px-6 py-2 rounded-lg hover:from-purple-700 hover:to-blue-700 transition-all"
           >
             Submit Another Application
           </button>
@@ -198,7 +367,9 @@ const EcosystemForm = () => {
                   name="firstName"
                   value={formData.firstName}
                   onChange={handleChange}
-                  className="w-full px-4 py-3 bg-white/5 rounded-lg text-white placeholder-gray-400 focus:outline-none border focus:border-primary/50 transition-all"
+                  className={`w-full px-4 py-3 bg-white/5 rounded-lg text-white placeholder-gray-400 focus:outline-none border transition-all ${
+                    errors.firstName ? 'border-red-500' : 'border-white/10 focus:border-purple-500'
+                  }`}
                   placeholder="Enter your first name"
                 />
                 {errors.firstName && <p className="text-red-400 text-sm mt-1">{errors.firstName}</p>}
@@ -214,7 +385,9 @@ const EcosystemForm = () => {
                   name="lastName"
                   value={formData.lastName}
                   onChange={handleChange}
-                  className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-primary/50 transition-all"
+                  className={`w-full px-4 py-3 bg-white/5 rounded-lg text-white placeholder-gray-400 focus:outline-none border transition-all ${
+                    errors.lastName ? 'border-red-500' : 'border-white/10 focus:border-purple-500'
+                  }`}
                   placeholder="Enter your last name"
                 />
                 {errors.lastName && <p className="text-red-400 text-sm mt-1">{errors.lastName}</p>}
@@ -232,7 +405,9 @@ const EcosystemForm = () => {
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
-                className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-primary/50 transition-all"
+                className={`w-full px-4 py-3 bg-white/5 rounded-lg text-white placeholder-gray-400 focus:outline-none border transition-all ${
+                  errors.email ? 'border-red-500' : 'border-white/10 focus:border-purple-500'
+                }`}
                 placeholder="your.email@example.com"
               />
               {errors.email && <p className="text-red-400 text-sm mt-1">{errors.email}</p>}
@@ -249,7 +424,9 @@ const EcosystemForm = () => {
                 name="phone"
                 value={formData.phone}
                 onChange={handleChange}
-                className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-primary/50 transition-all"
+                className={`w-full px-4 py-3 bg-white/5 rounded-lg text-white placeholder-gray-400 focus:outline-none border transition-all ${
+                  errors.phone ? 'border-red-500' : 'border-white/10 focus:border-purple-500'
+                }`}
                 placeholder="+91 "
               />
               {errors.phone && <p className="text-red-400 text-sm mt-1">{errors.phone}</p>}
@@ -265,7 +442,9 @@ const EcosystemForm = () => {
                 name="occupation"
                 value={formData.occupation}
                 onChange={handleChange}
-                className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white focus:outline-none focus:border-primary/50 transition-all"
+                className={`w-full px-4 py-3 bg-white/5 rounded-lg text-white focus:outline-none border transition-all ${
+                  errors.occupation ? 'border-red-500' : 'border-white/10 focus:border-purple-500'
+                }`}
               >
                 <option value="" className="bg-slate-800">Select your occupation</option>
                 {occupations.map(occ => (
@@ -286,7 +465,9 @@ const EcosystemForm = () => {
                   name="otherOccupation"
                   value={formData.otherOccupation}
                   onChange={handleChange}
-                  className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-primary/50 transition-all"
+                  className={`w-full px-4 py-3 bg-white/5 rounded-lg text-white placeholder-gray-400 focus:outline-none border transition-all ${
+                    errors.otherOccupation ? 'border-red-500' : 'border-white/10 focus:border-purple-500'
+                  }`}
                   placeholder="Enter your occupation"
                 />
                 {errors.otherOccupation && <p className="text-red-400 text-sm mt-1">{errors.otherOccupation}</p>}
@@ -303,7 +484,9 @@ const EcosystemForm = () => {
                 name="ecosystem"
                 value={formData.ecosystem}
                 onChange={handleChange}
-                className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white focus:outline-none focus:border-primary/50 transition-all"
+                className={`w-full px-4 py-3 bg-white/5 rounded-lg text-white focus:outline-none border transition-all ${
+                  errors.ecosystem ? 'border-red-500' : 'border-white/10 focus:border-purple-500'
+                }`}
               >
                 <option value="" className="bg-slate-800">Choose an ecosystem</option>
                 {ecosystems.map(eco => (
@@ -323,12 +506,20 @@ const EcosystemForm = () => {
                 value={formData.reason}
                 onChange={handleChange}
                 rows={5}
-                className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-primary/50 transition-all resize-none"
+                className={`w-full px-4 py-3 bg-white/5 rounded-lg text-white placeholder-gray-400 focus:outline-none border transition-all resize-none ${
+                  errors.reason ? 'border-red-500' : 'border-white/10 focus:border-purple-500'
+                }`}
                 placeholder="Tell us why you're interested in joining this ecosystem..."
               />
               <div className="flex justify-between items-center mt-1">
-                {errors.reason && <p className="text-red-400 text-sm">{errors.reason}</p>}
-                <p className="text-gray-400 text-sm ml-auto">
+                <div className="flex-1">
+                  {errors.reason && <p className="text-red-400 text-sm">{errors.reason}</p>}
+                </div>
+                <p className={`text-sm ml-auto ${
+                  formData.reason.trim().split(/\s+/).filter(w => w).length > 200 
+                    ? 'text-red-400' 
+                    : 'text-gray-400'
+                }`}>
                   {formData.reason.trim().split(/\s+/).filter(w => w).length} / 200 words
                 </p>
               </div>
@@ -342,13 +533,15 @@ const EcosystemForm = () => {
               </label>
               <div className="flex items-center gap-4">
                 <div className="bg-primary/50 text-white px-6 py-3 rounded-lg font-mono text-lg">
-                  {num1} + {num2} = ?
+                  {captcha.n1} + {captcha.n2} = ?
                 </div>
                 <input
                   type="text"
                   value={captchaAnswer}
                   onChange={handleCaptchaChange}
-                  className="w-24 px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white text-center focus:outline-none focus:border-primary/50 transition-all"
+                  className={`w-24 px-4 py-3 bg-white/5 rounded-lg text-white text-center focus:outline-none border transition-all ${
+                    errors.captcha ? 'border-red-500' : 'border-white/10 focus:border-purple-500'
+                  }`}
                   placeholder="Answer"
                 />
                 {captchaVerified && (
@@ -363,9 +556,21 @@ const EcosystemForm = () => {
             {/* Submit Button */}
             <button
               type="submit"
-              className="w-full bg-primary/50 text-white py-4 rounded-lg font-semibold text-lg hover:from-purple-700 hover:to-blue-700 transform hover:scale-[1.02] transition-all shadow-lg hover:shadow-xl"
+              disabled={isSubmitting}
+              className={`w-full py-4 rounded-lg font-semibold text-lg transform transition-all shadow-lg ${
+                isSubmitting
+                  ? 'bg-primary/50 cursor-not-allowed'
+                  : 'bg-primary/50 hover:from-purple-700 hover:to-blue-700 hover:scale-[1.02] hover:shadow-xl'
+              } text-white flex items-center justify-center gap-2`}
             >
-              Submit Application
+              {isSubmitting ? (
+                <>
+                  <Loader2 className="w-5 h-5 animate-spin" />
+                  Submitting...
+                </>
+              ) : (
+                'Submit Application'
+              )}
             </button>
 
             <p className="text-center text-gray-400 text-sm">
