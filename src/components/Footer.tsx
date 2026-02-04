@@ -45,22 +45,22 @@ const Footer = () => {
           <div>
             <ul className="space-y-3">
               <li>
-                <a href="#privacy" className="text-foreground/70 hover:text-foreground transition-colors">
+                <a href="/privacy" className="text-foreground/70 hover:text-foreground transition-colors">
                   Privacy Policy
                 </a>
               </li>
               <li>
-                <a href="#cookie" className="text-foreground/70 hover:text-foreground transition-colors">
+                <a href="/cookie" className="text-foreground/70 hover:text-foreground transition-colors">
                   Cookie Policy
                 </a>
               </li>
               <li>
-                <a href="#terms" className="text-foreground/70 hover:text-foreground transition-colors">
+                <a href="/general" className="text-foreground/70 hover:text-foreground transition-colors">
                   General Terms
                 </a>
               </li>
               <li>
-                <a href="#refund" className="text-foreground/70 hover:text-foreground transition-colors">
+                <a href="/refund" className="text-foreground/70 hover:text-foreground transition-colors">
                   Refund Policy
                 </a>
               </li>
@@ -85,7 +85,7 @@ const Footer = () => {
           {/* Column 4: CTA */}
           <div className="flex items-center justify-end">
             <a
-              href="https://mail.google.com/mail/?view=cm&fs=1&to=info@digiculum.com"
+              href="mailto:info@digiculum.com"
               className="btn-primary text-center"
               target="_blank"
             >
