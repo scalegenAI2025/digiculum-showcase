@@ -14,7 +14,7 @@ import GeneralTerms from "./components/GeneralTerms";
 import RefundPolicy from "./components/RefundPolicy";
 import EcosystemForm from "./components/ecosystem/EcosystemForm";
 import EssentialCompetenciesOfAi from "./components/courses/instructor-courses/EssentialCompetenciesOfAi";
-import GenerativeAiTechnicalMasterclass from "./components/courses/instructor-courses/GenerativeAiTechnicalMasterclass";
+import GenerativeAiTechnicalMasterclass from "./components/courses/instructor-courses/Generativeaitechnicalmasterclass";
 import AiGenaiTransformationStrategy from "./components/courses/instructor-courses/AiGenaiTransformationStrategy";
 import CultivatingAiGenaiMindset from "./components/courses/instructor-courses/CultivatingAiGenaiMindset";
 import AiGenaiOperationalReadiness from "./components/courses/instructor-courses/AiGenaiOperationalReadiness";

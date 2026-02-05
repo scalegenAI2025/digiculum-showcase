@@ -418,9 +418,11 @@ const EssentialCompetenciesOfAi = () => {
               <div className="bg-card border border-border rounded-lg p-4">
                 <p className="font-semibold text-foreground mb-2">Based on his book</p>
                 <p className="text-sm text-muted-foreground mb-3">Available on Amazon</p>
+                <a target="_blank" href="https://www.amazon.com/dp/B0CT4J7H1D?ref=cm_sw_r_ffobk_cp_ud_dp_SN58ATAJN43WRWFFBSQX&ref_=cm_sw_r_ffobk_cp_ud_dp_SN58ATAJN43WRWFFBSQX&social_share=cm_sw_r_ffobk_cp_ud_dp_SN58ATAJN43WRWFFBSQX&bestFormat=true&csmig=1">
                 <Button variant="outline" size="sm">
                   Order →
                 </Button>
+                </a>
               </div>
             </div>
           </CardContent>

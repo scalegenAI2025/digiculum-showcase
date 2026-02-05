@@ -582,9 +582,11 @@ const AiGenaiOperationalReadiness = () => {
                 <p className="text-sm text-muted-foreground mb-3">
                   Available on Amazon
                 </p>
+                <a target="_blank" href="https://www.amazon.com/Scaling-Generative-Operational-Readiness-Enterprises/dp/1637427980">
                 <Button variant="outline" size="sm">
                   Order →
                 </Button>
+                </a>
               </div>
             </div>
           </CardContent>

@@ -444,9 +444,11 @@ const GenerativeAiTechnicalMasterclass = () => {
               <div className="bg-card border border-border rounded-lg p-4">
                 <p className="font-semibold text-foreground mb-2">Based on his book</p>
                 <p className="text-sm text-muted-foreground mb-3">Available on Amazon</p>
+                <a target="_blank" href="https://www.amazon.com/Scaling-Generative-Operational-Readiness-Enterprises/dp/1637427980">
                 <Button variant="outline" size="sm">
                   Order →
                 </Button>
+                </a>
               </div>
             </div>
           </CardContent>
