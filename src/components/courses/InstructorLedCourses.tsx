@@ -3,7 +3,7 @@ import leadershipBg from "@/assets/instruction-based-courses/leadership.png";
 import techmasterclassBg from "@/assets/instruction-based-courses/tech_masterclass.png";
 import strategyBg from "@/assets/instruction-based-courses/strategy.png";
 import mindsetBg from "@/assets/instruction-based-courses/Mindset.png";
-import opsreadinessBg from "@/assets/instruction-based-courses/ops_readiness.png"
+import opsreadinessBg from "@/assets/instruction-based-courses/ops_readiness.png";
 
 const instructorCourses = [
   {
@@ -32,7 +32,7 @@ const instructorCourses = [
     audience: "For executives, managers, and early career professionals",
     duration: "4 hours",
     image: mindsetBg,
-    link: "/courses/AI/GenAI-Operational-Readiness",
+    link: "/courses/Cultivating-AI/GenAI-Mindset",
   },
   {
     title: "AI/GenAI Operational Readiness",
@@ -43,16 +43,13 @@ const instructorCourses = [
   },
 ];
 
-
 const InstructorLedCourses = () => {
   const navigate = useNavigate();
 
   return (
     <section id="instructor-led" className="py-20 bg-black">
       <div className="container mx-auto px-6">
-        <h2 className="heading-lg mb-10 text-white">
-          Instructor-led Courses
-        </h2>
+        <h2 className="heading-lg mb-10 text-white">Instructor-led Courses</h2>
 
         <div className="grid md:grid-cols-3 gap-8">
           {instructorCourses.map((course, index) => (
@@ -75,9 +72,7 @@ const InstructorLedCourses = () => {
                   {course.title}
                 </h3>
 
-                <p className="text-sm text-white/70 mb-3">
-                  {course.audience}
-                </p>
+                <p className="text-sm text-white/70 mb-3">{course.audience}</p>
 
                 <div className="text-sm text-white/70 mb-4">
                   {course.duration}
