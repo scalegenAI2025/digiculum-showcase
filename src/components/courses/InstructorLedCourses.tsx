@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import leadershipBg from "@/assets/instruction-based-courses/leadership.png";
 import techmasterclassBg from "@/assets/instruction-based-courses/tech_masterclass.png";
 import strategyBg from "@/assets/instruction-based-courses/strategy.png";
@@ -10,34 +11,42 @@ const instructorCourses = [
     audience: "For executives and middle managers",
     duration: "12 hours",
     image: leadershipBg,
+    link: "/courses/Essential-Competencies-of-AI/GenAI-Leader",
   },
   {
     title: "Generative AI Technical Masterclass",
     audience: "For technical professionals",
     duration: "18 hours",
     image: techmasterclassBg,
+    link: "/courses/Generative-AI-Technical-Masterclass",
   },
   {
     title: "AI/GenAI Transformation Strategy",
     audience: "For executives and middle managers",
     duration: "6 hours",
     image: strategyBg,
+    link: "/courses/AI/GenAI-Transformation-Strategy",
   },
   {
     title: "Cultivating AI/GenAI Mindset",
     audience: "For executives, managers, and early career professionals",
     duration: "4 hours",
     image: mindsetBg,
+    link: "/courses/AI/GenAI-Operational-Readiness",
   },
   {
     title: "AI/GenAI Operational Readiness",
     audience: "For executives and middle managers",
     duration: "12 hours",
     image: opsreadinessBg,
+    link: "/courses/AI/GenAI-Operational-Readiness",
   },
 ];
 
+
 const InstructorLedCourses = () => {
+  const navigate = useNavigate();
+
   return (
     <section id="instructor-led" className="py-20 bg-black">
       <div className="container mx-auto px-6">
@@ -49,7 +58,7 @@ const InstructorLedCourses = () => {
           {instructorCourses.map((course, index) => (
             <div
               key={index}
-              className="relative h-[380px] rounded-xl overflow-hidden border border-white/10 
+              className="relative h-[380px] rounded-xl overflow-hidden border border-white/10
                          hover:border-white/30 transition-all duration-300 group"
               style={{
                 backgroundImage: `url(${course.image})`,
@@ -57,9 +66,8 @@ const InstructorLedCourses = () => {
                 backgroundPosition: "center",
               }}
             >
-              {/* Dark overlay */}
-              <div className="absolute inset-0 bg-gradient-to-t 
-                              from-black/90 via-black/60 to-black/20" />
+              {/* Overlay */}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/60 to-black/20" />
 
               {/* Content */}
               <div className="relative z-10 h-full flex flex-col justify-end p-6">
@@ -76,8 +84,8 @@ const InstructorLedCourses = () => {
                 </div>
 
                 <button
-                  className="w-fit px-5 py-2 rounded-full
-                             text-sm btn-primary"
+                  onClick={() => navigate(course.link)}
+                  className="w-fit px-5 py-2 rounded-full text-sm btn-primary"
                 >
                   Explore
                 </button>

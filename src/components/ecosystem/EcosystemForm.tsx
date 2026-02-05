@@ -446,9 +446,9 @@ const EcosystemForm = () => {
                   errors.occupation ? 'border-red-500' : 'border-white/10 focus:border-primary/50'
                 }`}
               >
-                <option value="" className="bg-slate-800">Select your occupation</option>
+                <option value="" className="bg-primary">Select your occupation</option>
                 {occupations.map(occ => (
-                  <option key={occ} value={occ} className="bg-slate-800">{occ}</option>
+                  <option key={occ} value={occ} className="bg-black hover:bg-white">{occ}</option>
                 ))}
               </select>
               {errors.occupation && <p className="text-red-400 text-sm mt-1">{errors.occupation}</p>}
@@ -488,9 +488,9 @@ const EcosystemForm = () => {
                   errors.ecosystem ? 'border-red-500' : 'border-white/10 focus:border-primary/50'
                 }`}
               >
-                <option value="" className="bg-slate-800">Choose an ecosystem</option>
+                <option value="" className="bg-primary">Choose an ecosystem</option>
                 {ecosystems.map(eco => (
-                  <option key={eco} value={eco} className="bg-slate-800">{eco}</option>
+                  <option key={eco} value={eco} className="bg-black">{eco}</option>
                 ))}
               </select>
               {errors.ecosystem && <p className="text-red-400 text-sm mt-1">{errors.ecosystem}</p>}

@@ -13,7 +13,12 @@ import CookiePolicy from "./components/CookiePolicy";
 import GeneralTerms from "./components/GeneralTerms";
 import RefundPolicy from "./components/RefundPolicy";
 import EcosystemForm from "./components/ecosystem/EcosystemForm";
+import EssentialCompetenciesOfAi from "./components/courses/instructor-courses/EssentialCompetenciesOfAi";
+import GenerativeAiTechnicalMasterclass from "./components/courses/instructor-courses/Generativeaitechnicalmasterclass";
+import AiGenaiTransformationStrategy from "./components/courses/instructor-courses/AiGenaiTransformationStrategy";
+import CultivatingAiGenaiMindset from "./components/courses/instructor-courses/CultivatingAiGenaiMindset";
 import NotFound from "./pages/NotFound";
+import ScrollToTop from "./components/ScrollToTop";
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -22,6 +27,7 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
+      <ScrollToTop />
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/leaders" element={<Leaders />} />
@@ -33,6 +39,10 @@ const App = () => (
           <Route path="/general" element={<GeneralTerms />} />
           <Route path="/refund" element={<RefundPolicy />} />
           <Route path="/ecosystemform" element={<EcosystemForm />} />
+          <Route path="/courses/Essential-Competencies-of-AI/GenAI-Leader" element={<EssentialCompetenciesOfAi />} />
+          <Route path="/courses/Generative-AI-Technical-Masterclass" element={<GenerativeAiTechnicalMasterclass />} />
+          <Route path="/courses/AI/GenAI-Transformation-Strategy" element={<AiGenaiTransformationStrategy />} />
+          <Route path="/courses/AI/GenAI-Operational-Readiness" element={<CultivatingAiGenaiMindset />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
