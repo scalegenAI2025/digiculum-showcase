@@ -3,6 +3,13 @@ import Footer from "@/components/Footer";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
+import bg from '@/assets/instruction-based-courses/Technical-Masterclass/bg.jpg'
+import amazon from '@/assets/instruction-based-courses/Technical-Masterclass/amazon.webp'
+import coaching from '@/assets/instruction-based-courses/Essential-Competencies/coaching.png'
+import amit from '@/assets/instruction-based-courses/Essential-Competencies/amit.png'
+import qrCode from '@/assets/instruction-based-courses/Essential-Competencies/qr-code.png'
+import superEcosystem from '@/assets/instruction-based-courses/Essential-Competencies/super-ecosystem.jpg'
+
 import { 
   Cpu, 
   Users, 
@@ -30,9 +37,13 @@ const GenerativeAiTechnicalMasterclass = () => {
     <div className="min-h-screen bg-background">
       <Navbar />
       
-      {/* Hero Section */}
-      <section className="pt-32 pb-16 px-6">
-        <div className="container mx-auto max-w-6xl text-center">
+      {/* Hero Section with Background Image */}
+      <section 
+        className="pt-32 pb-16 px-6 relative bg-cover bg-center"
+        style={{ backgroundImage: `url(${bg})` }}
+      >
+        <div className="absolute inset-0 bg-background/80 backdrop-blur-sm"></div>
+        <div className="container mx-auto max-w-6xl text-center relative z-10">
           <div className="inline-flex items-center gap-2 bg-primary/10 border border-primary/30 rounded-full px-4 py-2 mb-6">
             <Cpu className="w-4 h-4 text-primary" />
             <span className="text-sm text-primary">Technical Masterclass</span>
@@ -298,7 +309,7 @@ const GenerativeAiTechnicalMasterclass = () => {
           </CardContent>
         </Card>
 
-        {/* Coaching */}
+        {/* Coaching with Image */}
         <Card className="mb-8 bg-card/50 border-border/50">
           <CardHeader>
             <CardTitle className="flex items-center gap-3 text-xl">
@@ -307,69 +318,82 @@ const GenerativeAiTechnicalMasterclass = () => {
             </CardTitle>
           </CardHeader>
           <CardContent className="text-foreground/80 space-y-6">
-            <p className="mb-4">Three types of technical professionals would enroll in the course:</p>
-            
-            <div className="space-y-4">
-              <div className="bg-card border border-border rounded-lg p-4">
-                <div className="flex items-start gap-3">
-                  <div className="bg-primary/10 rounded-full p-2 mt-1">
-                    <span className="font-bold text-primary">A</span>
+            <div className="grid md:grid-cols-2 gap-6 items-start">
+              <div className="space-y-4">
+                <p className="mb-4">Three types of technical professionals would enroll in the course:</p>
+                
+                <div className="space-y-4">
+                  <div className="bg-card border border-border rounded-lg p-4">
+                    <div className="flex items-start gap-3">
+                      <div className="bg-primary/10 rounded-full p-2 mt-1">
+                        <span className="font-bold text-primary">A</span>
+                      </div>
+                      <div className="flex-1">
+                        <h5 className="font-semibold text-foreground mb-2">Type A: Same role, same job description, No AI/GenAI</h5>
+                        <p className="text-sm">Coaching will include transition to Type B or Type C, based on participant's interest</p>
+                      </div>
+                    </div>
                   </div>
-                  <div className="flex-1">
-                    <h5 className="font-semibold text-foreground mb-2">Type A: Same role, same job description, No AI/GenAI</h5>
-                    <p className="text-sm">Coaching will include transition to Type B or Type C, based on participant's interest</p>
+
+                  <div className="bg-card border border-border rounded-lg p-4">
+                    <div className="flex items-start gap-3">
+                      <div className="bg-primary/10 rounded-full p-2 mt-1">
+                        <span className="font-bold text-primary">B</span>
+                      </div>
+                      <div className="flex-1">
+                        <h5 className="font-semibold text-foreground mb-2">Type B: Same role, modified job description, Partial AI/GenAI</h5>
+                        <p className="text-sm">Coaching will include dealing with change in job description</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="bg-card border border-border rounded-lg p-4">
+                    <div className="flex items-start gap-3">
+                      <div className="bg-primary/10 rounded-full p-2 mt-1">
+                        <span className="font-bold text-primary">C</span>
+                      </div>
+                      <div className="flex-1">
+                        <h5 className="font-semibold text-foreground mb-2">Type C: New role, new job description, Full AI/GenAI</h5>
+                        <p className="text-sm">Coaching will include bringing innovations and productivity into daily jobs</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <Separator className="my-6" />
+
+                <div>
+                  <h5 className="font-semibold text-foreground mb-4">The coaching format comprises:</h5>
+                  <div className="space-y-3">
+                    <div className="bg-muted/30 rounded p-3">
+                      <p><strong className="text-primary">Commitment contract</strong> with the coach</p>
+                    </div>
+                    <div className="bg-muted/30 rounded p-3">
+                      <p><strong className="text-primary">Continuous check-ins</strong> on implementation of the technical concepts</p>
+                    </div>
+                    <div className="bg-muted/30 rounded p-3">
+                      <p><strong className="text-primary">Problem-solving</strong> and behavior building</p>
+                    </div>
+                    <div className="bg-muted/30 rounded p-3">
+                      <p><strong className="text-primary">Continuous feedback</strong> on the technical competence development</p>
+                    </div>
                   </div>
                 </div>
               </div>
 
-              <div className="bg-card border border-border rounded-lg p-4">
-                <div className="flex items-start gap-3">
-                  <div className="bg-primary/10 rounded-full p-2 mt-1">
-                    <span className="font-bold text-primary">B</span>
-                  </div>
-                  <div className="flex-1">
-                    <h5 className="font-semibold text-foreground mb-2">Type B: Same role, modified job description, Partial AI/GenAI</h5>
-                    <p className="text-sm">Coaching will include dealing with change in job description</p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="bg-card border border-border rounded-lg p-4">
-                <div className="flex items-start gap-3">
-                  <div className="bg-primary/10 rounded-full p-2 mt-1">
-                    <span className="font-bold text-primary">C</span>
-                  </div>
-                  <div className="flex-1">
-                    <h5 className="font-semibold text-foreground mb-2">Type C: New role, new job description, Full AI/GenAI</h5>
-                    <p className="text-sm">Coaching will include bringing innovations and productivity into daily jobs</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <Separator className="my-6" />
-
-            <div>
-              <h5 className="font-semibold text-foreground mb-4">The coaching format comprises:</h5>
-              <div className="space-y-3">
-                <div className="bg-muted/30 rounded p-3">
-                  <p><strong className="text-primary">Commitment contract</strong> with the coach</p>
-                </div>
-                <div className="bg-muted/30 rounded p-3">
-                  <p><strong className="text-primary">Continuous check-ins</strong> on implementation of the technical concepts</p>
-                </div>
-                <div className="bg-muted/30 rounded p-3">
-                  <p><strong className="text-primary">Problem-solving</strong> and behavior building</p>
-                </div>
-                <div className="bg-muted/30 rounded p-3">
-                  <p><strong className="text-primary">Continuous feedback</strong> on the technical competence development</p>
-                </div>
+              {/* Coaching Image */}
+              <div className="flex items-center justify-center">
+                <img 
+                  src={coaching} 
+                  alt="Coaching Framework" 
+                  className="w-full max-w-md rounded-lg border border-border shadow-lg"
+                />
               </div>
             </div>
           </CardContent>
         </Card>
 
-        {/* Ecosystem */}
+        {/* Ecosystem with Image */}
         <Card className="mb-8 bg-card/50 border-border/50">
           <CardHeader>
             <CardTitle className="flex items-center gap-3 text-xl">
@@ -378,42 +402,55 @@ const GenerativeAiTechnicalMasterclass = () => {
             </CardTitle>
           </CardHeader>
           <CardContent className="text-foreground/80 space-y-4">
-            <p>
-              An ecosystem is a cohort where people collaborate to seek and share knowledge, skills, and experiences with each other.
-            </p>
-            
-            <div className="bg-primary/5 border border-primary/20 rounded-lg p-4 space-y-2">
-              <div className="flex items-start gap-2">
-                <CheckCircle2 className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
-                <p>Collaboration is a powerful and effective learning technique</p>
-              </div>
-              <div className="flex items-start gap-2">
-                <CheckCircle2 className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
-                <p>Future of work will be largely dependent on an individual's ability to work in ecosystems</p>
-              </div>
-              <div className="flex items-start gap-2">
-                <CheckCircle2 className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
-                <p>Research shows that an individual learns 3X faster through ecosystems than standalone</p>
-              </div>
-              <div className="flex items-start gap-2">
-                <CheckCircle2 className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
-                <p>AI/GenAI transformation requires diverse skillsets and expertise to be leveraged through ecosystems</p>
-              </div>
-              <div className="flex items-start gap-2">
-                <CheckCircle2 className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
-                <p>Ecosystems enable a paradigm shift in the mindset, from being an employee of a firm to an employee of an industry</p>
-              </div>
-            </div>
+            <div className="grid md:grid-cols-2 gap-6 items-start">
+              <div className="space-y-4">
+                <p>
+                  An ecosystem is a cohort where people collaborate to seek and share knowledge, skills, and experiences with each other.
+                </p>
+                
+                <div className="bg-primary/5 border border-primary/20 rounded-lg p-4 space-y-2">
+                  <div className="flex items-start gap-2">
+                    <CheckCircle2 className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
+                    <p>Collaboration is a powerful and effective learning technique</p>
+                  </div>
+                  <div className="flex items-start gap-2">
+                    <CheckCircle2 className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
+                    <p>Future of work will be largely dependent on an individual's ability to work in ecosystems</p>
+                  </div>
+                  <div className="flex items-start gap-2">
+                    <CheckCircle2 className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
+                    <p>Research shows that an individual learns 3X faster through ecosystems than standalone</p>
+                  </div>
+                  <div className="flex items-start gap-2">
+                    <CheckCircle2 className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
+                    <p>AI/GenAI transformation requires diverse skillsets and expertise to be leveraged through ecosystems</p>
+                  </div>
+                  <div className="flex items-start gap-2">
+                    <CheckCircle2 className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
+                    <p>Ecosystems enable a paradigm shift in the mindset, from being an employee of a firm to an employee of an industry</p>
+                  </div>
+                </div>
 
-            <div className="bg-muted/50 rounded-lg p-4 mt-4">
-              <p className="font-semibold text-foreground">
-                After completion of the course, participants shall be automatically enrolled in an ecosystem of professionals belonging to different industries and geographical locations.
-              </p>
+                <div className="bg-muted/50 rounded-lg p-4 mt-4">
+                  <p className="font-semibold text-foreground">
+                    After completion of the course, participants shall be automatically enrolled in an ecosystem of professionals belonging to different industries and geographical locations.
+                  </p>
+                </div>
+              </div>
+
+              {/* Ecosystem Image */}
+              <div className="flex items-center justify-center h-full min-h-[300px]">
+                <img 
+                  src={superEcosystem} 
+                  alt="Super Ecosystem" 
+                  className="w-full max-w-md rounded-lg border border-border shadow-lg"
+                />
+              </div>
             </div>
           </CardContent>
         </Card>
 
-        {/* Instructor */}
+        {/* Instructor with Images */}
         <Card className="mb-8 bg-card/50 border-border/50">
           <CardHeader>
             <CardTitle className="flex items-center gap-3 text-xl">
@@ -422,10 +459,20 @@ const GenerativeAiTechnicalMasterclass = () => {
             </CardTitle>
           </CardHeader>
           <CardContent className="text-foreground/80">
-            <div className="flex flex-col md:flex-row gap-6 items-start">
-              <div className="flex-1">
-                <h4 className="font-semibold text-foreground text-lg mb-2">Amit Prabhu</h4>
-                <p className="text-sm mb-4">
+            <div className="grid md:grid-cols-3 gap-6 items-start">
+              {/* Left: Amit Photo */}
+              <div className="flex justify-center">
+                <img 
+                  src={amit} 
+                  alt="Amit Prabhu" 
+                  className="w-full max-w-xs rounded-lg border border-border shadow-lg"
+                />
+              </div>
+
+              {/* Center: Details and QR Code */}
+              <div className="space-y-4">
+                <h3 className="font-semibold text-foreground text-lg"> A Course By Amit Prabhu</h3>
+                <p className="text-sm">
                   AI Consultant, Author, Speaker, Business Trainer, Policymaker, Entrepreneur, and Career Coach
                 </p>
                 <div className="space-y-2 text-sm">
@@ -440,15 +487,38 @@ const GenerativeAiTechnicalMasterclass = () => {
                     </a>
                   </p>
                 </div>
+                
+                {/* QR Code */}
+                <div className="flex justify-center pt-4">
+                  <img 
+                    src={qrCode} 
+                    alt="Connect on LinkedIn" 
+                    className="w-32 h-32 border border-border rounded"
+                  />
+                </div>
+                <p className="text-center text-sm italic">Connect on LinkedIn</p>
               </div>
-              <div className="bg-card border border-border rounded-lg p-4">
-                <p className="font-semibold text-foreground mb-2">Based on his book</p>
-                <p className="text-sm text-muted-foreground mb-3">Available on Amazon</p>
-                <a target="_blank" href="https://www.amazon.com/Scaling-Generative-Operational-Readiness-Enterprises/dp/1637427980">
-                <Button variant="outline" size="sm">
-                  Order →
-                </Button>
-                </a>
+
+              {/* Right: Book */}
+              <div className="flex flex-col items-center justify-center space-y-4">
+                <img 
+                  src={amazon} 
+                  alt="Scaling Generative AI Book" 
+                  className="w-full max-w-xs rounded-lg border border-border shadow-lg"
+                />
+                <div className="text-center">
+                  <p className="font-semibold text-foreground mb-1">Based on his book</p>
+                  <p className="text-sm text-muted-foreground mb-3">Available on Amazon</p>
+                  <a 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    href="https://www.amazon.com/Scaling-Generative-Operational-Readiness-Enterprises/dp/1637427980"
+                  >
+                    <Button variant="outline" size="sm">
+                      Order →
+                    </Button>
+                  </a>
+                </div>
               </div>
             </div>
           </CardContent>

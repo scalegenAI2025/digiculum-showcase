@@ -3,6 +3,13 @@ import Footer from "@/components/Footer";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
+import bg from "@/assets/instruction-based-courses/Operational-Readiness/bg.jpg"
+import amazon from "@/assets/instruction-based-courses/Operational-Readiness/amazon.webp"
+import framework from "@/assets/instruction-based-courses/Operational-Readiness/framework.png"
+import amit from "@/assets/instruction-based-courses/Essential-Competencies/amit.png"
+import qrCode from "@/assets/instruction-based-courses/Essential-Competencies/qr-code.png"
+import superEcosystem from "@/assets/instruction-based-courses/Essential-Competencies/super-ecosystem.jpg"
+import coaching from "@/assets/instruction-based-courses/Essential-Competencies/coaching.png"
 import {
   Rocket,
   TrendingUp,

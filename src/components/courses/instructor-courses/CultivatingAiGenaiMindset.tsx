@@ -3,6 +3,13 @@ import Footer from "@/components/Footer";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
+import bg from '@/assets/instruction-based-courses/Cultivating-AI-Mindset/bg.jpg'
+import amazon from '@/assets/instruction-based-courses/Cultivating-AI-Mindset/amazon.webp'
+import framework from '@/assets/instruction-based-courses/Cultivating-AI-Mindset/framework.png'
+import coaching from '@/assets/instruction-based-courses/Essential-Competencies/coaching.png'
+import amit from '@/assets/instruction-based-courses/Essential-Competencies/amit.png'
+import qrCode from '@/assets/instruction-based-courses/Essential-Competencies/qr-code.png'
+import superEcosystem from '@/assets/instruction-based-courses/Essential-Competencies/super-ecosystem.jpg'
 import { 
   Brain, 
   Users, 
@@ -28,9 +35,13 @@ const CultivatingAiGenaiMindset = () => {
     <div className="min-h-screen bg-background">
       <Navbar />
       
-      {/* Hero Section */}
-      <section className="pt-32 pb-16 px-6">
-        <div className="container mx-auto max-w-6xl text-center">
+      {/* Hero Section with Background Image */}
+      <section 
+        className="pt-32 pb-16 px-6 relative bg-cover bg-center"
+        style={{ backgroundImage: `url(${bg})` }}
+      >
+        <div className="absolute inset-0 bg-background/80 backdrop-blur-sm"></div>
+        <div className="container mx-auto max-w-6xl text-center relative z-10">
           <div className="inline-flex items-center gap-2 bg-primary/10 border border-primary/30 rounded-full px-4 py-2 mb-6">
             <Brain className="w-4 h-4 text-primary" />
             <span className="text-sm text-primary">Growth Mindset Course</span>
@@ -109,6 +120,15 @@ const CultivatingAiGenaiMindset = () => {
               <p className="font-semibold text-foreground text-center">
                 GROWTH MINDSET FRAMEWORK
               </p>
+            </div>
+
+            {/* Framework Image */}
+            <div className="mt-6">
+              <img 
+                src={framework} 
+                alt="Growth Mindset Framework" 
+                className="w-full rounded-lg border border-border shadow-lg"
+              />
             </div>
           </CardContent>
         </Card>
@@ -237,7 +257,7 @@ const CultivatingAiGenaiMindset = () => {
           </CardContent>
         </Card>
 
-        {/* Coaching */}
+        {/* Coaching with Image */}
         <Card className="mb-8 bg-card/50 border-border/50">
           <CardHeader>
             <CardTitle className="flex items-center gap-3 text-xl">
@@ -246,38 +266,51 @@ const CultivatingAiGenaiMindset = () => {
             </CardTitle>
           </CardHeader>
           <CardContent className="text-foreground/80 space-y-4">
-            <p className="mb-4">In the course, you will be introduced to:</p>
-            
-            <div className="space-y-3">
-              <div className="bg-muted/30 rounded p-3">
-                <p><strong className="text-primary">The importance</strong> of cultivating the growth mindset</p>
-              </div>
-              <div className="bg-muted/30 rounded p-3">
-                <p><strong className="text-primary">Understanding</strong> the key differences between the fixed and growth mindset</p>
-              </div>
-              <div className="bg-muted/30 rounded p-3">
-                <p><strong className="text-primary">Growth mindset cultivation framework</strong></p>
-              </div>
-              <div className="bg-muted/30 rounded p-3">
-                <p><strong className="text-primary">Practical applications</strong> of growth mindset</p>
-              </div>
-            </div>
+            <div className="grid md:grid-cols-2 gap-6 items-start">
+              <div className="space-y-4">
+                <p className="mb-4">In the course, you will be introduced to:</p>
+                
+                <div className="space-y-3">
+                  <div className="bg-muted/30 rounded p-3">
+                    <p><strong className="text-primary">The importance</strong> of cultivating the growth mindset</p>
+                  </div>
+                  <div className="bg-muted/30 rounded p-3">
+                    <p><strong className="text-primary">Understanding</strong> the key differences between the fixed and growth mindset</p>
+                  </div>
+                  <div className="bg-muted/30 rounded p-3">
+                    <p><strong className="text-primary">Growth mindset cultivation framework</strong></p>
+                  </div>
+                  <div className="bg-muted/30 rounded p-3">
+                    <p><strong className="text-primary">Practical applications</strong> of growth mindset</p>
+                  </div>
+                </div>
 
-            <Separator className="my-6" />
+                <Separator className="my-6" />
 
-            <div>
-              <h5 className="font-semibold text-foreground mb-3">In the coaching, there will be:</h5>
-              <ul className="list-disc list-inside space-y-2 ml-4">
-                <li>Commitment contract with the coach</li>
-                <li>Continuous check-ins on plan of action</li>
-                <li>Problem-solving and behavior building</li>
-                <li>Continuous feedback on the growth mindset cultivation</li>
-              </ul>
+                <div>
+                  <h5 className="font-semibold text-foreground mb-3">In the coaching, there will be:</h5>
+                  <ul className="list-disc list-inside space-y-2 ml-4">
+                    <li>Commitment contract with the coach</li>
+                    <li>Continuous check-ins on plan of action</li>
+                    <li>Problem-solving and behavior building</li>
+                    <li>Continuous feedback on the growth mindset cultivation</li>
+                  </ul>
+                </div>
+              </div>
+
+              {/* Coaching Image */}
+              <div className="flex items-center justify-center">
+                <img 
+                  src={coaching} 
+                  alt="Coaching Framework" 
+                  className="w-full max-w-md rounded-lg border border-border shadow-lg"
+                />
+              </div>
             </div>
           </CardContent>
         </Card>
 
-        {/* Ecosystem */}
+        {/* Ecosystem with Image */}
         <Card className="mb-8 bg-card/50 border-border/50">
           <CardHeader>
             <CardTitle className="flex items-center gap-3 text-xl">
@@ -286,42 +319,55 @@ const CultivatingAiGenaiMindset = () => {
             </CardTitle>
           </CardHeader>
           <CardContent className="text-foreground/80 space-y-4">
-            <p>
-              An ecosystem is a cohort where people collaborate to seek and share knowledge, skills, and experiences with each other.
-            </p>
-            
-            <div className="bg-primary/5 border border-primary/20 rounded-lg p-4 space-y-2">
-              <div className="flex items-start gap-2">
-                <CheckCircle2 className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
-                <p>Collaboration is a powerful and effective learning technique</p>
-              </div>
-              <div className="flex items-start gap-2">
-                <CheckCircle2 className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
-                <p>Future of work will be largely dependent on an individual's ability to work in ecosystems</p>
-              </div>
-              <div className="flex items-start gap-2">
-                <CheckCircle2 className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
-                <p>Research shows that an individual learns 3X faster through ecosystems than standalone</p>
-              </div>
-              <div className="flex items-start gap-2">
-                <CheckCircle2 className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
-                <p>AI/GenAI transformation requires diverse skillsets and expertise to be leveraged through ecosystems</p>
-              </div>
-              <div className="flex items-start gap-2">
-                <CheckCircle2 className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
-                <p>Ecosystems enable a paradigm shift in the mindset, from being an employee of a firm to an employee of an industry</p>
-              </div>
-            </div>
+            <div className="grid md:grid-cols-2 gap-6 items-start">
+              <div className="space-y-4">
+                <p>
+                  An ecosystem is a cohort where people collaborate to seek and share knowledge, skills, and experiences with each other.
+                </p>
+                
+                <div className="bg-primary/5 border border-primary/20 rounded-lg p-4 space-y-2">
+                  <div className="flex items-start gap-2">
+                    <CheckCircle2 className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
+                    <p>Collaboration is a powerful and effective learning technique</p>
+                  </div>
+                  <div className="flex items-start gap-2">
+                    <CheckCircle2 className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
+                    <p>Future of work will be largely dependent on an individual's ability to work in ecosystems</p>
+                  </div>
+                  <div className="flex items-start gap-2">
+                    <CheckCircle2 className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
+                    <p>Research shows that an individual learns 3X faster through ecosystems than standalone</p>
+                  </div>
+                  <div className="flex items-start gap-2">
+                    <CheckCircle2 className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
+                    <p>AI/GenAI transformation requires diverse skillsets and expertise to be leveraged through ecosystems</p>
+                  </div>
+                  <div className="flex items-start gap-2">
+                    <CheckCircle2 className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
+                    <p>Ecosystems enable a paradigm shift in the mindset, from being an employee of a firm to an employee of an industry</p>
+                  </div>
+                </div>
 
-            <div className="bg-muted/50 rounded-lg p-4 mt-4">
-              <p className="font-semibold text-foreground">
-                After completion of the course, participants shall be automatically enrolled in an ecosystem of professionals belonging to different industries and geographical locations.
-              </p>
+                <div className="bg-muted/50 rounded-lg p-4 mt-4">
+                  <p className="font-semibold text-foreground">
+                    After completion of the course, participants shall be automatically enrolled in an ecosystem of professionals belonging to different industries and geographical locations.
+                  </p>
+                </div>
+              </div>
+
+              {/* Ecosystem Image */}
+              <div className="flex items-center justify-center h-full min-h-[300px]">
+                <img 
+                  src={superEcosystem} 
+                  alt="Super Ecosystem" 
+                  className="w-full max-w-md rounded-lg border border-border shadow-lg"
+                />
+              </div>
             </div>
           </CardContent>
         </Card>
 
-        {/* Instructor */}
+        {/* Instructor with Images */}
         <Card className="mb-8 bg-card/50 border-border/50">
           <CardHeader>
             <CardTitle className="flex items-center gap-3 text-xl">
@@ -330,10 +376,20 @@ const CultivatingAiGenaiMindset = () => {
             </CardTitle>
           </CardHeader>
           <CardContent className="text-foreground/80">
-            <div className="flex flex-col md:flex-row gap-6 items-start">
-              <div className="flex-1">
-                <h4 className="font-semibold text-foreground text-lg mb-2">Amit Prabhu</h4>
-                <p className="text-sm mb-4">
+            <div className="grid md:grid-cols-3 gap-6 items-start">
+              {/* Left: Amit Photo */}
+              <div className="flex justify-center">
+                <img 
+                  src={amit} 
+                  alt="Amit Prabhu" 
+                  className="w-full max-w-xs rounded-lg border border-border shadow-lg"
+                />
+              </div>
+
+              {/* Center: Details and QR Code */}
+              <div className="space-y-4">
+                <h4 className="font-semibold text-foreground text-lg">A Course By Amit Prabhu</h4>
+                <p className="text-sm">
                   AI Consultant, Author, Speaker, Business Trainer, Policymaker, Entrepreneur, and Career Coach
                 </p>
                 <div className="space-y-2 text-sm">
@@ -348,15 +404,38 @@ const CultivatingAiGenaiMindset = () => {
                     </a>
                   </p>
                 </div>
+                
+                {/* QR Code */}
+                <div className="flex justify-center pt-4">
+                  <img 
+                    src={qrCode} 
+                    alt="Connect on LinkedIn" 
+                    className="w-32 h-32 border border-border rounded"
+                  />
+                </div>
+                <p className="text-center text-sm italic">Connect on LinkedIn</p>
               </div>
-              <div className="bg-card border border-border rounded-lg p-4">
-                <p className="font-semibold text-foreground mb-2">Based on his book</p>
-                <p className="text-sm text-muted-foreground mb-3">Available on Amazon</p>
-                <a target="_blank" href="https://www.amazon.com/dp/B0CT4J7H1D?ref=cm_sw_r_ffobk_cp_ud_dp_SN58ATAJN43WRWFFBSQX&ref_=cm_sw_r_ffobk_cp_ud_dp_SN58ATAJN43WRWFFBSQX&social_share=cm_sw_r_ffobk_cp_ud_dp_SN58ATAJN43WRWFFBSQX&bestFormat=true&csmig=1">
-                <Button variant="outline" size="sm">
-                  Order →
-                </Button>
-                </a>
+
+              {/* Right: Book */}
+              <div className="flex flex-col items-center justify-center space-y-4">
+                <img 
+                  src={amazon} 
+                  alt="Digital Leadership Framework Book" 
+                  className="w-full max-w-xs rounded-lg border border-border shadow-lg"
+                />
+                <div className="text-center">
+                  <p className="font-semibold text-foreground mb-1">Based on his book</p>
+                  <p className="text-sm text-muted-foreground mb-3">Available on Amazon</p>
+                  <a 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    href="https://www.amazon.com/dp/B0CT4J7H1D?ref=cm_sw_r_ffobk_cp_ud_dp_SN58ATAJN43WRWFFBSQX&ref_=cm_sw_r_ffobk_cp_ud_dp_SN58ATAJN43WRWFFBSQX&social_share=cm_sw_r_ffobk_cp_ud_dp_SN58ATAJN43WRWFFBSQX&bestFormat=true&csmig=1"
+                  >
+                    <Button variant="outline" size="sm">
+                      Order →
+                    </Button>
+                  </a>
+                </div>
               </div>
             </div>
           </CardContent>
