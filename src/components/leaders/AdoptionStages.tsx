@@ -8,7 +8,7 @@ const stages = [
     gradient: "bg-primary/50",
   },
   {
-    title: "Evaluate",
+    title: "Evaluate AI",
     description: "Intermediate stage. Considerable AI pilots and Agents. Not ready to scale.",
     icon: Search,
     gradient: "bg-primary/50",

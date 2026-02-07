@@ -71,11 +71,14 @@ const FundamentalAgentsVsBots = () => {
 
             {/* Agent v Bot Test row */}
             <div className="flex items-center gap-4 mb-4">
-              <div className="text-primary font-bold whitespace-nowrap">
-                Agent<br />v<br />Bot<br />Test
+              <div className="flex flex-col text-primary font-bold whitespace-nowrap">
+                <span className="text-white">Agent</span>
+                <span className="text-white">v</span>
+                <span className="text-white">Bot</span>
+                <span className="text-primary">Test</span>
+                {/*Agent<br />v<br />Bot<br />Test*/}
               </div>
               <div className="flex items-center gap-2">
-                <span className="font-medium">Start</span>
                 <Arrow />
               </div>
               <div className="flex-1 grid grid-cols-5 gap-4">

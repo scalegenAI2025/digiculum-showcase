@@ -12,9 +12,9 @@ const FundamentalUpskillVsReskill = () => {
                 <circle cx="50" cy="50" r="45" stroke="currentColor" fill="none" strokeWidth="2" className="text-foreground/60" />
                 <polygon points="50,30 30,65 70,65" fill="none" stroke="currentColor" strokeWidth="2" className="text-foreground/60" />
               </svg>
-              <span className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-xs md:text-sm font-medium">You</span>
+              <span className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-xs md:text-xs">You</span>
             </div>
-            <p className="font-medium text-sm md:text-base">Your Job</p>
+            <p className=" text-sm md:text-base">Your Job</p>
           </div>
 
           {/* Step 2 */}

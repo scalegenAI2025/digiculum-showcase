@@ -38,9 +38,9 @@ const ReskillPartner = () => {
                   "Will AI take away my job?"
                 </span>
               </p>
-              <p className="text-2xl font-bold text-foreground">
-                The real question is:{" "}
-                <span className="text-foreground">
+              <p className="text-xl text-foreground/70">
+                It should be:{" "}
+                <span className="text-foreground font-semibold text-2xl">
                   "Will you allow AI to take away your job?"
                 </span>
               </p>
@@ -58,9 +58,13 @@ const ReskillPartner = () => {
       {/* Second part */}
       <div className="container mx-auto px-6 max-w-4xl mt-20">
         <div className="text-center space-y-8 text-lg text-foreground/80">
-          <p className="font-semibold text-xl text-foreground">
-            But AI reskilling isn't a one-size-fits-all course.
-          </p>
+        <div className="flex justify-center items-center gap-3">
+          <span className="text-xl text-foreground">
+            But AI reskilling isn't a 
+            <span className="font-bold">one-size-fits-all</span>
+            <span>course</span>
+          </span>
+          </div>
 
           <p>
             At Digiculum, we believe it should be a{" "}

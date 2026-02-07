@@ -3,7 +3,7 @@ import ecosystemBg from "@/assets/ecosystem.png";
 
 const EcosystemHero = () => {
   return (
-    <section className="relative py-20 md:py-28 overflow-hidden min-h-screen flex items-center">
+    <section className="relative min-h-screen flex items-center justify-center overflow-hidden -mt-20 pt-24 pb-8">
       {/* Background Image */}
       <div
         className="absolute inset-0 bg-cover bg-center bg-no-repeat"

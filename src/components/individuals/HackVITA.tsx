@@ -23,7 +23,8 @@ const categories = [
       "Creating photo-realistic, artistic, abstract images",
       "Anime design and concept visualization",
       "Enhancing images through variations",
-      "Inpainting & Outpainting",
+      "Inpainting",
+      "Outpainting"
     ],
   },
   {
@@ -59,10 +60,10 @@ const HackVITA = () => {
     <section className="py-20">
       <div className="container mx-auto px-6">
         <h2 className="text-3xl md:text-4xl font-bold text-center mb-4">
-          Hack <span className="text-gradient">VITA</span> Using AI Tools
+          Hack 
         </h2>
         <p className="text-foreground/70 text-center mb-12 max-w-2xl mx-auto">
-          Master AI tools across Video, Image, Text, and Audio to transform your daily tasks
+          Master AI tools across VITA (Video, Image, Text, and Audio) to transform your daily tasks
         </p>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">

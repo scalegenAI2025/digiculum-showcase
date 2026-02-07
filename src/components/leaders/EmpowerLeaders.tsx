@@ -13,7 +13,7 @@ const empowermentData = [
     ],
   },
   {
-    stage: "Evaluate",
+    stage: "Evaluate AI",
     icon: Search,
     color: "text-primary",
     bgColor: "bg-primary/10",

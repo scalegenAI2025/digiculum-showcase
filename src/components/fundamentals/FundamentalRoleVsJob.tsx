@@ -10,7 +10,7 @@ const FundamentalRoleVsJob = () => {
           <div className="lg:hidden space-y-6">
             {/* Role Section */}
             <div>
-              <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center justify-center mb-4">
                 <p className="text-primary text-xs md:text-sm max-w-[100px]">
                   <span className="text-primary font-medium">AI Engineer</span> is a broad generic role defined at industry level
                 </p>

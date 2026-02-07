@@ -15,30 +15,32 @@ const Hero = () => {
       <div className="relative z-10 container mx-auto px-4 md:px-6 py-8 md:py-12">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8 items-stretch max-w-5xl mx-auto">
           {/* Left Card - For Individuals */}
-          <div className="bg-card/80 backdrop-blur-sm border border-primary/20 rounded-xl md:rounded-2xl p-5 md:p-8 hover:border-primary/40 transition-all duration-300 animate-fade-in-up">
+          <div className="bg-card/50 border border-primary/20 rounded-xl md:rounded-2xl p-5 md:p-8 hover:border-primary/40 transition-all duration-300 animate-fade-in-up">
             <div className="flex flex-col h-full">
               <div className="mb-4">
-                <span className="inline-block px-3 md:px-4 py-1 md:py-1.5 bg-primary/20 text-primary font-semibold text-xs md:text-sm rounded-full">
+                <span className="inline-block px-3 md:px-4 py-1 md:py-1.5 bg-primary/20 text-white font-semibold text-xs md:text-sm rounded-full">
                   For Individuals
                 </span>
               </div>
               <p className="text-foreground/70 italic mb-2 md:mb-4 text-xs md:text-sm">
                 Technical, Non-Technical or Absolute Beginners
               </p>
-              
+
               <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-1 md:mb-2">
                 AI Practitioner
               </h2>
               <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-primary mb-3 md:mb-4">
                 Bootcamp
               </h2>
-              
-              <p className="text-primary italic text-xs md:text-sm mb-2 md:mb-4">
-                Start Date: 16th Feb, 2026
-              </p>
-              
+              <div className="flex gap-1.5">
+                <span className="text-white italic text-xs md:text-sm mb-2 md:mb-4">Start Date:</span>
+                <span className="text-white font-bold italic text-xs md:text-sm mb-2 md:mb-4">
+                  23rd Feb, 2026
+                </span>
+              </div>
+
               <p className="text-foreground/60 text-xs md:text-sm mb-4 md:mb-6">Cohort-based</p>
-              
+
               <div className="mt-auto">
                 <a href="#consultation" className="btn-primary inline-block text-xs md:text-sm px-4 md:px-6 py-2 md:py-2.5">
                   1:1 Consultation
@@ -48,28 +50,28 @@ const Hero = () => {
           </div>
 
           {/* Right Card - For Business Leaders */}
-          <div className="bg-card/80 backdrop-blur-sm border border-primary/20 rounded-xl md:rounded-2xl p-5 md:p-8 hover:border-primary/40 transition-all duration-300 animate-fade-in-delay-1">
+          <div className="bg-card/50 border border-primary/20 rounded-xl md:rounded-2xl p-5 md:p-8 hover:border-primary/40 transition-all duration-300 animate-fade-in-delay-1">
             <div className="flex flex-col h-full">
               <div className="mb-4">
-                <span className="inline-block px-3 md:px-4 py-1 md:py-1.5 bg-primary/20 text-primary font-semibold text-xs md:text-sm rounded-full">
+                <span className="inline-block px-3 md:px-4 py-1 md:py-1.5 bg-primary/20 text-white font-semibold text-xs md:text-sm rounded-full">
                   For Business Leaders
                 </span>
               </div>
               <p className="text-foreground/70 italic mb-2 md:mb-4 text-xs md:text-sm">
                 Senior Leaders, Executives, or Functional decision-makers
               </p>
-              
+
               <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-1 md:mb-2">
                 AI Leadership
               </h2>
               <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-primary mb-3 md:mb-4">
                 Readiness Program
               </h2>
-              
+
               <div className="h-2 md:h-4" />
-              
+
               <p className="text-foreground/60 text-xs md:text-sm mb-4 md:mb-6">Enterprise-focused</p>
-              
+
               <div className="mt-auto">
                 <a href="/leaders" className="btn-primary inline-block text-xs md:text-sm px-4 md:px-6 py-2 md:py-2.5">
                   Find More
@@ -79,7 +81,7 @@ const Hero = () => {
           </div>
         </div>
       </div>
-      
+
     </section>
   );
 };

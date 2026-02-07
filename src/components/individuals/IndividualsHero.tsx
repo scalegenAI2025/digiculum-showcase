@@ -50,8 +50,8 @@ const IndividualsHero = () => {
               </div>
 
               <div>
-                <p className="font-semibold">Practical</p>
-                <p className="text-white/70">1:1 Consultation</p>
+                <p className="font-semibold">Practical Application</p>
+                <p className="text-white/70">Coaching + Ecosystem</p>
               </div>
             </div>
 
@@ -74,13 +74,13 @@ const IndividualsHero = () => {
 
           {/* RIGHT SIDE */}
           <div className="flex items-center lg:justify-end">
-            <div className="bg-black/70 backdrop-blur-xl p-8 rounded-2xl max-w-md w-full">
+            <div className="bg-black/50 p-8 rounded-2xl max-w-md w-full">
               <h2 className="text-2xl font-bold mb-6">
                 Don’t miss out the unbeatable <br />
-                <span className="text-primary">Early Joiner offer</span>
+                <span className="text-white">Early Joiner offer</span>
               </h2>
 
-              <p className="text-sm text-white/60 mb-2">90% DISCOUNT</p>
+              <p className="text-lg text-white mb-2 font-bold">90% DISCOUNT</p>
 
               <p className="text-lg line-through text-white/40">
                 INR 3,00,000
