@@ -15,7 +15,7 @@ const Ecosystem = () => {
       <EcosystemHero />
       <SectionSeparator />
       <EcosystemConcept />
-      <SectionSeparator />
+      {/* <SectionSeparator /> */}
       <EcosystemBenefits />
       <SectionSeparator />
       <EcosystemCTA />

@@ -399,12 +399,12 @@ const EcosystemForm = () => {
             Thank you for your interest in joining our ecosystem. Your
             application is under review and we'll get back to you soon.
           </p>
-          <button
+          {/* <button
             onClick={() => setSubmitted(false)}
             className="bg-primary/50 text-white px-6 py-2 rounded-lg hover:from-purple-700 hover:to-blue-700 transition-all"
           >
             Submit Another Application
-          </button>
+          </button> */}
         </div>
       </div>
     );

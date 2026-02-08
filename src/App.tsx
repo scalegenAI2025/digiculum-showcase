@@ -12,9 +12,9 @@ import PrivacyPolicy from "./components/PrivacyPolicy";
 import CookiePolicy from "./components/CookiePolicy";
 import GeneralTerms from "./components/GeneralTerms";
 import RefundPolicy from "./components/RefundPolicy";
-import EcosystemForm from "./components/ecosystem/EcosystemForm";
+import EcosystemFormUpdated from "./pages/EcosystemFormUpdated";
 import EssentialCompetenciesOfAi from "./components/courses/instructor-courses/EssentialCompetenciesOfAi";
-import GenerativeAiTechnicalMasterclass from "./components/courses/instructor-courses/Generativeaitechnicalmasterclass";
+import GenerativeAiTechnicalMasterclass from "./components/courses/instructor-courses/GenerativeAiTechnicalMasterclass";
 import AiGenaiTransformationStrategy from "./components/courses/instructor-courses/AiGenaiTransformationStrategy";
 import CultivatingAiGenaiMindset from "./components/courses/instructor-courses/CultivatingAiGenaiMindset";
 import AiGenaiOperationalReadiness from "./components/courses/instructor-courses/AiGenaiOperationalReadiness";
@@ -39,7 +39,8 @@ const App = () => (
           <Route path="/cookie" element={<CookiePolicy />} />
           <Route path="/general" element={<GeneralTerms />} />
           <Route path="/refund" element={<RefundPolicy />} />
-          <Route path="/ecosystemform" element={<EcosystemForm />} />
+          {/* <Route path="/ecosystemform" element={<EcosystemForm />} /> */}
+          <Route path="/EcosystemFormUpdated" element={<EcosystemFormUpdated />} />
           <Route
             path="/courses/Essential-Competencies-of-AI/GenAI-Leader"
             element={<EssentialCompetenciesOfAi />}
