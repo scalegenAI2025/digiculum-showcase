@@ -1,10 +1,10 @@
-import { Video, Image, FileText, Music } from "lucide-react";
+import { Video, Image, FileText, Music, Zap } from "lucide-react";
 
 const categories = [
   {
     icon: Video,
     title: "Video",
-    color: "bg-primary/50",
+    color: "text-primary",
     borderColor: "hover:border-red-500/50",
     items: [
       "Turn text or slides into short videos",
@@ -17,7 +17,7 @@ const categories = [
   {
     icon: Image,
     title: "Image",
-    color: "bg-primary/50",
+    color: "text-primary",
     borderColor: "hover:border-purple-500/50",
     items: [
       "Creating photo-realistic, artistic, abstract images",
@@ -30,7 +30,7 @@ const categories = [
   {
     icon: FileText,
     title: "Text",
-    color: "bg-primary/50",
+    color: "text-primary",
     borderColor: "hover:border-blue-500/50",
     items: [
       "Create, summarize, augment text",
@@ -43,7 +43,7 @@ const categories = [
   {
     icon: Music,
     title: "Audio",
-    color: "bg-primary/50",
+    color: "text-primary",
     borderColor: "hover:border-green-500/50",
     items: [
       "Create your own music",
@@ -57,14 +57,20 @@ const categories = [
 
 const HackVITA = () => {
   return (
-    <section className="py-20">
+    <section className="py-20 bg-card/30">
       <div className="container mx-auto px-6">
-        <h2 className="text-3xl md:text-4xl font-bold text-center mb-4">
+        <div className="flex flex-col gap-4">
+        <div className="flex gap-2 items-center">
+        <Zap className="w-6 h-6 text-foreground" />
+        <h2 className="text-2xl font-bold text-primary">
           Hack 
         </h2>
-        <p className="text-foreground/70 text-center mb-12 max-w-2xl mx-auto">
+        </div>
+        
+        <p className="text-foreground/70 mb-12 max-w-2xl">
           Master AI tools across VITA (Video, Image, Text, and Audio) to transform your daily tasks
         </p>
+        </div>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
           {categories.map((category, index) => (

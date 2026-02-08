@@ -1,4 +1,4 @@
-import { GraduationCap } from "lucide-react";
+import { Brain, Zap, Wrench } from "lucide-react";
 
 const topics = [
   { category: "AI Fundamentals", items: ["What type of technology is AI?", "Different types of AI", "Key Enablers of AI", "Correlation between AI, IT, and Digital Transformation"] },
@@ -13,15 +13,21 @@ const WhatYouWillLearn = () => {
   return (
     <section className="py-20 bg-card/30">
       <div className="container mx-auto px-6">
-        <div className="flex items-center justify-center gap-3 mb-4">
-          <GraduationCap className="w-8 h-8 text-primary" />
+        <div className="flex items-center justify-center gap-3 mb-12">
           <h2 className="text-3xl md:text-4xl font-bold">
             What You Will <span className="text-gradient">Learn</span>
           </h2>
         </div>
-        <p className="text-foreground/70 text-center mb-12 max-w-2xl mx-auto">
+        <div className="flex flex-col gap-4">
+        <div className="flex gap-2 items-center">
+          <Brain className="w-6 h-6 text-foreground" />
+          <h2 className="text-2xl font-bold text-primary">Know</h2>
+          </div>
+
+        <p className="text-foreground/70 mb-12 max-w-2xl">
           Know important AI concepts in simple, easy to understand language
         </p>
+        </div>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           {topics.map((topic, index) => (

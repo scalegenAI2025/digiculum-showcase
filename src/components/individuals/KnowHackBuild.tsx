@@ -4,7 +4,7 @@ const pillars = [
   {
     icon: Brain,
     title: "Know",
-    color: "bg-primary/50",
+    color: "text-primary",
     description: "Understand core AI concepts, trends, and use cases that matter for your role.",
     items: [
       "What type of technology is AI?",
@@ -18,7 +18,7 @@ const pillars = [
   {
     icon: Zap,
     title: "Hack",
-    color: "bg-primary/50",
+    color: "text-primary",
     description: "Apply AI tools to automate everyday tasks and boost productivity—without coding.",
     items: [
       "Video: Turn text into videos, derive insights",
@@ -30,7 +30,7 @@ const pillars = [
   {
     icon: Wrench,
     title: "Build",
-    color: "bg-primary/50",
+    color: "text-primary",
     description: "Create practical AI apps that improve your work and give you an edge.",
     items: [
       "Create your personal AI projects",
@@ -59,8 +59,8 @@ const KnowHackBuild = () => {
               className="glass-card overflow-hidden group hover:border-primary/50 transition-all duration-300"
             >
               {/* Gradient header */}
-              <div className={`bg-gradient-to-r ${pillar.color} p-6`}>
-                <div className="flex items-center gap-4">
+              <div className={`bg-gradient-to-r ${pillar.color}`}>
+                <div className="flex items-center gap-2">
                   <div className="w-12 h-12 bg-background/20 backdrop-blur-sm rounded-xl flex items-center justify-center">
                     <pillar.icon className="w-6 h-6 text-foreground" />
                   </div>

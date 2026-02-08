@@ -4,12 +4,18 @@ const JourneyFlowchart = () => {
   return (
     <section className="py-16 md:py-24 bg-background" id="courses">
       <div className="container mx-auto px-4 md:px-6">
-        <div className="text-center mb-12 md:mb-16">
-          <h2 className="text-2xl md:text-3xl lg:text-5xl font-light">
-            Your Personalized, Continuous, Collaborative AI{" "}
-            <span className="text-primary font-bold italic">Reskilling</span>
-          </h2>
-          <h2 className="text-2xl md:text-3xl lg:text-5xl font-light mt-2">Journey</h2>
+        <div className="text-center mb-12 md:mb-16 ">
+          <div className="text-4xl md:text-5xl">
+            <div className="flex flex-col gap-2">
+            Your Personalized, Continuous, Collaborative
+            <div className="flex justify-center items-center gap-2">
+            <span className="text-primary font-bold">AI</span>
+            
+            <span className="text-white font-bold">Reskilling Journey</span>
+            </div>
+            </div>
+            
+          </div>          
         </div>
 
         {/* Mobile View - Stacked Cards */}

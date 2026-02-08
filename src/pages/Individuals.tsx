@@ -30,9 +30,7 @@ const Individuals = () => {
       <AISpecialization />
       <SectionSeparator />
       <WhatYouWillLearn />
-      <SectionSeparator />
       <HackVITA />
-      <SectionSeparator />
       <BuildProject />
       <SectionSeparator />
       <ToolsUsed />

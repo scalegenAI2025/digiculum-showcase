@@ -39,12 +39,20 @@ const AISpecialization = () => {
           <h2 className="text-3xl md:text-4xl font-bold mb-4">
             <span className="text-gradient">AI Specialization</span> Program
           </h2>
-          <p className="text-foreground/70 mb-6">
-            After completion of 21-day AI Practitioner Bootcamp, an individual can enroll in a 1-month AI Specialization Program.
+          <div className="flex flex-col gap-2">
+          <div className="flex flex-col text-foreground/70">
+          <p>
+            After completion of 21-day AI Practitioner Bootcamp, an individual can enroll in a 1-month
           </p>
-          <p className="text-foreground/80">
-            The 1-month AI Specialization Program helps you turn the general AI skills and capabilities into job-specific advantage.
+          <span>AI Specialization Program.</span>
+          </div>
+          <div className="flex flex-col text-foreground/70">
+          <p>
+            The 1-month AI Specialization Program helps you turn the general AI skills and capabilities into
           </p>
+          <span>job-specific advantage.</span>
+          </div>
+          </div>
         </div>
 
         <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">

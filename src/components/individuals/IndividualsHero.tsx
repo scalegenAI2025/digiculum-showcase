@@ -85,10 +85,12 @@ const IndividualsHero = () => {
               <p className="text-lg line-through text-white/40">
                 INR 3,00,000
               </p>
-
+              <div className="flex gap-2">
               <p className="text-3xl font-bold text-primary mb-6">
-                INR 30,000 only
+                INR 30,000/-*
               </p>
+              <span className="text-3xl font-bold text-white mb-6">Only</span>
+              </div>
             </div>
           </div>
 
