@@ -57,9 +57,11 @@ const IndividualsHero = () => {
 
             {/* CTA */}
             <div className="flex gap-4">
+              <a href="https://calendly.com/kirtikganesan27/30min" target="_blank">
               <Button size="lg" className="bg-primary hover:bg-primary/90">
                 1:1 Consultation
               </Button>
+              </a>
 
               <Button
                 size="lg"

@@ -50,9 +50,11 @@ const CultivatingAiGenaiMindset = () => {
           <p className="text-muted-foreground text-lg max-w-3xl mx-auto mb-8">
             Develop the right mindset to accelerate GenAI adoption and transformation in your organization
           </p>
+          <a href="https://calendly.com/kirtikganesan27/30min" target="_blank">
           <Button size="lg" className="bg-primary hover:bg-primary/90">
-            Book a Consultation →
+            1:1 Consultation →
           </Button>
+          </a>
         </div>
       </section>
 
@@ -450,9 +452,11 @@ const CultivatingAiGenaiMindset = () => {
             <p className="text-muted-foreground mb-6 max-w-2xl mx-auto">
               Join our mindset transformation course and empower your organization to embrace AI/GenAI with confidence and enthusiasm.
             </p>
+            <a href="https://calendly.com/kirtikganesan27/30min" target="_blank">
             <Button size="lg" className="bg-primary hover:bg-primary/90">
-              Book a Consultation →
+              1:1 Consultation →
             </Button>
+            </a>
           </div>
         </div>
       </div>

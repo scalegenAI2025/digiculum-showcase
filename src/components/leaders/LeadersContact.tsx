@@ -3,7 +3,7 @@ import { Calendar, Mail } from "lucide-react";
 
 const LeadersContact = () => {
   const handleConsultation = () => {
-    window.open("https://calendly.com", "_blank");
+    window.open("https://calendly.com/kirtikganesan27/30min", "_blank");
   };
 
   return (

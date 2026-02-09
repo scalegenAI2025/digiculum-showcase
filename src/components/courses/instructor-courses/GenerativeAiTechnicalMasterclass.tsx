@@ -52,9 +52,11 @@ const GenerativeAiTechnicalMasterclass = () => {
           <p className="text-muted-foreground text-lg max-w-3xl mx-auto mb-8">
             Master complex GenAI concepts with simplified, applicable knowledge for technical professionals
           </p>
+          <a href="https://calendly.com/kirtikganesan27/30min" target="_blank">
           <Button size="lg" className="bg-primary hover:bg-primary/90">
-            Book a Consultation →
+            1:1 Consultation →
           </Button>
+          </a>
         </div>
       </section>
 
@@ -533,9 +535,11 @@ const GenerativeAiTechnicalMasterclass = () => {
             <p className="text-muted-foreground mb-6 max-w-2xl mx-auto">
               Join our Technical Masterclass and gain the skills needed to drive GenAI transformation in your organization.
             </p>
+            <a href="https://calendly.com/kirtikganesan27/30min" target="_blank">
             <Button size="lg" className="bg-primary hover:bg-primary/90">
-              Book a Consultation →
+              1:1 Consultation →
             </Button>
+            </a>
           </div>
         </div>
       </div>

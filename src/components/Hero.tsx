@@ -42,7 +42,7 @@ const Hero = () => {
               <p className="text-foreground/60 text-xs md:text-sm mb-4 md:mb-6">Cohort-based</p>
 
               <div className="mt-auto">
-                <a href="#consultation" className="btn-primary inline-block text-xs md:text-sm px-4 md:px-6 py-2 md:py-2.5">
+                <a href="https://calendly.com/kirtikganesan27/30min" target="_blank" className="btn-primary inline-block text-xs md:text-sm px-4 md:px-6 py-2 md:py-2.5">
                   1:1 Consultation
                 </a>
               </div>

@@ -46,14 +46,15 @@ const ToolsUsed = () => {
           Get hands-on experience with industry-leading AI tools
         </p>
 
-        {/* LOGO GRID */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6 max-w-5xl mx-auto mb-14">
+        {/* LOGO GRID - 3 columns on mobile, 4 on tablet, 5 on desktop for better distribution */}
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-6 max-w-6xl mx-auto mb-14">
           {tools.map((tool, index) => (
             <div
               key={index}
-              className="glass-card flex items-center justify-center p-6 rounded-xl
-                         hover:border-primary/50 transition-all duration-300"
-              title={tool.name}
+              className={`glass-card flex flex-col items-center justify-center p-6 rounded-xl
+                         hover:border-primary/50 transition-all duration-300 gap-4 ${
+                           index === 10 ? 'lg:col-start-2' : ''
+                         }`}
             >
               <img
                 src={tool.logo}
@@ -61,6 +62,9 @@ const ToolsUsed = () => {
                 loading="lazy"
                 className="h-10 md:h-12 object-contain transition duration-300"
               />
+              <p className="text-primary text-sm font-medium text-center">
+                {tool.name}
+              </p>
             </div>
           ))}
         </div>

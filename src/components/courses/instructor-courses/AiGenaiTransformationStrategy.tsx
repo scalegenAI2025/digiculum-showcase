@@ -53,9 +53,11 @@ const AiGenaiTransformationStrategy = () => {
           <p className="text-muted-foreground text-lg max-w-3xl mx-auto mb-8">
             Develop comprehensive end-to-end strategies to successfully scale your AI/GenAI initiatives
           </p>
+          <a href="https://calendly.com/kirtikganesan27/30min" target="_blank">
           <Button size="lg" className="bg-primary hover:bg-primary/90">
-            Book a Consultation →
+            1:1 Consultation →
           </Button>
+          </a>
         </div>
       </section>
 
@@ -485,9 +487,11 @@ const AiGenaiTransformationStrategy = () => {
             <p className="text-muted-foreground mb-6 max-w-2xl mx-auto">
               Join our Transformation Strategy course and develop a comprehensive framework to successfully scale your AI initiatives.
             </p>
+            <a href="https://calendly.com/kirtikganesan27/30min" target="_blank">
             <Button size="lg" className="bg-primary hover:bg-primary/90">
-              Book a Consultation →
+              1:1 Consultation →
             </Button>
+            </a>
           </div>
         </div>
       </div>

@@ -57,8 +57,7 @@ const FinalCTA = () => {
             </p>
 
             <a
-              href="https://calendly.com"
-              target="_blank"
+              href="https://calendly.com/kirtikganesan27/30min" target="_blank"
               rel="noopener noreferrer"
             >
               <Button size="lg" className="btn-primary">

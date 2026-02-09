@@ -48,9 +48,11 @@ const AiGenaiOperationalReadiness = () => {
             Implement the Readiness Rocket Framework to successfully scale GenAI
             in your organization
           </p>
+          <a href="https://calendly.com/kirtikganesan27/30min" target="_blank">
           <Button size="lg" className="bg-primary hover:bg-primary/90">
-            Book a Consultation →
+            1:1 Consultation →
           </Button>
+          </a>
         </div>
       </section>
 
@@ -685,9 +687,11 @@ const AiGenaiOperationalReadiness = () => {
               Readiness Rocket Framework to successfully scale GenAI in your
               enterprise.
             </p>
+            <a href="https://calendly.com/kirtikganesan27/30min" target="_blank">
             <Button size="lg" className="bg-primary hover:bg-primary/90">
-              Book a Consultation →
+              1:1 Consultation →
             </Button>
+            </a>
           </div>
         </div>
       </div>
