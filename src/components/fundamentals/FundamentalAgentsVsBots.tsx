@@ -34,7 +34,7 @@ const FundamentalAgentsVsBots = () => {
 
           {/* Red Zone */}
           <div className="text-center mt-4">
-            <span className="font-semibold text-red-400">Red Zone (Bot)</span>
+            <span className="font-semibold text-primary">Red Zone (Bot)</span>
           </div>
         </div>
 
@@ -47,7 +47,7 @@ const FundamentalAgentsVsBots = () => {
             </div>
 
             {/* Top outcomes */}
-            <div className="grid grid-cols-5 gap-4 text-center text-sm mb-2">
+            <div className="grid grid-cols-5 gap-4 text-center text-sm mb-2" style={{ marginLeft: "120px" }}>
               <div>Goal and it auto-performs the tasks</div>
               <div>Can figure out path A to C</div>
               <div>Can auto-detect it</div>
@@ -56,7 +56,7 @@ const FundamentalAgentsVsBots = () => {
             </div>
 
             {/* Arrows up */}
-            <div className="grid grid-cols-5 gap-4 text-center mb-2">
+            <div className="grid grid-cols-5 gap-4 text-center mb-2" style={{ marginLeft: "120px" }}>
               {[...Array(5)].map((_, i) => (
                 <div key={i} className="flex justify-center">
                   <svg width="20" height="30" viewBox="0 0 20 30" fill="none" className="text-foreground/50">
@@ -116,7 +116,7 @@ const FundamentalAgentsVsBots = () => {
 
             {/* Red Zone Header */}
             <div className="text-center">
-              <span className="font-semibold text-red-400">Red Zone</span>
+              <span className="font-semibold text-primary">Red Zone</span>
             </div>
           </div>
         </div>
@@ -132,7 +132,7 @@ const FundamentalAgentsVsBots = () => {
             Focus on moving the core capabilities from Red zone to Blue zone.
           </p>
           <p>
-            If all 5 answers fall in Red zone, it is a <span className="font-bold text-red-400">Bot</span>.
+            If all 5 answers fall in Red zone, it is a <span className="font-bold text-primary">Bot</span>.
             Call it a Bot. Do not call it an Agent and mislead your clients.
           </p>
         </div>
