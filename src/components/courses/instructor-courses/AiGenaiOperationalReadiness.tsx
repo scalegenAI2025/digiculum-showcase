@@ -3,13 +3,13 @@ import Footer from "@/components/Footer";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
-import bg from "@/assets/instruction-based-courses/Operational-Readiness/bg.jpg"
-import amazon from "@/assets/instruction-based-courses/Operational-Readiness/amazon.webp"
-import framework from "@/assets/instruction-based-courses/Operational-Readiness/framework.png"
-import amit from "@/assets/instruction-based-courses/Essential-Competencies/amit.png"
-import qrCode from "@/assets/instruction-based-courses/Essential-Competencies/qr-code.png"
-import superEcosystem from "@/assets/instruction-based-courses/Essential-Competencies/super-ecosystem.jpg"
-import coaching from "@/assets/instruction-based-courses/Essential-Competencies/coaching.png"
+import bg from "@/assets/instruction-based-courses/Operational-Readiness/bg.jpg";
+import amazon from "@/assets/instruction-based-courses/Operational-Readiness/amazon.webp";
+import framework from "@/assets/instruction-based-courses/Operational-Readiness/framework.png";
+import amit from "@/assets/instruction-based-courses/Essential-Competencies/amit.png";
+import qrCode from "@/assets/instruction-based-courses/Essential-Competencies/qr-code.png";
+import superEcosystem from "@/assets/instruction-based-courses/Essential-Competencies/super-ecosystem.jpg";
+import coaching from "@/assets/instruction-based-courses/Essential-Competencies/coaching.png";
 import {
   Rocket,
   TrendingUp,
@@ -33,7 +33,7 @@ const AiGenaiOperationalReadiness = () => {
       <Navbar />
 
       {/* Hero Section with Background Image */}
-      <section 
+      <section
         className="pt-32 pb-16 px-6 relative bg-cover bg-center"
         style={{ backgroundImage: `url(${bg})` }}
       >
@@ -48,10 +48,10 @@ const AiGenaiOperationalReadiness = () => {
             Implement the Readiness Rocket Framework to successfully scale GenAI
             in your organization
           </p>
-          <a href="https://calendly.com/kirtikganesan27/30min" target="_blank">
-          <Button size="lg" className="bg-primary hover:bg-primary/90">
-            1:1 Consultation →
-          </Button>
+          <a href={import.meta.env.VITE_CALENDLY_URL} target="_blank">
+            <Button size="lg" className="bg-primary hover:bg-primary/90">
+              1:1 Consultation →
+            </Button>
           </a>
         </div>
       </section>
@@ -134,9 +134,9 @@ const AiGenaiOperationalReadiness = () => {
 
             {/* Framework Image */}
             <div className="mt-6 flex justify-center">
-              <img 
-                src={framework} 
-                alt="Readiness Rocket Framework" 
+              <img
+                src={framework}
+                alt="Readiness Rocket Framework"
                 className="w-full max-w-2xl rounded-lg border border-border shadow-lg"
               />
             </div>
@@ -442,7 +442,9 @@ const AiGenaiOperationalReadiness = () => {
           <CardContent className="text-foreground/80 space-y-4">
             <div className="grid md:grid-cols-2 gap-6 items-start">
               <div className="space-y-4">
-                <p className="mb-4">In the course, you will be introduced to:</p>
+                <p className="mb-4">
+                  In the course, you will be introduced to:
+                </p>
 
                 <div className="space-y-3">
                   <div className="bg-muted/30 rounded p-3">
@@ -450,13 +452,15 @@ const AiGenaiOperationalReadiness = () => {
                       <strong className="text-primary">
                         Readiness Rocket Framework
                       </strong>{" "}
-                      an operational readiness framework for Scaling Generative AI
+                      an operational readiness framework for Scaling Generative
+                      AI
                     </p>
                   </div>
                   <div className="bg-muted/30 rounded p-3">
                     <p>
-                      <strong className="text-primary">Assessments</strong> such as
-                      AI maturity, GenAI maturity, AI/GenAI Mindsets, VITA scores
+                      <strong className="text-primary">Assessments</strong> such
+                      as AI maturity, GenAI maturity, AI/GenAI Mindsets, VITA
+                      scores
                     </p>
                   </div>
                   <div className="bg-muted/30 rounded p-3">
@@ -491,7 +495,8 @@ const AiGenaiOperationalReadiness = () => {
                     </li>
                     <li>Problem-solving and behavior building</li>
                     <li>
-                      Continuous feedback on the operational readiness development
+                      Continuous feedback on the operational readiness
+                      development
                     </li>
                   </ul>
                 </div>
@@ -499,9 +504,9 @@ const AiGenaiOperationalReadiness = () => {
 
               {/* Coaching Image */}
               <div className="flex items-center justify-center">
-                <img 
-                  src={coaching} 
-                  alt="Coaching Framework" 
+                <img
+                  src={coaching}
+                  alt="Coaching Framework"
                   className="w-full max-w-md rounded-lg border border-border shadow-lg"
                 />
               </div>
@@ -524,21 +529,23 @@ const AiGenaiOperationalReadiness = () => {
                   <div className="flex items-start gap-2">
                     <CheckCircle2 className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
                     <p>
-                      An Ecosystem is a cohort where people collaborate to seek and
-                      share knowledge, skills, and experiences with each other.
+                      An Ecosystem is a cohort where people collaborate to seek
+                      and share knowledge, skills, and experiences with each
+                      other.
                     </p>
                   </div>
                   <div className="flex items-start gap-2">
                     <CheckCircle2 className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
                     <p>
-                      Collaboration is a powerful and effective learning technique
+                      Collaboration is a powerful and effective learning
+                      technique
                     </p>
                   </div>
                   <div className="flex items-start gap-2">
                     <CheckCircle2 className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
                     <p>
-                      Future of Work will be largely dependent on an individual's
-                      ability to work in ecosystems
+                      Future of Work will be largely dependent on an
+                      individual's ability to work in ecosystems
                     </p>
                   </div>
                   <div className="flex items-start gap-2">
@@ -558,8 +565,8 @@ const AiGenaiOperationalReadiness = () => {
                   <div className="flex items-start gap-2">
                     <CheckCircle2 className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
                     <p>
-                      Ecosystems enable a paradigm shift in the mindset, from being
-                      an employee of a firm to an employee of an industry
+                      Ecosystems enable a paradigm shift in the mindset, from
+                      being an employee of a firm to an employee of an industry
                     </p>
                   </div>
                 </div>
@@ -568,16 +575,17 @@ const AiGenaiOperationalReadiness = () => {
                   <p className="font-semibold text-foreground">
                     After completion of the course, participants shall be
                     automatically enrolled in an ecosystem of professionals
-                    belonging to different industries and geographical locations.
+                    belonging to different industries and geographical
+                    locations.
                   </p>
                 </div>
               </div>
 
               {/* Ecosystem Image */}
               <div className="flex items-center justify-center">
-                <img 
-                  src={superEcosystem} 
-                  alt="Super Ecosystem" 
+                <img
+                  src={superEcosystem}
+                  alt="Super Ecosystem"
                   className="w-full max-w-md rounded-lg border border-border shadow-lg"
                 />
               </div>
@@ -597,9 +605,9 @@ const AiGenaiOperationalReadiness = () => {
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
               {/* Left: Amit Photo */}
               <div className="flex justify-center lg:justify-start">
-                <img 
-                  src={amit} 
-                  alt="Amit Prabhu" 
+                <img
+                  src={amit}
+                  alt="Amit Prabhu"
                   className="w-full max-w-[280px] rounded-lg border border-border shadow-lg object-cover"
                 />
               </div>
@@ -611,8 +619,8 @@ const AiGenaiOperationalReadiness = () => {
                     Amit Prabhu
                   </h4>
                   <p className="text-sm mb-4">
-                    AI Consultant, Author, Speaker, Business Trainer, Policymaker,
-                    Entrepreneur, and Career Coach
+                    AI Consultant, Author, Speaker, Business Trainer,
+                    Policymaker, Entrepreneur, and Career Coach
                   </p>
                   <div className="space-y-2 text-sm">
                     <p>
@@ -635,23 +643,25 @@ const AiGenaiOperationalReadiness = () => {
                     </p>
                   </div>
                 </div>
-                
+
                 {/* QR Code */}
                 <div className="flex flex-col items-center pt-4">
-                  <img 
-                    src={qrCode} 
-                    alt="Connect on LinkedIn" 
+                  <img
+                    src={qrCode}
+                    alt="Connect on LinkedIn"
                     className="w-36 h-36 border border-border rounded mb-2"
                   />
-                  <p className="text-center text-sm italic text-muted-foreground">Connect on LinkedIn</p>
+                  <p className="text-center text-sm italic text-muted-foreground">
+                    Connect on LinkedIn
+                  </p>
                 </div>
               </div>
 
               {/* Right: Book */}
               <div className="flex flex-col items-center justify-start space-y-4">
-                <img 
-                  src={amazon} 
-                  alt="Scaling Generative AI Book" 
+                <img
+                  src={amazon}
+                  alt="Scaling Generative AI Book"
                   className="w-full max-w-[280px] rounded-lg border border-border shadow-lg"
                 />
                 <div className="text-center space-y-2">
@@ -661,8 +671,8 @@ const AiGenaiOperationalReadiness = () => {
                   <p className="text-sm text-muted-foreground">
                     Available on Amazon
                   </p>
-                  <a 
-                    target="_blank" 
+                  <a
+                    target="_blank"
                     rel="noopener noreferrer"
                     href="https://www.amazon.com/Scaling-Generative-Operational-Readiness-Enterprises/dp/1637427980"
                   >
@@ -687,10 +697,10 @@ const AiGenaiOperationalReadiness = () => {
               Readiness Rocket Framework to successfully scale GenAI in your
               enterprise.
             </p>
-            <a href="https://calendly.com/kirtikganesan27/30min" target="_blank">
-            <Button size="lg" className="bg-primary hover:bg-primary/90">
-              1:1 Consultation →
-            </Button>
+            <a href={import.meta.env.VITE_CALENDLY_URL} target="_blank">
+              <Button size="lg" className="bg-primary hover:bg-primary/90">
+                1:1 Consultation →
+              </Button>
             </a>
           </div>
         </div>

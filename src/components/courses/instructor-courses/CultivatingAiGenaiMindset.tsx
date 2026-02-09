@@ -3,19 +3,19 @@ import Footer from "@/components/Footer";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
-import bg from '@/assets/instruction-based-courses/Cultivating-AI-Mindset/bg.jpg'
-import amazon from '@/assets/instruction-based-courses/Cultivating-AI-Mindset/amazon.webp'
-import framework from '@/assets/instruction-based-courses/Cultivating-AI-Mindset/framework.png'
-import coaching from '@/assets/instruction-based-courses/Essential-Competencies/coaching.png'
-import amit from '@/assets/instruction-based-courses/Essential-Competencies/amit.png'
-import qrCode from '@/assets/instruction-based-courses/Essential-Competencies/qr-code.png'
-import superEcosystem from '@/assets/instruction-based-courses/Essential-Competencies/super-ecosystem.jpg'
-import { 
-  Brain, 
-  Users, 
-  TrendingUp, 
-  Zap, 
-  BookOpen, 
+import bg from "@/assets/instruction-based-courses/Cultivating-AI-Mindset/bg.jpg";
+import amazon from "@/assets/instruction-based-courses/Cultivating-AI-Mindset/amazon.webp";
+import framework from "@/assets/instruction-based-courses/Cultivating-AI-Mindset/framework.png";
+import coaching from "@/assets/instruction-based-courses/Essential-Competencies/coaching.png";
+import amit from "@/assets/instruction-based-courses/Essential-Competencies/amit.png";
+import qrCode from "@/assets/instruction-based-courses/Essential-Competencies/qr-code.png";
+import superEcosystem from "@/assets/instruction-based-courses/Essential-Competencies/super-ecosystem.jpg";
+import {
+  Brain,
+  Users,
+  TrendingUp,
+  Zap,
+  BookOpen,
   CheckCircle2,
   Calendar,
   Target,
@@ -27,16 +27,16 @@ import {
   Focus,
   UserCheck,
   MessageSquare,
-  Activity
+  Activity,
 } from "lucide-react";
 
 const CultivatingAiGenaiMindset = () => {
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
-      
+
       {/* Hero Section with Background Image */}
-      <section 
+      <section
         className="pt-32 pb-16 px-6 relative bg-cover bg-center"
         style={{ backgroundImage: `url(${bg})` }}
       >
@@ -48,12 +48,13 @@ const CultivatingAiGenaiMindset = () => {
           </div>
           <h1 className="heading-xl mb-6">Cultivating AI/GenAI Mindset</h1>
           <p className="text-muted-foreground text-lg max-w-3xl mx-auto mb-8">
-            Develop the right mindset to accelerate GenAI adoption and transformation in your organization
+            Develop the right mindset to accelerate GenAI adoption and
+            transformation in your organization
           </p>
-          <a href="https://calendly.com/kirtikganesan27/30min" target="_blank">
-          <Button size="lg" className="bg-primary hover:bg-primary/90">
-            1:1 Consultation →
-          </Button>
+          <a href={import.meta.env.VITE_CALENDLY_URL} target="_blank">
+            <Button size="lg" className="bg-primary hover:bg-primary/90">
+              1:1 Consultation →
+            </Button>
           </a>
         </div>
       </section>
@@ -71,7 +72,9 @@ const CultivatingAiGenaiMindset = () => {
             <ul className="space-y-3">
               <li className="flex items-start gap-2">
                 <CheckCircle2 className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
-                <p>Different people have reacted differently to the GenAI hype</p>
+                <p>
+                  Different people have reacted differently to the GenAI hype
+                </p>
               </li>
               <li className="flex items-start gap-2">
                 <CheckCircle2 className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
@@ -79,16 +82,23 @@ const CultivatingAiGenaiMindset = () => {
               </li>
               <li className="flex items-start gap-2">
                 <CheckCircle2 className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
-                <p>Like individuals, the organizations have a mindset too, which is the weighted average of the mindset of all the individuals</p>
+                <p>
+                  Like individuals, the organizations have a mindset too, which
+                  is the weighted average of the mindset of all the individuals
+                </p>
               </li>
               <li className="flex items-start gap-2">
                 <CheckCircle2 className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
-                <p>Different organizations have reacted differently to the GenAI hype based on their mindsets</p>
+                <p>
+                  Different organizations have reacted differently to the GenAI
+                  hype based on their mindsets
+                </p>
               </li>
             </ul>
             <div className="bg-primary/5 border border-primary/20 rounded-lg p-4 mt-4">
               <p className="font-semibold text-foreground">
-                Scaled adoption of GenAI is very slow in organizations with skeptic mindsets.
+                Scaled adoption of GenAI is very slow in organizations with
+                skeptic mindsets.
               </p>
             </div>
           </CardContent>
@@ -106,18 +116,24 @@ const CultivatingAiGenaiMindset = () => {
             <ul className="space-y-3">
               <li className="flex items-start gap-2">
                 <ArrowRight className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
-                <p>In order to scale generative AI, an organization should cultivate the right mindset</p>
+                <p>
+                  In order to scale generative AI, an organization should
+                  cultivate the right mindset
+                </p>
               </li>
               <li className="flex items-start gap-2">
                 <ArrowRight className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
-                <p>Right mindset should be cultivated by individuals at different levels in the corporate hierarchy</p>
+                <p>
+                  Right mindset should be cultivated by individuals at different
+                  levels in the corporate hierarchy
+                </p>
               </li>
               <li className="flex items-start gap-2">
                 <ArrowRight className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
                 <p>Based on the growth mindset framework</p>
               </li>
             </ul>
-            
+
             <div className="bg-muted/50 rounded-lg p-4 mt-4">
               <p className="font-semibold text-foreground text-center">
                 GROWTH MINDSET FRAMEWORK
@@ -126,9 +142,9 @@ const CultivatingAiGenaiMindset = () => {
 
             {/* Framework Image */}
             <div className="mt-6">
-              <img 
-                src={framework} 
-                alt="Growth Mindset Framework" 
+              <img
+                src={framework}
+                alt="Growth Mindset Framework"
                 className="w-full rounded-lg border border-border shadow-lg"
               />
             </div>
@@ -147,15 +163,21 @@ const CultivatingAiGenaiMindset = () => {
             <div className="grid md:grid-cols-3 gap-4">
               <div className="bg-primary/5 border border-primary/20 rounded-lg p-4">
                 <p className="font-semibold text-foreground mb-2">Delivery</p>
-                <p className="text-sm">Instructor-driven online or classroom-based</p>
+                <p className="text-sm">
+                  Instructor-driven online or classroom-based
+                </p>
               </div>
               <div className="bg-primary/5 border border-primary/20 rounded-lg p-4">
                 <p className="font-semibold text-foreground mb-2">Duration</p>
                 <p className="text-sm">4 hours</p>
               </div>
               <div className="bg-primary/5 border border-primary/20 rounded-lg p-4">
-                <p className="font-semibold text-foreground mb-2">Target Audience</p>
-                <p className="text-sm">Employees at all levels in the organization hierarchy</p>
+                <p className="font-semibold text-foreground mb-2">
+                  Target Audience
+                </p>
+                <p className="text-sm">
+                  Employees at all levels in the organization hierarchy
+                </p>
               </div>
             </div>
           </CardContent>
@@ -173,18 +195,30 @@ const CultivatingAiGenaiMindset = () => {
             <div className="grid md:grid-cols-2 gap-4">
               <div className="bg-card border border-border rounded-lg p-4">
                 <h5 className="font-semibold text-primary mb-2">Coaching</h5>
-                <p className="text-sm">Ensure practical application of competencies at workplace</p>
+                <p className="text-sm">
+                  Ensure practical application of competencies at workplace
+                </p>
               </div>
               <div className="bg-card border border-border rounded-lg p-4">
-                <h5 className="font-semibold text-primary mb-2">Call-to-Action</h5>
-                <p className="text-sm">Speed up your organization's AI/GenAI deployment</p>
+                <h5 className="font-semibold text-primary mb-2">
+                  Call-to-Action
+                </h5>
+                <p className="text-sm">
+                  Speed up your organization's AI/GenAI deployment
+                </p>
               </div>
               <div className="bg-card border border-border rounded-lg p-4">
-                <h5 className="font-semibold text-primary mb-2">Content Customization</h5>
-                <p className="text-sm">Differentiate from competitors with tailored content</p>
+                <h5 className="font-semibold text-primary mb-2">
+                  Content Customization
+                </h5>
+                <p className="text-sm">
+                  Differentiate from competitors with tailored content
+                </p>
               </div>
               <div className="bg-card border border-border rounded-lg p-4">
-                <h5 className="font-semibold text-primary mb-2">Collaboration</h5>
+                <h5 className="font-semibold text-primary mb-2">
+                  Collaboration
+                </h5>
                 <p className="text-sm">Learn through ecosystem partnerships</p>
               </div>
             </div>
@@ -201,14 +235,17 @@ const CultivatingAiGenaiMindset = () => {
           </CardHeader>
           <CardContent className="text-foreground/80 space-y-6">
             <p className="text-sm text-muted-foreground">
-              Instructor-led, in-person/virtual, 4 hours, 1-2-1 coaching (1 hour free)
+              Instructor-led, in-person/virtual, 4 hours, 1-2-1 coaching (1 hour
+              free)
             </p>
 
             <div className="space-y-6">
               <div className="border-l-2 border-primary pl-4">
                 <div className="flex items-center gap-2 mb-3">
                   <Eye className="w-5 h-5 text-primary" />
-                  <h5 className="font-semibold text-foreground">Need for Right Mindset</h5>
+                  <h5 className="font-semibold text-foreground">
+                    Need for Right Mindset
+                  </h5>
                 </div>
                 <ul className="list-disc list-inside space-y-2 text-sm ml-2">
                   <li>The GenAI hype</li>
@@ -220,7 +257,9 @@ const CultivatingAiGenaiMindset = () => {
               <div className="border-l-2 border-primary pl-4">
                 <div className="flex items-center gap-2 mb-3">
                   <Brain className="w-5 h-5 text-primary" />
-                  <h5 className="font-semibold text-foreground">The Growth Mindset</h5>
+                  <h5 className="font-semibold text-foreground">
+                    The Growth Mindset
+                  </h5>
                 </div>
                 <ul className="list-disc list-inside space-y-2 text-sm ml-2">
                   <li>Fixed mindset vs Growth mindset</li>
@@ -233,7 +272,9 @@ const CultivatingAiGenaiMindset = () => {
               <div className="border-l-2 border-primary pl-4">
                 <div className="flex items-center gap-2 mb-3">
                   <TrendingUp className="w-5 h-5 text-primary" />
-                  <h5 className="font-semibold text-foreground">Cultivating Growth Mindset</h5>
+                  <h5 className="font-semibold text-foreground">
+                    Cultivating Growth Mindset
+                  </h5>
                 </div>
                 <ul className="list-disc list-inside space-y-2 text-sm ml-2">
                   <li>More about the belief → action → focus framework</li>
@@ -246,7 +287,9 @@ const CultivatingAiGenaiMindset = () => {
               <div className="border-l-2 border-primary pl-4">
                 <div className="flex items-center gap-2 mb-3">
                   <Activity className="w-5 h-5 text-primary" />
-                  <h5 className="font-semibold text-foreground">Practical Applications of Growth Mindset</h5>
+                  <h5 className="font-semibold text-foreground">
+                    Practical Applications of Growth Mindset
+                  </h5>
                 </div>
                 <ul className="list-disc list-inside space-y-2 text-sm ml-2">
                   <li>Case study discussion</li>
@@ -270,41 +313,62 @@ const CultivatingAiGenaiMindset = () => {
           <CardContent className="text-foreground/80 space-y-4">
             <div className="grid md:grid-cols-2 gap-6 items-start">
               <div className="space-y-4">
-                <p className="mb-4">In the course, you will be introduced to:</p>
-                
+                <p className="mb-4">
+                  In the course, you will be introduced to:
+                </p>
+
                 <div className="space-y-3">
                   <div className="bg-muted/30 rounded p-3">
-                    <p><strong className="text-primary">The importance</strong> of cultivating the growth mindset</p>
+                    <p>
+                      <strong className="text-primary">The importance</strong>{" "}
+                      of cultivating the growth mindset
+                    </p>
                   </div>
                   <div className="bg-muted/30 rounded p-3">
-                    <p><strong className="text-primary">Understanding</strong> the key differences between the fixed and growth mindset</p>
+                    <p>
+                      <strong className="text-primary">Understanding</strong>{" "}
+                      the key differences between the fixed and growth mindset
+                    </p>
                   </div>
                   <div className="bg-muted/30 rounded p-3">
-                    <p><strong className="text-primary">Growth mindset cultivation framework</strong></p>
+                    <p>
+                      <strong className="text-primary">
+                        Growth mindset cultivation framework
+                      </strong>
+                    </p>
                   </div>
                   <div className="bg-muted/30 rounded p-3">
-                    <p><strong className="text-primary">Practical applications</strong> of growth mindset</p>
+                    <p>
+                      <strong className="text-primary">
+                        Practical applications
+                      </strong>{" "}
+                      of growth mindset
+                    </p>
                   </div>
                 </div>
 
                 <Separator className="my-6" />
 
                 <div>
-                  <h5 className="font-semibold text-foreground mb-3">In the coaching, there will be:</h5>
+                  <h5 className="font-semibold text-foreground mb-3">
+                    In the coaching, there will be:
+                  </h5>
                   <ul className="list-disc list-inside space-y-2 ml-4">
                     <li>Commitment contract with the coach</li>
                     <li>Continuous check-ins on plan of action</li>
                     <li>Problem-solving and behavior building</li>
-                    <li>Continuous feedback on the growth mindset cultivation</li>
+                    <li>
+                      Continuous feedback on the growth mindset cultivation
+                    </li>
                   </ul>
                 </div>
               </div>
 
               {/* Coaching Image */}
               <div className="flex items-center justify-center">
-                <img 
-                  src={coaching} 
-                  alt="Coaching Framework" 
+                <img
+                  src={coaching}
+                  alt="Coaching Framework"
                   className="w-full max-w-md rounded-lg border border-border shadow-lg"
                 />
               </div>
@@ -324,44 +388,63 @@ const CultivatingAiGenaiMindset = () => {
             <div className="grid md:grid-cols-2 gap-6 items-start">
               <div className="space-y-4">
                 <p>
-                  An ecosystem is a cohort where people collaborate to seek and share knowledge, skills, and experiences with each other.
+                  An ecosystem is a cohort where people collaborate to seek and
+                  share knowledge, skills, and experiences with each other.
                 </p>
-                
+
                 <div className="bg-primary/5 border border-primary/20 rounded-lg p-4 space-y-2">
                   <div className="flex items-start gap-2">
                     <CheckCircle2 className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
-                    <p>Collaboration is a powerful and effective learning technique</p>
+                    <p>
+                      Collaboration is a powerful and effective learning
+                      technique
+                    </p>
                   </div>
                   <div className="flex items-start gap-2">
                     <CheckCircle2 className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
-                    <p>Future of work will be largely dependent on an individual's ability to work in ecosystems</p>
+                    <p>
+                      Future of work will be largely dependent on an
+                      individual's ability to work in ecosystems
+                    </p>
                   </div>
                   <div className="flex items-start gap-2">
                     <CheckCircle2 className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
-                    <p>Research shows that an individual learns 3X faster through ecosystems than standalone</p>
+                    <p>
+                      Research shows that an individual learns 3X faster through
+                      ecosystems than standalone
+                    </p>
                   </div>
                   <div className="flex items-start gap-2">
                     <CheckCircle2 className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
-                    <p>AI/GenAI transformation requires diverse skillsets and expertise to be leveraged through ecosystems</p>
+                    <p>
+                      AI/GenAI transformation requires diverse skillsets and
+                      expertise to be leveraged through ecosystems
+                    </p>
                   </div>
                   <div className="flex items-start gap-2">
                     <CheckCircle2 className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
-                    <p>Ecosystems enable a paradigm shift in the mindset, from being an employee of a firm to an employee of an industry</p>
+                    <p>
+                      Ecosystems enable a paradigm shift in the mindset, from
+                      being an employee of a firm to an employee of an industry
+                    </p>
                   </div>
                 </div>
 
                 <div className="bg-muted/50 rounded-lg p-4 mt-4">
                   <p className="font-semibold text-foreground">
-                    After completion of the course, participants shall be automatically enrolled in an ecosystem of professionals belonging to different industries and geographical locations.
+                    After completion of the course, participants shall be
+                    automatically enrolled in an ecosystem of professionals
+                    belonging to different industries and geographical
+                    locations.
                   </p>
                 </div>
               </div>
 
               {/* Ecosystem Image */}
               <div className="flex items-center justify-center h-full min-h-[300px]">
-                <img 
-                  src={superEcosystem} 
-                  alt="Super Ecosystem" 
+                <img
+                  src={superEcosystem}
+                  alt="Super Ecosystem"
                   className="w-full max-w-md rounded-lg border border-border shadow-lg"
                 />
               </div>
@@ -381,55 +464,72 @@ const CultivatingAiGenaiMindset = () => {
             <div className="grid md:grid-cols-3 gap-6 items-start">
               {/* Left: Amit Photo */}
               <div className="flex justify-center">
-                <img 
-                  src={amit} 
-                  alt="Amit Prabhu" 
+                <img
+                  src={amit}
+                  alt="Amit Prabhu"
                   className="w-full max-w-xs rounded-lg border border-border shadow-lg"
                 />
               </div>
 
               {/* Center: Details and QR Code */}
               <div className="space-y-4">
-                <h4 className="font-semibold text-foreground text-lg">A Course By Amit Prabhu</h4>
+                <h4 className="font-semibold text-foreground text-lg">
+                  A Course By Amit Prabhu
+                </h4>
                 <p className="text-sm">
-                  AI Consultant, Author, Speaker, Business Trainer, Policymaker, Entrepreneur, and Career Coach
+                  AI Consultant, Author, Speaker, Business Trainer, Policymaker,
+                  Entrepreneur, and Career Coach
                 </p>
                 <div className="space-y-2 text-sm">
                   <p>
-                    <a href="mailto:amit@amitprabhu.net" className="text-primary underline hover:text-primary/80">
+                    <a
+                      href="mailto:amit@amitprabhu.net"
+                      className="text-primary underline hover:text-primary/80"
+                    >
                       amit@amitprabhu.net
                     </a>
                   </p>
                   <p>
-                    <a href="https://www.amitprabhu.net" target="_blank" rel="noopener noreferrer" className="text-primary underline hover:text-primary/80">
+                    <a
+                      href="https://www.amitprabhu.net"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-primary underline hover:text-primary/80"
+                    >
                       www.amitprabhu.net
                     </a>
                   </p>
                 </div>
-                
+
                 {/* QR Code */}
                 <div className="flex justify-center pt-4">
-                  <img 
-                    src={qrCode} 
-                    alt="Connect on LinkedIn" 
+                  <img
+                    src={qrCode}
+                    alt="Connect on LinkedIn"
                     className="w-32 h-32 border border-border rounded"
                   />
                 </div>
-                <p className="text-center text-sm italic">Connect on LinkedIn</p>
+                <p className="text-center text-sm italic">
+                  Connect on LinkedIn
+                </p>
               </div>
 
               {/* Right: Book */}
               <div className="flex flex-col items-center justify-center space-y-4">
-                <img 
-                  src={amazon} 
-                  alt="Digital Leadership Framework Book" 
+                <img
+                  src={amazon}
+                  alt="Digital Leadership Framework Book"
                   className="w-full max-w-xs rounded-lg border border-border shadow-lg"
                 />
                 <div className="text-center">
-                  <p className="font-semibold text-foreground mb-1">Based on his book</p>
-                  <p className="text-sm text-muted-foreground mb-3">Available on Amazon</p>
-                  <a 
-                    target="_blank" 
+                  <p className="font-semibold text-foreground mb-1">
+                    Based on his book
+                  </p>
+                  <p className="text-sm text-muted-foreground mb-3">
+                    Available on Amazon
+                  </p>
+                  <a
+                    target="_blank"
                     rel="noopener noreferrer"
                     href="https://www.amazon.com/dp/B0CT4J7H1D?ref=cm_sw_r_ffobk_cp_ud_dp_SN58ATAJN43WRWFFBSQX&ref_=cm_sw_r_ffobk_cp_ud_dp_SN58ATAJN43WRWFFBSQX&social_share=cm_sw_r_ffobk_cp_ud_dp_SN58ATAJN43WRWFFBSQX&bestFormat=true&csmig=1"
                   >
@@ -450,12 +550,13 @@ const CultivatingAiGenaiMindset = () => {
               Ready to Cultivate a Growth Mindset?
             </h3>
             <p className="text-muted-foreground mb-6 max-w-2xl mx-auto">
-              Join our mindset transformation course and empower your organization to embrace AI/GenAI with confidence and enthusiasm.
+              Join our mindset transformation course and empower your
+              organization to embrace AI/GenAI with confidence and enthusiasm.
             </p>
-            <a href="https://calendly.com/kirtikganesan27/30min" target="_blank">
-            <Button size="lg" className="bg-primary hover:bg-primary/90">
-              1:1 Consultation →
-            </Button>
+            <a href={import.meta.env.VITE_CALENDLY_URL} target="_blank">
+              <Button size="lg" className="bg-primary hover:bg-primary/90">
+                1:1 Consultation →
+              </Button>
             </a>
           </div>
         </div>

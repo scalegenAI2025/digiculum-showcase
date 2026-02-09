@@ -9,22 +9,34 @@ const Footer = () => {
           <div>
             <ul className="space-y-3">
               <li>
-                <a href="/individuals" className="text-foreground hover:text-primary transition-colors">
+                <a
+                  href="/individuals"
+                  className="text-foreground hover:text-primary transition-colors"
+                >
                   Individuals
                 </a>
               </li>
               <li>
-                <a href="/leaders" className="text-foreground hover:text-primary transition-colors">
+                <a
+                  href="/leaders"
+                  className="text-foreground hover:text-primary transition-colors"
+                >
                   Leaders
                 </a>
               </li>
               <li>
-                <a href="/courses" className="text-foreground hover:text-primary transition-colors">
+                <a
+                  href="/courses"
+                  className="text-foreground hover:text-primary transition-colors"
+                >
                   Courses
                 </a>
               </li>
               <li>
-                <a href="/ecosystem" className="text-foreground hover:text-primary transition-colors">
+                <a
+                  href="/ecosystem"
+                  className="text-foreground hover:text-primary transition-colors"
+                >
                   Ecosystem
                 </a>
               </li>
@@ -45,22 +57,34 @@ const Footer = () => {
           <div>
             <ul className="space-y-3">
               <li>
-                <a href="/privacy" className="text-foreground/70 hover:text-foreground transition-colors">
+                <a
+                  href="/privacy"
+                  className="text-foreground/70 hover:text-foreground transition-colors"
+                >
                   Privacy Policy
                 </a>
               </li>
               <li>
-                <a href="/cookie" className="text-foreground/70 hover:text-foreground transition-colors">
+                <a
+                  href="/cookie"
+                  className="text-foreground/70 hover:text-foreground transition-colors"
+                >
                   Cookie Policy
                 </a>
               </li>
               <li>
-                <a href="/general" className="text-foreground/70 hover:text-foreground transition-colors">
+                <a
+                  href="/general"
+                  className="text-foreground/70 hover:text-foreground transition-colors"
+                >
                   General Terms
                 </a>
               </li>
               <li>
-                <a href="/refund" className="text-foreground/70 hover:text-foreground transition-colors">
+                <a
+                  href="/refund"
+                  className="text-foreground/70 hover:text-foreground transition-colors"
+                >
                   Refund Policy
                 </a>
               </li>
@@ -79,15 +103,15 @@ const Footer = () => {
               <Linkedin className="w-6 h-6" />
               LinkedIn
             </a>
-            
           </div>
 
           {/* Column 4: CTA */}
           <div className="flex items-center justify-end">
             <a
-              href="mailto:info@digiculum.com"
+              href="https://mail.google.com/mail/?view=cm&fs=1&to=info@digiculum.com"
               className="btn-primary text-center"
               target="_blank"
+              rel="noopener noreferrer"
             >
               Contact Us
             </a>

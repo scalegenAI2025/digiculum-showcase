@@ -9,7 +9,6 @@ const IndividualsHero = () => {
 
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden -mt-20 pt-24 pb-8">
-      
       {/* Background Image */}
       <div
         className="absolute inset-0 bg-cover bg-center"
@@ -22,7 +21,6 @@ const IndividualsHero = () => {
       {/* Content */}
       <div className="relative z-10 h-full container mx-auto px-6 flex items-center">
         <div className="grid lg:grid-cols-2 gap-12 w-full text-white">
-
           {/* LEFT SIDE */}
           <div>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-4">
@@ -32,9 +30,12 @@ const IndividualsHero = () => {
             <p className="text-xl font-semibold mb-6">Cohort #1</p>
 
             <p className="text-lg text-white/80 mb-8 max-w-xl">
-              Personalized Continuous Collaborative Learning Experience
-              through our unique <span className="text-primary font-semibold">
-              Know-Hack-Build</span> Framework
+              Personalized Continuous Collaborative Learning Experience through
+              our unique{" "}
+              <span className="text-primary font-semibold">
+                Know-Hack-Build
+              </span>{" "}
+              Framework
             </p>
 
             {/* Info Row */}
@@ -57,10 +58,10 @@ const IndividualsHero = () => {
 
             {/* CTA */}
             <div className="flex gap-4">
-              <a href="https://calendly.com/kirtikganesan27/30min" target="_blank">
-              <Button size="lg" className="bg-primary hover:bg-primary/90">
-                1:1 Consultation
-              </Button>
+              <a href={import.meta.env.VITE_CALENDLY_URL} target="_blank">
+                <Button size="lg" className="bg-primary hover:bg-primary/90">
+                  1:1 Consultation
+                </Button>
               </a>
 
               <Button
@@ -84,18 +85,15 @@ const IndividualsHero = () => {
 
               <p className="text-lg text-white mb-2 font-bold">90% DISCOUNT</p>
 
-              <p className="text-lg line-through text-white/40">
-                INR 3,00,000
-              </p>
+              <p className="text-lg line-through text-white/40">INR 3,00,000</p>
               <div className="flex gap-2">
-              <p className="text-3xl font-bold text-primary mb-6">
-                INR 30,000/-*
-              </p>
-              <span className="text-3xl font-bold text-white mb-6">Only</span>
+                <p className="text-3xl font-bold text-primary mb-6">
+                  INR 30,000
+                </p>
+                <span className="text-3xl font-bold text-white mb-6">only</span>
               </div>
             </div>
           </div>
-
         </div>
       </div>
 

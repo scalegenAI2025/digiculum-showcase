@@ -53,7 +53,7 @@ import leaderbg from "@/assets/leader-bg.png";
 const LeadersHero = () => {
   const handleConsultation = () => {
     // Opens Calendly or consultation booking page
-    window.open("https://calendly.com/kirtikganesan27/30min", "_blank");
+    window.open(import.meta.env.VITE_CALENDLY_URL, "_blank");
   };
 
   return (

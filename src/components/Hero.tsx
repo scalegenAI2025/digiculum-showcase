@@ -33,16 +33,24 @@ const Hero = () => {
                 Bootcamp
               </h2>
               <div className="flex gap-1.5">
-                <span className="text-white italic text-xs md:text-sm mb-2 md:mb-4">Start Date:</span>
+                <span className="text-white italic text-xs md:text-sm mb-2 md:mb-4">
+                  Start Date:
+                </span>
                 <span className="text-white font-bold italic text-xs md:text-sm mb-2 md:mb-4">
                   23rd Feb, 2026
                 </span>
               </div>
 
-              <p className="text-foreground/60 text-xs md:text-sm mb-4 md:mb-6">Cohort-based</p>
+              <p className="text-foreground/60 text-xs md:text-sm mb-4 md:mb-6">
+                Cohort-based
+              </p>
 
               <div className="mt-auto">
-                <a href="https://calendly.com/kirtikganesan27/30min" target="_blank" className="btn-primary inline-block text-xs md:text-sm px-4 md:px-6 py-2 md:py-2.5">
+                <a
+                  href={import.meta.env.VITE_CALENDLY_URL}
+                  target="_blank"
+                  className="btn-primary inline-block text-xs md:text-sm px-4 md:px-6 py-2 md:py-2.5"
+                >
                   1:1 Consultation
                 </a>
               </div>
@@ -70,10 +78,15 @@ const Hero = () => {
 
               <div className="h-2 md:h-4" />
 
-              <p className="text-foreground/60 text-xs md:text-sm mb-4 md:mb-6">Enterprise-focused</p>
+              <p className="text-foreground/60 text-xs md:text-sm mb-4 md:mb-6">
+                Enterprise-focused
+              </p>
 
               <div className="mt-auto">
-                <a href="/leaders" className="btn-primary inline-block text-xs md:text-sm px-4 md:px-6 py-2 md:py-2.5">
+                <a
+                  href="/leaders"
+                  className="btn-primary inline-block text-xs md:text-sm px-4 md:px-6 py-2 md:py-2.5"
+                >
                   Find More
                 </a>
               </div>
@@ -81,7 +94,6 @@ const Hero = () => {
           </div>
         </div>
       </div>
-
     </section>
   );
 };
