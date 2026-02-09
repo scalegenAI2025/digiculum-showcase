@@ -1,149 +1,116 @@
 import { useState } from "react";
-import { z } from "zod";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogDescription,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { useToast } from "@/hooks/use-toast";
-import { Download } from "lucide-react";
-
-const formSchema = z.object({
-  fullName: z.string().trim().min(1, "Full name is required").max(100, "Name must be less than 100 characters"),
-  email: z.string().trim().email("Invalid email address").max(255, "Email must be less than 255 characters"),
-  phone: z.string().trim().min(1, "Phone number is required").max(20, "Phone number must be less than 20 characters"),
-});
-
-type FormValues = z.infer<typeof formSchema>;
+import { Label } from "@/components/ui/label";
 
 interface BrochureDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  onSubmit?: (data: { name: string; email: string; phone: string }) => void;
 }
 
-const BrochureDialog = ({ open, onOpenChange }: BrochureDialogProps) => {
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const { toast } = useToast();
-  
-  const form = useForm<FormValues>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      fullName: "",
-      email: "",
-      phone: "",
-    },
+const BrochureDialog = ({ open, onOpenChange, onSubmit }: BrochureDialogProps) => {
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    phone: "",
   });
 
-  const onSubmit = async (data: FormValues) => {
-    setIsSubmitting(true);
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
     
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    // Call the onSubmit handler if provided
+    if (onSubmit) {
+      onSubmit(formData);
+    }
     
-    toast({
-      title: "Brochure Download Started!",
-      description: `Thank you ${data.fullName}! Your brochure is being downloaded.`,
-    });
-    
-    setIsSubmitting(false);
-    onOpenChange(false);
-    form.reset();
+    // Reset form
+    setFormData({ name: "", email: "", phone: "" });
+  };
+
+  const handleChange = (field: string, value: string) => {
+    setFormData(prev => ({ ...prev, [field]: value }));
   };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-md bg-card border-border">
+      <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle className="text-2xl font-bold text-center">
-            Download Brochure
-          </DialogTitle>
-          <DialogDescription className="text-center text-foreground/70">
-            Get detailed information about the AI Practitioner Bootcamp
+          <DialogTitle className="text-2xl font-bold">Download Brochure</DialogTitle>
+          <DialogDescription className="text-base">
+            Please provide your details to download the AI Practitioner Bootcamp brochure.
           </DialogDescription>
         </DialogHeader>
         
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 mt-4">
-            <FormField
-              control={form.control}
-              name="fullName"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Full Name *</FormLabel>
-                  <FormControl>
-                    <Input 
-                      placeholder="Enter your full name" 
-                      className="bg-background border-border"
-                      {...field} 
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
+        <form onSubmit={handleSubmit} className="space-y-5 mt-4">
+          <div className="space-y-2">
+            <Label htmlFor="name" className="text-sm font-medium">
+              Full Name <span className="text-destructive">*</span>
+            </Label>
+            <Input
+              id="name"
+              placeholder="Enter your full name"
+              value={formData.name}
+              onChange={(e) => handleChange("name", e.target.value)}
+              required
+              className="w-full"
             />
-            
-            <FormField
-              control={form.control}
-              name="email"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Email Address *</FormLabel>
-                  <FormControl>
-                    <Input 
-                      type="email"
-                      placeholder="Enter your email address" 
-                      className="bg-background border-border"
-                      {...field} 
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="email" className="text-sm font-medium">
+              Email Address <span className="text-destructive">*</span>
+            </Label>
+            <Input
+              id="email"
+              type="email"
+              placeholder="your.email@example.com"
+              value={formData.email}
+              onChange={(e) => handleChange("email", e.target.value)}
+              required
+              className="w-full"
             />
-            
-            <FormField
-              control={form.control}
-              name="phone"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Phone Number *</FormLabel>
-                  <FormControl>
-                    <Input 
-                      type="tel"
-                      placeholder="Enter your phone number" 
-                      className="bg-background border-border"
-                      {...field} 
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="phone" className="text-sm font-medium">
+              Phone Number <span className="text-destructive">*</span>
+            </Label>
+            <Input
+              id="phone"
+              type="tel"
+              placeholder="+91 98765 43210"
+              value={formData.phone}
+              onChange={(e) => handleChange("phone", e.target.value)}
+              required
+              className="w-full"
             />
-            
+          </div>
+
+          <div className="flex gap-3 pt-2">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => onOpenChange(false)}
+              className="flex-1"
+            >
+              Cancel
+            </Button>
             <Button 
               type="submit" 
-              className="w-full btn-primary mt-6"
-              disabled={isSubmitting}
+              className="flex-1 bg-primary hover:bg-primary/90"
             >
-              <Download className="w-4 h-4 mr-2" />
-              {isSubmitting ? "Processing..." : "Download Now"}
+              Submit & Download
             </Button>
-          </form>
-        </Form>
+          </div>
+        </form>
       </DialogContent>
     </Dialog>
   );
