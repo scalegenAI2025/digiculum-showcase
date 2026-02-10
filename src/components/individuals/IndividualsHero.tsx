@@ -3,9 +3,26 @@ import { Button } from "@/components/ui/button";
 import { Calendar, Clock, Users } from "lucide-react";
 import BrochureDialog from "./BrochureDialog";
 import individualsBg from "@/assets/individuals.png";
+import brochurePdf from "@/assets/individuals.pdf";
 
 const IndividualsHero = () => {
   const [brochureOpen, setBrochureOpen] = useState(false);
+
+  const handleBrochureSubmit = (data: { name: string; email: string; phone: string }) => {
+    // Here you can send data to Google Sheets or your backend
+    console.log("User data:", data);
+    
+    // Download the PDF after form submission
+    const link = document.createElement('a');
+    link.href = brochurePdf;
+    link.download = 'AI-Practitioner-Bootcamp-Brochure.pdf';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    
+    // Close the dialog
+    setBrochureOpen(false);
+  };
 
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden -mt-20 pt-24 pb-8">
@@ -79,7 +96,7 @@ const IndividualsHero = () => {
           <div className="flex items-center lg:justify-end">
             <div className="bg-black/50 p-8 rounded-2xl max-w-md w-full">
               <h2 className="text-2xl font-bold mb-6">
-                Don’t miss out the unbeatable <br />
+                Don't miss out the unbeatable <br />
                 <span className="text-white">Early Joiner offer</span>
               </h2>
 
@@ -97,7 +114,11 @@ const IndividualsHero = () => {
         </div>
       </div>
 
-      <BrochureDialog open={brochureOpen} onOpenChange={setBrochureOpen} />
+      <BrochureDialog 
+        open={brochureOpen} 
+        onOpenChange={setBrochureOpen}
+        onSubmit={handleBrochureSubmit}
+      />
     </section>
   );
 };
