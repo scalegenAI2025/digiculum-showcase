@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import BrochureDialog from "./BrochureDialog";
+import brochurePdf from "@/assets/individuals.pdf";
 import gptLogo from '@/assets/AI-logos/openai.png'
 import claudeLogo from '@/assets/AI-logos/Claude.png'
 import GeminiLogo from '@/assets/AI-logos/Gemini.png'
@@ -34,6 +35,21 @@ const tools = [
 
 const ToolsUsed = () => {
   const [brochureOpen, setBrochureOpen] = useState(false);
+
+  const handleBrochureSubmit = (data: { name: string; email: string; phone: string }) => {
+    // Here you can send data to Google Sheets or your backend
+    console.log("User data:", data);
+    
+    // Download the PDF after form submission
+    const link = document.createElement('a');
+    link.href = brochurePdf;
+    link.download = 'AI-Practitioner-Bootcamp-Brochure.pdf';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    
+    // Close the dialog (handled by BrochureDialog itself)
+  };
 
   return (
     <section className="py-20 bg-card/30">
@@ -85,7 +101,11 @@ const ToolsUsed = () => {
         </div>
       </div>
 
-      <BrochureDialog open={brochureOpen} onOpenChange={setBrochureOpen} />
+      <BrochureDialog 
+        open={brochureOpen} 
+        onOpenChange={setBrochureOpen}
+        onSubmit={handleBrochureSubmit}
+      />
     </section>
   );
 };

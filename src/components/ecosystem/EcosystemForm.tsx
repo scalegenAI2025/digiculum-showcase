@@ -328,20 +328,23 @@ const EcosystemForm = () => {
     };
 
     try {
-      const GOOGLE_SHEETS_URL = import.meta.env.VITE_GOOGLE_SHEETS_URL;
+      const GOOGLE_SHEETS_URL = import.meta.env.VITE_ECOSYSTEM_URL;
 
-      await fetch(GOOGLE_SHEETS_URL, {
+      // Fire and forget - send data to Google Sheets in the background
+      // Don't await the response, just trigger it
+      fetch(GOOGLE_SHEETS_URL, {
         method: "POST",
         mode: "no-cors",
         headers: {
           "Content-Type": "text/plain",
         },
         body: JSON.stringify(submissionData),
+      }).catch((error) => {
+        // Log error but don't block the user experience
+        console.error("Error submitting to Google Sheets:", error);
       });
 
-      // Small delay to ensure the request completes
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-
+      // Immediately proceed with UI updates without waiting for Google Sheets
       setSubmitted(true);
 
       // Reset form
@@ -363,6 +366,7 @@ const EcosystemForm = () => {
       const n1 = Math.floor(Math.random() * 100) + 1;
       const n2 = Math.floor(Math.random() * 100) + 1;
       setCaptcha({ n1, n2, answer: n1 + n2 });
+
     } catch (error) {
       console.error("Submission error:", error);
       alert(

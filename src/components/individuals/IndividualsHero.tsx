@@ -59,7 +59,7 @@ const IndividualsHero = () => {
             <div className="flex flex-wrap gap-6 mb-10 text-sm">
               <div>
                 <p className="font-semibold">21 Days</p>
-                <p className="text-white/70">Start Date: 16th Feb 2026</p>
+                <p className="text-white/70">Start Date: 23rd Feb 2026</p>
               </div>
 
               <div>

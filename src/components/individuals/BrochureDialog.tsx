@@ -9,7 +9,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Loader2 } from "lucide-react";
+import { Loader2, CheckCircle2 } from "lucide-react";
 
 interface BrochureDialogProps {
   open: boolean;
@@ -25,17 +25,28 @@ const BrochureDialog = ({ open, onOpenChange, onSubmit }: BrochureDialogProps) =
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [showToast, setShowToast] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
     setError(null);
     
+    // Validate phone number
+    const phoneRegex = /^\d{10}$/;
+    if (!phoneRegex.test(formData.phone)) {
+      setError("Phone number must be exactly 10 digits");
+      setIsSubmitting(false);
+      return;
+    }
+    
     try {
       // Replace this URL with your Google Apps Script Web App URL
-      const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwGYmY8lRb931RZSMPAX0VQOLsmi_apldCnDPznE652B62zZDeG7sekBlFDLJTUA6fPzQ/exec";
+      const GOOGLE_SCRIPT_URL = import.meta.env.VITE_BROCHURE_URL;
       
-      const response = await fetch(GOOGLE_SCRIPT_URL, {
+      // Fire and forget - send data to Google Sheets in the background
+      // Don't await the response, just trigger it
+      fetch(GOOGLE_SCRIPT_URL, {
         method: "POST",
         mode: "no-cors", // Important for Google Apps Script
         headers: {
@@ -47,10 +58,15 @@ const BrochureDialog = ({ open, onOpenChange, onSubmit }: BrochureDialogProps) =
           phone: formData.phone,
           timestamp: new Date().toISOString(),
         }),
+      }).catch(err => {
+        // Log error but don't block the user experience
+        console.error("Error submitting to Google Sheets:", err);
       });
 
-      // With no-cors mode, we can't read the response, so we assume success
-      // Call the onSubmit handler if provided
+      // Immediately proceed with the download and UI updates
+      // without waiting for Google Sheets response
+      
+      // Call the onSubmit handler if provided (triggers PDF download)
       if (onSubmit) {
         onSubmit(formData);
       }
@@ -61,11 +77,16 @@ const BrochureDialog = ({ open, onOpenChange, onSubmit }: BrochureDialogProps) =
       // Close dialog
       onOpenChange(false);
       
-      // You might want to show a success message here
-      alert("Thank you! Your brochure will be downloaded shortly.");
+      // Show toast notification
+      setShowToast(true);
+      
+      // Hide toast after 3 seconds
+      setTimeout(() => {
+        setShowToast(false);
+      }, 3000);
       
     } catch (err) {
-      console.error("Error submitting form:", err);
+      console.error("Error in form submission:", err);
       setError("Failed to submit form. Please try again.");
     } finally {
       setIsSubmitting(false);
@@ -73,101 +94,134 @@ const BrochureDialog = ({ open, onOpenChange, onSubmit }: BrochureDialogProps) =
   };
 
   const handleChange = (field: string, value: string) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
+    // For phone field, only allow numbers
+    if (field === "phone") {
+      const numericValue = value.replace(/\D/g, "");
+      // Limit to 10 digits
+      if (numericValue.length <= 10) {
+        setFormData(prev => ({ ...prev, [field]: numericValue }));
+      }
+    } else {
+      setFormData(prev => ({ ...prev, [field]: value }));
+    }
+    
+    // Clear error when user starts typing
+    if (error) setError(null);
   };
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-md">
-        <DialogHeader>
-          <DialogTitle className="text-2xl font-bold">Download Brochure</DialogTitle>
-          <DialogDescription className="text-base">
-            Please provide your details to download the AI Practitioner Bootcamp brochure.
-          </DialogDescription>
-        </DialogHeader>
-        
-        <form onSubmit={handleSubmit} className="space-y-5 mt-4">
-          <div className="space-y-2">
-            <Label htmlFor="name" className="text-sm font-medium">
-              Full Name <span className="text-destructive">*</span>
-            </Label>
-            <Input
-              id="name"
-              placeholder="Enter your full name"
-              value={formData.name}
-              onChange={(e) => handleChange("name", e.target.value)}
-              required
-              disabled={isSubmitting}
-              className="w-full"
-            />
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="email" className="text-sm font-medium">
-              Email Address <span className="text-destructive">*</span>
-            </Label>
-            <Input
-              id="email"
-              type="email"
-              placeholder="your.email@example.com"
-              value={formData.email}
-              onChange={(e) => handleChange("email", e.target.value)}
-              required
-              disabled={isSubmitting}
-              className="w-full"
-            />
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="phone" className="text-sm font-medium">
-              Phone Number <span className="text-destructive">*</span>
-            </Label>
-            <Input
-              id="phone"
-              type="tel"
-              placeholder="+91 98765 43210"
-              value={formData.phone}
-              onChange={(e) => handleChange("phone", e.target.value)}
-              required
-              disabled={isSubmitting}
-              className="w-full"
-            />
-          </div>
-
-          {error && (
-            <div className="text-sm text-destructive bg-destructive/10 p-3 rounded-md">
-              {error}
+    <>
+      <Dialog open={open} onOpenChange={onOpenChange}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle className="text-2xl font-bold">Download Brochure</DialogTitle>
+            <DialogDescription className="text-base">
+              Please provide your details to download the AI Practitioner Bootcamp brochure.
+            </DialogDescription>
+          </DialogHeader>
+          
+          <form onSubmit={handleSubmit} className="space-y-5 mt-4">
+            <div className="space-y-2">
+              <Label htmlFor="name" className="text-sm font-medium">
+                Full Name <span className="text-destructive">*</span>
+              </Label>
+              <Input
+                id="name"
+                placeholder="Enter your full name"
+                value={formData.name}
+                onChange={(e) => handleChange("name", e.target.value)}
+                required
+                disabled={isSubmitting}
+                className="w-full"
+              />
             </div>
-          )}
 
-          <div className="flex gap-3 pt-2">
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => onOpenChange(false)}
-              className="flex-1"
-              disabled={isSubmitting}
-            >
-              Cancel
-            </Button>
-            <Button 
-              type="submit" 
-              className="flex-1 bg-primary hover:bg-primary/90"
-              disabled={isSubmitting}
-            >
-              {isSubmitting ? (
-                <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Submitting...
-                </>
-              ) : (
-                "Submit & Download"
-              )}
-            </Button>
+            <div className="space-y-2">
+              <Label htmlFor="email" className="text-sm font-medium">
+                Email Address <span className="text-destructive">*</span>
+              </Label>
+              <Input
+                id="email"
+                type="email"
+                placeholder="your.email@example.com"
+                value={formData.email}
+                onChange={(e) => handleChange("email", e.target.value)}
+                required
+                disabled={isSubmitting}
+                className="w-full"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="phone" className="text-sm font-medium">
+                Phone Number <span className="text-destructive">*</span>
+              </Label>
+              <Input
+                id="phone"
+                type="tel"
+                placeholder="9876543210"
+                value={formData.phone}
+                onChange={(e) => handleChange("phone", e.target.value)}
+                required
+                disabled={isSubmitting}
+                className="w-full"
+                maxLength={10}
+              />
+              <p className="text-xs text-muted-foreground">
+                Enter 10-digit phone number (numbers only)
+              </p>
+            </div>
+
+            {error && (
+              <div className="text-sm text-destructive bg-destructive/10 p-3 rounded-md">
+                {error}
+              </div>
+            )}
+
+            <div className="flex gap-3 pt-2">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => onOpenChange(false)}
+                className="flex-1"
+                disabled={isSubmitting}
+              >
+                Cancel
+              </Button>
+              <Button 
+                type="submit" 
+                className="flex-1 bg-primary hover:bg-primary/90"
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Submitting...
+                  </>
+                ) : (
+                  "Submit & Download"
+                )}
+              </Button>
+            </div>
+          </form>
+        </DialogContent>
+      </Dialog>
+
+      {/* Toast Notification */}
+      {showToast && (
+        <div className="fixed bottom-6 right-6 z-50 animate-in slide-in-from-bottom-5 duration-300">
+          <div className="bg-primary text-white px-6 py-4 rounded-lg shadow-lg flex items-center gap-3 max-w-md">
+            <CheckCircle2 className="w-6 h-6 flex-shrink-0" />
+            <div>
+              <p className="font-semibold">Download Complete!</p>
+              <p className="text-sm opacity-90">
+                Your brochure has been downloaded successfully.
+              </p>
+            </div>
           </div>
-        </form>
-      </DialogContent>
-    </Dialog>
+        </div>
+      )}
+    </>
   );
 };
 
