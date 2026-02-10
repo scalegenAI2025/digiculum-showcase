@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import BrochureDialog from "./BrochureDialog";
 import brochurePdf from "@/assets/individuals.pdf";
 import gptLogo from "@/assets/AI-logos/openai.png";
-import claudeLogo from "@/assets/AI-logos/claude.png";
+import claudeLogo from "@/assets/AI-logos/claudelogo.png";
 import GeminiLogo from "@/assets/AI-logos/gemini.png";
 import aiStudioLogo from "@/assets/AI-logos/aistudio.png";
 import runwayLogo from "@/assets/AI-logos/runway.png";
