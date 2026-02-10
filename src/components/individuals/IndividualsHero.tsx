@@ -8,18 +8,22 @@ import brochurePdf from "@/assets/individuals.pdf";
 const IndividualsHero = () => {
   const [brochureOpen, setBrochureOpen] = useState(false);
 
-  const handleBrochureSubmit = (data: { name: string; email: string; phone: string }) => {
+  const handleBrochureSubmit = (data: {
+    name: string;
+    email: string;
+    phone: string;
+  }) => {
     // Here you can send data to Google Sheets or your backend
     console.log("User data:", data);
-    
+
     // Download the PDF after form submission
-    const link = document.createElement('a');
+    const link = document.createElement("a");
     link.href = brochurePdf;
-    link.download = 'AI-Practitioner-Bootcamp-Brochure.pdf';
+    link.download = "AI-Practitioner-Bootcamp-Brochure.pdf";
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
-    
+
     // Close the dialog
     setBrochureOpen(false);
   };
@@ -84,7 +88,7 @@ const IndividualsHero = () => {
               <Button
                 size="lg"
                 variant="outline"
-                className="border-white/40 text-white hover:bg-white/10"
+                className="bg-primary hover:bg-primary/90"
                 onClick={() => setBrochureOpen(true)}
               >
                 Download Brochure
@@ -114,8 +118,8 @@ const IndividualsHero = () => {
         </div>
       </div>
 
-      <BrochureDialog 
-        open={brochureOpen} 
+      <BrochureDialog
+        open={brochureOpen}
         onOpenChange={setBrochureOpen}
         onSubmit={handleBrochureSubmit}
       />

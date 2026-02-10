@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { Menu, X } from "lucide-react";
-import digiLogo from "@/assets/digi-logo.png";
-
+import digiLogo from "@/assets/Digiculum-Logo.png";
 
 const navLinks = [
   { label: "Individuals", href: "/individuals" },
@@ -22,10 +21,9 @@ const Navbar = () => {
             <img
               src={digiLogo}
               alt="Digiculum Logo"
-              className="h-8 w-auto md:h-10 object-contain h-8 w-auto md:h-10 object-contain mix-blend-screen brightness-110 contrast-125 drop-shadow(0 0 0 white)"
+              className="h-12 md:h-14 w-auto max-h-10 md:max-h-12 object-contain mix-blend-screen brightness-110 contrast-125"
             />
           </a>
-
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center gap-10">
