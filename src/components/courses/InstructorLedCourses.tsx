@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 import leadershipBg from "@/assets/instruction-based-courses/leadership.png";
 import techmasterclassBg from "@/assets/instruction-based-courses/tech_masterclass.png";
 import strategyBg from "@/assets/instruction-based-courses/strategy.png";
-import mindsetBg from "@/assets/instruction-based-courses/Mindset.png";
+import mindsetBg from "@/assets/instruction-based-courses/mindset.png";
 import opsreadinessBg from "@/assets/instruction-based-courses/ops_readiness.png";
 
 const instructorCourses = [
