@@ -346,7 +346,7 @@
 
 // export default JourneyFlowchart;
 
-import AIReskilling from "@/assets/Reskill.png";
+import AIReskilling from "@/assets/Journey.png";
 
 const JourneyFlowchart = () => {
   return (
@@ -354,7 +354,7 @@ const JourneyFlowchart = () => {
       <div className="container mx-auto px-4 md:px-6">
         <div className="text-center mb-12 md:mb-16">
           <div className="text-4xl md:text-5xl">
-            <div className="flex flex-col gap-2">
+            <div className="flex flex-col gap-2 text-2xl md:text-3xl lg:text-4xl font-light mb-4">
               Your Personalized, Continuous, Collaborative
               <div className="flex justify-center items-center gap-2">
                 <span className="text-primary font-bold">AI</span>

@@ -1,8 +1,8 @@
-import superEcosystemImg from "@/assets/super_ecosystem.png";
+import superEcosystemImg from "@/assets/ecosystem.png"
 
 const EcosystemConcept = () => {
   return (
-    <section className="py-20 bg-card/30">
+    <section className="py-20 bg-#121212">
       <div className="container mx-auto px-6">
         {/* Heading */}
         <div className="max-w-4xl mx-auto text-center mb-16">
@@ -14,7 +14,7 @@ const EcosystemConcept = () => {
         </div>
 
         {/* Ecosystem Diagram Image */}
-        <div className="max-w-5xl mx-auto">
+        <div className="max-w-5xl mx-auto rounded-xl overflow-hidden transition-all duration-300 hover:ring-2 hover:ring-primary hover:bg-primary/5">
           <img
             src={superEcosystemImg}
             alt="Super Ecosystem Diagram"

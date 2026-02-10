@@ -65,7 +65,7 @@ const LeadersHero = () => {
       />
 
       {/* Dark Overlay */}
-      <div className="absolute inset-0 bg-background/85" />
+      <div className="absolute inset-0 bg-background/60" />
 
       {/* Content */}
       <div className="relative z-10 w-full pl-6 md:pl-16 lg:pl-24">

@@ -3,12 +3,14 @@ const ReskillPartner = () => {
     <section className="py-24 bg-background" id="about">
       <div className="container mx-auto px-6 max-w-4xl">
         <div className="text-center animate-fade-in-up">
-          <h2 className="text-4xl md:text-5xl font-light mb-2">
-            We are your <span className="text-primary font-bold">AI</span>
-          </h2>
-          <h2 className="text-4xl md:text-5xl font-bold mb-12">
-            Reskilling Partners
-          </h2>
+          <h2 className="text-2xl md:text-3xl lg:text-4xl font-light mb-4">
+  We are your
+</h2>
+
+<h2 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-12">
+  <span className="text-primary">AI</span> Reskilling Partners
+</h2>
+
 
           <div className="space-y-8 text-lg text-foreground/80 text-left">
             <p>
@@ -62,7 +64,7 @@ const ReskillPartner = () => {
 
       {/* Second part */}
       <div className="container mx-auto px-6 max-w-4xl mt-20">
-        <div className="text-center space-y-8 text-lg text-foreground/80">
+        <div className="space-y-8 text-lg text-foreground/80">
           <div className="flex justify-center items-center gap-3">
             <span className="text-xl text-foreground">
               But AI reskilling isn't a

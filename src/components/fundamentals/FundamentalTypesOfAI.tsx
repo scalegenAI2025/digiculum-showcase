@@ -50,7 +50,7 @@
 
 // export default FundamentalTypesOfAI;
 
-import TGA from "@/assets/Trad-Gen-Agent.png";
+import TGA from "@/assets/typesofai.png";
 
 const FundamentalTypesOfAI = () => {
   return (

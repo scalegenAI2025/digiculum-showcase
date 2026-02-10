@@ -15,13 +15,8 @@ const LeadersContact = () => {
           </h2>
 
           <p className="text-lg text-muted-foreground mb-8">
-            Write to us at{" "}
-            <a
-              href="mailto:info@digiculum.com"
-              className="text-primary hover:underline font-medium"
-            >
-              info@digiculum.com
-            </a>
+            Write to us at info@digiculum.com
+        
           </p>
 
           <div className="flex items-center justify-center gap-4 mb-8">

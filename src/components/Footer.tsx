@@ -4,12 +4,12 @@ const Footer = () => {
   return (
     <footer className="bg-card border-t border-border py-16">
       <div className="container mx-auto px-6">
-        <div className="grid md:grid-cols-4 gap-12">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-12">
           {/* Column 1: Navigation */}
           <div>
             <ul className="space-y-3">
               <li>
-                <a
+                <a 
                   href="/individuals"
                   className="text-foreground hover:text-primary transition-colors"
                 >
@@ -91,8 +91,8 @@ const Footer = () => {
             </ul>
           </div>
 
-          {/* Column 3: Social & Contact */}
-          <div>
+          {/* Column 3: Social & Contact - Hidden on mobile */}
+          <div className="hidden md:block">
             <p className="text-foreground/70 mb-4">Follow us on</p>
             <a
               href="https://www.linkedin.com/company/digiculum/"
@@ -105,8 +105,8 @@ const Footer = () => {
             </a>
           </div>
 
-          {/* Column 4: CTA */}
-          <div className="flex items-center justify-end">
+          {/* Column 4: CTA - Hidden on mobile */}
+          <div className="hidden md:flex items-center justify-end">
             <a
               href="https://mail.google.com/mail/?view=cm&fs=1&to=info@digiculum.com"
               className="btn-primary text-center"
@@ -116,6 +116,32 @@ const Footer = () => {
               Contact Us
             </a>
           </div>
+        </div>
+
+        {/* Mobile: Social Media - Below the two columns */}
+        <div className="md:hidden mt-8">
+          <p className="text-foreground/70 mb-4">Follow us on</p>
+          <a
+            href="https://www.linkedin.com/company/digiculum/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 text-foreground hover:text-primary transition-colors font-semibold text-xl"
+          >
+            <Linkedin className="w-6 h-6" />
+            LinkedIn
+          </a>
+        </div>
+
+        {/* Mobile: Contact Button - Centered */}
+        <div className="md:hidden flex justify-center mt-8">
+          <a
+            href="https://mail.google.com/mail/?view=cm&fs=1&to=info@digiculum.com"
+            className="btn-primary text-center"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Contact Us
+          </a>
         </div>
 
         {/* Copyright */}

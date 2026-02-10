@@ -66,7 +66,7 @@ const Hero = () => {
                 </span>
               </div>
               <p className="text-foreground/70 italic mb-2 md:mb-4 text-xs md:text-sm">
-                Senior Leaders, Executives, or Functional decision-makers
+                Senior Leaders, Executives, or Functional Decision-makers
               </p>
 
               <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-1 md:mb-2">

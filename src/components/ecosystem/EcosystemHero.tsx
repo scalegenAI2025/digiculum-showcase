@@ -43,7 +43,7 @@
 // export default EcosystemHero;
 
 import { Network } from "lucide-react";
-import ecosystemBg from "@/assets/ecosystem.png";
+import ecosystemBg from "@/assets/ecosystembg.png";
 
 const EcosystemHero = () => {
   return (
@@ -55,20 +55,26 @@ const EcosystemHero = () => {
       />
 
       {/* Dark Overlay */}
-      <div className="absolute inset-0 bg-black/60" />
+      <div className="absolute inset-0 bg-black/40" />
 
       {/* Content */}
       <div className="relative w-full px-6 md:px-12 lg:px-20">
         <div className="max-w-4xl">
-          <h1 className="heading-xl mb-6 text-white">
-            How fast an individual reskills largely depends on their ability to work in {" "}
-            <span className="text-accent-gradient">
-              Ecosystems
-            </span>
-          </h1>
+          <h1 className="heading-xl mb-6 text-white leading-tight">
+  Reskilling accelerates
+  <br />
+  when individuals thrive
+  <br />
+  <span>in </span>
+  <span className="text-accent-gradient">
+   Ecosystems
+  </span>
+</h1>
+
 
           <p className="text-xl text-white/80 mb-8">
             Join a community where ambitious professionals learn together,
+            <br />
             share insights, and accelerate their AI journey
           </p>
         </div>

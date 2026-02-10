@@ -183,7 +183,7 @@
 
 // export default FundamentalAgentsVsBots;
 
-import AgentBot from "@/assets/Agent-Bot.png";
+import AgentBot from "@/assets/agentvsbot.png";
 
 const FundamentalAgentsVsBots = () => {
   return (

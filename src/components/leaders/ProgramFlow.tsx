@@ -53,8 +53,8 @@ const programSteps = [
 
 const ProgramFlow = () => {
   return (
-    <section className="py-16 md:py-24 bg-black">
-      <div className="container mx-auto px-6">
+    <section className="py-16 md:py-24 bg-#121212 ">
+      <div className="p-6 container mx-auto px-6 rounded-xl overflow-hidden transition-all duration-300 hover:ring-2 hover:ring-primary hover:bg-primary/5 ">
         <h2 className="text-3xl md:text-4xl font-bold text-center mb-16 text-white">
           AI Leadership Readiness Program
         </h2>
