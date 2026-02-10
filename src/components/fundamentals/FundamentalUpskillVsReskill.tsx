@@ -80,7 +80,7 @@ const FundamentalUpskillVsReskill = () => {
         <div className="rounded-xl overflow-hidden transition-all duration-300 hover:ring-2 hover:ring-primary hover:bg-primary/5">
           <img
             src={UpskillReskill}
-            alt="Upskilling vs AI Reskilling Diagram"
+            alt="Upskilling vs AI Reskilling"
             className="max-w-full h-auto"
           />
         </div>
