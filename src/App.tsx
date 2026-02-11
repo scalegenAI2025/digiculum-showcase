@@ -39,8 +39,7 @@ const App = () => (
           <Route path="/cookies" element={<CookiePolicy />} />
           <Route path="/terms" element={<GeneralTerms />} />
           <Route path="/refund" element={<RefundPolicy />} />
-          {/* <Route path="/ecosystemform" element={<EcosystemForm />} /> */}
-          <Route path="/EcosystemFormUpdated" element={<EcosystemFormUpdated />} />
+          <Route path="/ecosystemform" element={<EcosystemFormUpdated />} />
           <Route
             path="/courses/Essential-Competencies-of-AI/GenAI-Leader"
             element={<EssentialCompetenciesOfAi />}

@@ -20,7 +20,7 @@ const EcosystemCTA = () => {
           </p>
           
           <a 
-            href="/ecosystemformupdated"
+            href="/ecosystemform"
             target="_blank"
             rel="noopener noreferrer"
             className="btn-primary inline-flex items-center gap-2 text-lg px-10 py-4"
