@@ -26,7 +26,7 @@ const LeadersHero = () => {
     <section className="relative min-h-screen flex items-center overflow-hidden -mt-20 pt-24 pb-8">
       {/* Background Image */}
       <div
-        className="absolute inset-0 bg-cover bg-center"
+        className="absolute inset-0 bg-cover"
         style={{ backgroundImage: `url(${leaderbg})` }}
       />
 
