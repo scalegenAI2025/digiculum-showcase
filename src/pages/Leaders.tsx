@@ -15,9 +15,7 @@ const Leaders = () => {
       <LeadersHero />
       <SectionSeparator />
       <AdoptionStages />
-      <SectionSeparator />
       <LeaderChallenges />
-      <SectionSeparator />
       <EmpowerLeaders />
       <SectionSeparator />
       <ProgramFlow />

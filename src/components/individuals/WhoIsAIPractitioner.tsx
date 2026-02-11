@@ -30,7 +30,7 @@ const cards = [
     icon: BookOpen,
     question: "Who is this bootcamp for?",
     answer:
-      "For technical, non-technical or absolute beginners who want practical AI skills and knowledge.",
+      "For technical, non-technical, or absolute beginners who want practical AI skills and knowledge.",
   },
   {
     icon: Code,
@@ -60,7 +60,7 @@ const cards = [
     icon: Sparkles,
     question: "How is this bootcamp different from a typical program ?",
     answer:
-      "This is a highly individual-centric bootcamp where learning is personalized to your needs using the Know–Hack–Build model. You’ll receive continuous coaching focused on practical application, along with collaborative learning through an ecosystem where you can seek and share knowledge and experiences with others.",
+      "This is a personalized, individual-centric bootcamp built on the Know–Hack–Build model, offering continuous practical coaching and collaborative ecosystem-based learning where you can both seek and share knowledge and experiences.",
   },
   {
     icon: Clock,
@@ -126,7 +126,7 @@ const WhoIsAIPractitioner = () => {
           mt-4 text-foreground/80 text-semibold leading-relaxed
           opacity-0 max-h-0 overflow-hidden
           transition-all duration-300 ease-in-out
-          group-hover:opacity-100 group-hover:max-h-40
+          group-hover:opacity-100 group-hover:max-h-96
         "
               >
                 {card.answer}

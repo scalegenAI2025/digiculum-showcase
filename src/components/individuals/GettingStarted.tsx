@@ -17,7 +17,7 @@ const steps = [
     icon: Rocket,
     number: "Step 3",
     title: "Start your AI Reskilling Journey",
-    description: "Begin your transformation into an AI Practitioner",
+    description: "Become an AI Practitioner",
   },
 ];
 

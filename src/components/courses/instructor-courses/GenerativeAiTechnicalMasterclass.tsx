@@ -8,7 +8,7 @@ import amazon from "@/assets/instruction-based-courses/Technical-Masterclass/ama
 import coaching from "@/assets/instruction-based-courses/Essential-Competencies/coaching.png";
 import amit from "@/assets/instruction-based-courses/Essential-Competencies/amit.png";
 import qrCode from "@/assets/instruction-based-courses/Essential-Competencies/qr-code.png";
-import superEcosystem from "@/assets/instruction-based-courses/Essential-Competencies/super-ecosystem.jpg";
+import superEcosystem from "@/assets/instruction-based-courses/ecosystem.png";
 
 import {
   Cpu,
@@ -109,9 +109,6 @@ const GenerativeAiTechnicalMasterclass = () => {
             </p>
 
             <div className="bg-muted/50 rounded-lg p-4">
-              <p className="font-semibold text-foreground mb-2">
-                GenAI 2.0 Coverage:
-              </p>
               <div className="grid md:grid-cols-2 gap-3">
                 <div className="flex items-start gap-2">
                   <CheckCircle2 className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
@@ -147,7 +144,7 @@ const GenerativeAiTechnicalMasterclass = () => {
               <div className="bg-primary/5 border border-primary/20 rounded-lg p-4">
                 <p className="font-semibold text-foreground mb-2">Delivery</p>
                 <p className="text-sm">
-                  Instructor-led: online or in-class options
+                  Instructor-driven online or classroom based
                 </p>
               </div>
               <div className="bg-primary/5 border border-primary/20 rounded-lg p-4">
@@ -228,7 +225,7 @@ const GenerativeAiTechnicalMasterclass = () => {
           </CardHeader>
           <CardContent className="text-foreground/80 space-y-4">
             <p className="text-sm text-muted-foreground mb-6">
-              Instructor-led, in-person/virtual, 18 hours, 1-2-1 coaching (1
+              Instructor-led, in-person/virtual, 18 hours, 1:1 coaching (1
               hour free)
             </p>
 
@@ -291,8 +288,8 @@ const GenerativeAiTechnicalMasterclass = () => {
                   </h5>
                 </div>
                 <p className="text-sm">
-                  Strong focus on self-attention technique at the heart of
-                  transformer architectures
+                  Strong focus on self-attention technique, the heart of
+                  transformer architecture
                 </p>
               </div>
 
@@ -591,7 +588,7 @@ const GenerativeAiTechnicalMasterclass = () => {
                 </div>
 
                 <div className="bg-muted/50 rounded-lg p-4 mt-4">
-                  <p className="font-semibold text-foreground">
+                  <p className="text-foreground">
                     After completion of the course, participants shall be
                     automatically enrolled in an ecosystem of professionals
                     belonging to different industries and geographical

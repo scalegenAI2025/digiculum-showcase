@@ -44,10 +44,10 @@ const EmpowerLeaders = () => {
     <section className="py-16 md:py-24">
       <div className="container mx-auto px-6">
         <h2 className="heading-lg text-center mb-4">
-          We empower leaders at every stage to
+          We empower leaders at every stage
         </h2>
         <p className="text-xl text-center text-muted-foreground mb-12">
-          make informed decisions and take fast actions
+          to make informed decisions and take fast actions
         </p>
 
         <div className="grid md:grid-cols-3 gap-6 md:gap-8">
