@@ -36,8 +36,8 @@ const App = () => (
           <Route path="/courses" element={<Courses />} />
           <Route path="/ecosystem" element={<Ecosystem />} />
           <Route path="/privacy" element={<PrivacyPolicy />} />
-          <Route path="/cookie" element={<CookiePolicy />} />
-          <Route path="/general" element={<GeneralTerms />} />
+          <Route path="/cookies" element={<CookiePolicy />} />
+          <Route path="/terms" element={<GeneralTerms />} />
           <Route path="/refund" element={<RefundPolicy />} />
           {/* <Route path="/ecosystemform" element={<EcosystemForm />} /> */}
           <Route path="/EcosystemFormUpdated" element={<EcosystemFormUpdated />} />

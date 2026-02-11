@@ -66,7 +66,7 @@ const Footer = () => {
               </li>
               <li>
                 <a
-                  href="/cookie"
+                  href="/cookies"
                   className="text-foreground/70 hover:text-foreground transition-colors"
                 >
                   Cookie Policy
@@ -74,7 +74,7 @@ const Footer = () => {
               </li>
               <li>
                 <a
-                  href="/general"
+                  href="/terms"
                   className="text-foreground/70 hover:text-foreground transition-colors"
                 >
                   General Terms
