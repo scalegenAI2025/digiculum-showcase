@@ -665,36 +665,38 @@ const EcosystemForm = () => {
                 <Shield className="w-4 h-4 mr-2" />
                 Security Verification *
               </label>
-              <div className="flex items-center gap-4">
-                <div className="bg-primary/50 text-white px-6 py-3 rounded-lg font-mono text-lg">
+              <div className="space-y-3 sm:space-y-0 sm:flex sm:items-center sm:gap-4">
+                <div className="bg-primary/50 text-white px-6 py-3 rounded-lg font-mono text-lg text-center sm:w-auto">
                   {captcha.n1} + {captcha.n2} = ?
                 </div>
-                <input
-                  type="text"
-                  value={captchaAnswer}
-                  onChange={handleCaptchaChange}
-                  className={`w-24 px-4 py-3 bg-white/5 rounded-lg text-white text-center focus:outline-none border transition-all ${
-                    errors.captcha
-                      ? "border-red-500"
-                      : "border-white/10 focus:border-primary/50"
-                  }`}
-                  placeholder="Answer"
-                />
-                {captchaVerified && (
-                  <svg
-                    className="w-6 h-6 text-green-500"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M5 13l4 4L19 7"
-                    />
-                  </svg>
-                )}
+                <div className="flex items-center gap-3">
+                  <input
+                    type="text"
+                    value={captchaAnswer}
+                    onChange={handleCaptchaChange}
+                    className={`w-full sm:w-32 px-4 py-3 bg-white/5 rounded-lg text-white text-center focus:outline-none border transition-all ${
+                      errors.captcha
+                        ? "border-red-500"
+                        : "border-white/10 focus:border-primary/50"
+                    }`}
+                    placeholder="Answer"
+                  />
+                  {captchaVerified && (
+                    <svg
+                      className="w-6 h-6 text-green-500 flex-shrink-0"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M5 13l4 4L19 7"
+                      />
+                    </svg>
+                  )}
+                </div>
               </div>
               {errors.captcha && (
                 <p className="text-red-400 text-sm mt-2">{errors.captcha}</p>
