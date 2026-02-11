@@ -197,7 +197,7 @@ const FundamentalAgentsVsBots = () => {
         <div className="rounded-xl overflow-hidden transition-all duration-300 hover:ring-2 hover:ring-primary hover:bg-primary/5">
           <img
             src={AgentBot}
-            alt="Agents vs Bots Diagram"
+            alt="Agents vs Bots"
             className="max-w-full h-auto"
           />
         </div>
