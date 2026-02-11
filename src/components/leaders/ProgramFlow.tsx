@@ -19,7 +19,7 @@ const programSteps = [
     milestone: true,
   },
   {
-    title: "Think-Evaluate-Scale e AI Maturity Assessment",
+    title: "Think-Evaluate-Scale AI Maturity Assessment",
     description: "Identify the stage of AI adoption for an enterprise",
     icon: Target,
     milestone: false,

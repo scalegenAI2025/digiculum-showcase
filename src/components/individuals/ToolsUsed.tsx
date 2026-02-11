@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import BrochureDialog from "./BrochureDialog";
-import brochurePdf from "@/assets/individuals.pdf";
+import brochurePdf from "@/assets/AI_Pract_Brochure.pdf";
 import gptLogo from "@/assets/AI-logos/openai.png";
 import claudeLogo from "@/assets/AI-logos/claudelogo.png";
 import GeminiLogo from "@/assets/AI-logos/gemini.png";

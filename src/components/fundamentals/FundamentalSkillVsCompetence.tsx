@@ -128,7 +128,7 @@
 
 // export default FundamentalSkillVsCompetence;
 
-import SkillsCompetence from "@/assets/Skills-Competence.png";
+import SkillsCompetence from "@/assets/skillsvscompetence.png";
 
 const FundamentalSkillVsCompetence = () => {
   return (

@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Calendar, Clock, Users } from "lucide-react";
 import BrochureDialog from "./BrochureDialog";
 import individualsBg from "@/assets/individuals.png";
-import brochurePdf from "@/assets/individuals.pdf";
+import brochurePdf from "@/assets/AI_Pract_Brochure.pdf";
 
 const IndividualsHero = () => {
   const [brochureOpen, setBrochureOpen] = useState(false);

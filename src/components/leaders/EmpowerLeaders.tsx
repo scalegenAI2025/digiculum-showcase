@@ -10,6 +10,7 @@ const empowermentData = [
     outcomes: [
       "Establish a pragmatic mindset toward balancing profits and ethics",
       "Identify where AI is relevant in their organization",
+      "Build scalable AI pilots and agents"
     ],
   },
   {
@@ -19,7 +20,7 @@ const empowermentData = [
     bgColor: "bg-primary/10",
     borderColor: "border-primary/30",
     outcomes: [
-      "Build scalable AI pilots and agents",
+      "Assess existing AI: workflows, apps, copilots, tools, frameworks, models etc",
       "Evaluate the operational readiness gaps",
       "Select right AI for future initiatives",
     ],
@@ -32,6 +33,7 @@ const empowermentData = [
     borderColor: "border-primary/30",
     outcomes: [
       "Prepare scaled adoption strategy for enterprise-wide transformation",
+      "Build platform for streamlining data and workflows",
       "Achieve operational readiness",
     ],
   },

@@ -72,7 +72,7 @@ const leftColumn = [
     category: "Generative AI",
     items: [
       "Building blocks of GenAI",
-      "LLM use cases",
+      "GenAI use cases",
       "LLM evolution",
       "How GPT was trained",
       "Prompt engineering",
