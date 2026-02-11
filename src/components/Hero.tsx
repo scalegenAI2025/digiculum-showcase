@@ -1,6 +1,20 @@
+import { useState, useEffect } from "react";
 import homebg from "@/assets/hero-img.png";
 
 const Hero = () => {
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768); // md breakpoint
+    };
+
+    handleResize(); // run once on load
+    window.addEventListener("resize", handleResize);
+
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden -mt-20 pt-24 pb-8">
       {/* Background Image */}
@@ -23,7 +37,7 @@ const Hero = () => {
                 </span>
               </div>
               <p className="text-foreground/70 italic mb-2 md:mb-4 text-xs md:text-sm">
-                Technical, Non-Technical or Absolute Beginners
+                Technical, Non-Technical, or Absolute Beginners
               </p>
 
               <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-1 md:mb-2">
@@ -49,7 +63,9 @@ const Hero = () => {
                 <a
                   href={import.meta.env.VITE_CALENDLY_URL}
                   target="_blank"
-                  className="btn-primary inline-block text-xs md:text-sm px-4 md:px-6 py-2 md:py-2.5"
+                  className={`btn-primary inline-block ${
+                    isMobile ? "text-xs px-4 py-2" : "text-sm px-6 py-2.5"
+                  }`}
                 >
                   1:1 Consultation
                 </a>
@@ -85,7 +101,9 @@ const Hero = () => {
               <div className="mt-auto">
                 <a
                   href="/leaders"
-                  className="btn-primary inline-block text-xs md:text-sm px-4 md:px-6 py-2 md:py-2.5"
+                  className={`btn-primary inline-block ${
+                    isMobile ? "text-xs px-4 py-2" : "text-sm px-6 py-2.5"
+                  }`}
                 >
                   Find More
                 </a>

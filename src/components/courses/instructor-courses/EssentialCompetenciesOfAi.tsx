@@ -25,7 +25,7 @@ import amazon from "@/assets/instruction-based-courses/Essential-Competencies/am
 import coaching from "@/assets/instruction-based-courses/Essential-Competencies/coaching.png";
 import framework from "@/assets/instruction-based-courses/Essential-Competencies/framework.png";
 import qrCode from "@/assets/instruction-based-courses/Essential-Competencies/qr-code.png";
-import superEcosystem from "@/assets/instruction-based-courses/Essential-Competencies/super-ecosystem.jpg";
+import superEcosystem from "@/assets/instruction-based-courses/ecosystem.png";
 
 const EssentialCompetenciesOfAi = () => {
   return (
@@ -290,7 +290,7 @@ const EssentialCompetenciesOfAi = () => {
           </CardHeader>
           <CardContent className="text-foreground/80 space-y-6">
             <p className="text-sm text-muted-foreground">
-              Instructor-led, in-person/virtual, 12 hours, 1-2-1 coaching (1
+              Instructor-led, in-person/virtual, 12 hours, 1:1 coaching (1
               hour free)
             </p>
 
@@ -311,7 +311,7 @@ const EssentialCompetenciesOfAi = () => {
                     </li>
                     <li>Pre-digital vs Digital style of leadership</li>
                     <li>6 facts about AI/GenAI every leader must know</li>
-                    <li>Difference between AI, ML, DL, and GenAI</li>
+                    <li>Difference between AI, ML, DL, GenAI, and Agentic AI</li>
                     <li>Types of GenAI content</li>
                     <li>Difference between traditional AI and GenAI</li>
                     <li>Evolution of LLMs</li>
@@ -339,7 +339,7 @@ const EssentialCompetenciesOfAi = () => {
                   <ul className="list-disc list-inside space-y-2 text-sm ml-2">
                     <li>Anatomy of growth mindset</li>
                     <li>How a growth mindset drives learning</li>
-                    <li>Reskilling for 12 new AI/GenAI job roles</li>
+                    <li>Reskilling for 10 new AI/GenAI job roles</li>
                     <li>Cultivating a growth mindset</li>
                   </ul>
                 </div>
@@ -425,7 +425,7 @@ const EssentialCompetenciesOfAi = () => {
                       <strong className="text-primary">
                         Growth Mindset Cultivation Framework
                       </strong>{" "}
-                      to ensure readiness to reskilling for 12 new AI/GenAI job
+                      to ensure readiness to reskilling for 10 new AI/GenAI job
                       roles
                     </p>
                   </div>
@@ -448,9 +448,9 @@ const EssentialCompetenciesOfAi = () => {
                   <div className="bg-muted/30 rounded p-3">
                     <p>
                       <strong className="text-primary">
-                        Fast Execution and Rocket Readiness Framework
+                        Fast Execution
                       </strong>{" "}
-                      with 7 important scaling actions
+                      with 7 important scaling actions using the Readiness Rocket Framework
                     </p>
                   </div>
                 </div>
@@ -540,7 +540,7 @@ const EssentialCompetenciesOfAi = () => {
                 </div>
 
                 <div className="bg-muted/50 rounded-lg p-4 mt-4">
-                  <p className="font-semibold text-foreground">
+                  <p className="text-foreground">
                     After completion of the course, participants shall be
                     automatically enrolled in an ecosystem of professionals
                     belonging to different industries and geographical

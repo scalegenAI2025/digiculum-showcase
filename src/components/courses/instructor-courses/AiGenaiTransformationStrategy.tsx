@@ -8,7 +8,7 @@ import amazon from "@/assets/instruction-based-courses/GenAI-Transformation/amaz
 import framework from "@/assets/instruction-based-courses/GenAI-Transformation/framework.png";
 import amit from "@/assets/instruction-based-courses/Essential-Competencies/amit.png";
 import qrCode from "@/assets/instruction-based-courses/Essential-Competencies/qr-code.png";
-import superEcosystem from "@/assets/instruction-based-courses/Essential-Competencies/super-ecosystem.jpg";
+import superEcosystem from "@/assets/instruction-based-courses/ecosystem.png";
 import coaching from "@/assets/instruction-based-courses/Essential-Competencies/coaching.png";
 
 import {
@@ -164,7 +164,7 @@ const AiGenaiTransformationStrategy = () => {
                   Target Audience
                 </p>
                 <p className="text-sm">
-                  Leaders/Managers at levels L1, L2, L3, L4, strategists,
+                  Leaders/Managers (at levels L1, L2, L3, L4), strategists,
                   transformation drivers, change agents, program/project
                   managers
                 </p>
@@ -235,7 +235,7 @@ const AiGenaiTransformationStrategy = () => {
           </CardHeader>
           <CardContent className="text-foreground/80 space-y-6">
             <p className="text-sm text-muted-foreground">
-              Instructor-led, in-person/virtual, 6 hours, 1-2-1 coaching (1 hour
+              Instructor-led, in-person/virtual, 6 hours, 1:1 coaching (1 hour
               free)
             </p>
 
@@ -266,11 +266,11 @@ const AiGenaiTransformationStrategy = () => {
                 </div>
                 <ul className="list-disc list-inside space-y-2 text-sm ml-2">
                   <li>6 facts about AI/GenAI every professional must know</li>
-                  <li>Difference between AI, ML, DL, and GenAI</li>
+                  <li>Difference between AI, ML, DL, GenAI and Agentic AI</li>
                   <li>Types of GenAI content</li>
-                  <li>Difference between traditional AI and GenAI</li>
+                  <li>Difference between traditional AI, GenAI and Agentic AI</li>
                   <li>Evolution of LLMs</li>
-                  <li>Business architecture of GenAI</li>
+                  <li>Business architecture of GenAI and Agentic AI</li>
                   <li>How GPT works</li>
                 </ul>
               </div>
@@ -477,7 +477,7 @@ const AiGenaiTransformationStrategy = () => {
                 </div>
 
                 <div className="bg-muted/50 rounded-lg p-4 mt-4">
-                  <p className="font-semibold text-foreground">
+                  <p className="text-foreground">
                     After completion of the course, participants shall be
                     automatically enrolled in an ecosystem of professionals
                     belonging to different industries and geographical

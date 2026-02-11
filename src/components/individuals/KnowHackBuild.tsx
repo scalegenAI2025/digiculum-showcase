@@ -70,14 +70,14 @@ const KnowHackBuild = () => {
               
               <div className="p-6">
                 <p className="text-foreground/80 mb-6">{pillar.description}</p>
-                <ul className="space-y-3">
+                {/* <ul className="space-y-3">
                   {pillar.items.map((item, i) => (
                     <li key={i} className="flex items-start gap-3 text-sm text-foreground/70">
                       <span className="w-1.5 h-1.5 rounded-full bg-primary mt-2 flex-shrink-0" />
                       {item}
                     </li>
                   ))}
-                </ul>
+                </ul> */}
               </div>
             </div>
           ))}

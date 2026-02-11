@@ -9,7 +9,7 @@ import framework from "@/assets/instruction-based-courses/Cultivating-AI-Mindset
 import coaching from "@/assets/instruction-based-courses/Essential-Competencies/coaching.png";
 import amit from "@/assets/instruction-based-courses/Essential-Competencies/amit.png";
 import qrCode from "@/assets/instruction-based-courses/Essential-Competencies/qr-code.png";
-import superEcosystem from "@/assets/instruction-based-courses/Essential-Competencies/super-ecosystem.jpg";
+import superEcosystem from "@/assets/instruction-based-courses/ecosystem.png";
 import {
   Brain,
   Users,
@@ -235,7 +235,7 @@ const CultivatingAiGenaiMindset = () => {
           </CardHeader>
           <CardContent className="text-foreground/80 space-y-6">
             <p className="text-sm text-muted-foreground">
-              Instructor-led, in-person/virtual, 4 hours, 1-2-1 coaching (1 hour
+              Instructor-led, in-person/virtual, 4 hours, 1:1 coaching (1 hour
               free)
             </p>
 
@@ -431,7 +431,7 @@ const CultivatingAiGenaiMindset = () => {
                 </div>
 
                 <div className="bg-muted/50 rounded-lg p-4 mt-4">
-                  <p className="font-semibold text-foreground">
+                  <p className="text-foreground">
                     After completion of the course, participants shall be
                     automatically enrolled in an ecosystem of professionals
                     belonging to different industries and geographical

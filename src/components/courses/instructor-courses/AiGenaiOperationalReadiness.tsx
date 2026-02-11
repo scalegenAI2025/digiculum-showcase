@@ -8,7 +8,7 @@ import amazon from "@/assets/instruction-based-courses/Operational-Readiness/ama
 import framework from "@/assets/instruction-based-courses/Operational-Readiness/framework.png";
 import amit from "@/assets/instruction-based-courses/Essential-Competencies/amit.png";
 import qrCode from "@/assets/instruction-based-courses/Essential-Competencies/qr-code.png";
-import superEcosystem from "@/assets/instruction-based-courses/Essential-Competencies/super-ecosystem.jpg";
+import superEcosystem from "@/assets/instruction-based-courses/ecosystem.png";
 import coaching from "@/assets/instruction-based-courses/Essential-Competencies/coaching.png";
 import {
   Rocket,
@@ -108,7 +108,7 @@ const AiGenaiOperationalReadiness = () => {
               <div className="grid md:grid-cols-2 gap-3">
                 <div className="flex items-start gap-2">
                   <CheckCircle2 className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
-                  <p>4 readiness areas</p>
+                  <p>4 Readiness Areas</p>
                 </div>
                 <div className="flex items-start gap-2">
                   <CheckCircle2 className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
@@ -120,7 +120,7 @@ const AiGenaiOperationalReadiness = () => {
                 </div>
                 <div className="flex items-start gap-2">
                   <CheckCircle2 className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
-                  <p>Strategy and maturity assessment</p>
+                  <p>Strategy and Maturity Assessment</p>
                 </div>
               </div>
             </div>
@@ -152,7 +152,6 @@ const AiGenaiOperationalReadiness = () => {
             </CardTitle>
           </CardHeader>
           <CardContent className="text-foreground/80">
-            <p className="mb-4">Digital Leadership Framework</p>
             <div className="grid md:grid-cols-2 gap-4">
               <div className="bg-card border border-border rounded-lg p-4">
                 <div className="flex items-center gap-2 mb-2">
@@ -227,7 +226,7 @@ const AiGenaiOperationalReadiness = () => {
                   Target Audience
                 </p>
                 <p className="text-sm">
-                  All Leaders/Managers at levels L1, L2, L3 and L4, strategists,
+                  All Leaders/Managers (at levels L1, L2, L3 and L4), strategists,
                   transformation drivers, change agents, program/project
                   managers
                 </p>
@@ -296,7 +295,7 @@ const AiGenaiOperationalReadiness = () => {
           </CardHeader>
           <CardContent className="text-foreground/80 space-y-6">
             <p className="text-sm text-muted-foreground">
-              Instructor-led, in-person/virtual, 12 hours, 1-2-1 coaching (1
+              Instructor-led, in-person/virtual, 12 hours, 1:1 coaching (1
               hour free)
             </p>
 
@@ -572,7 +571,7 @@ const AiGenaiOperationalReadiness = () => {
                 </div>
 
                 <div className="bg-muted/50 rounded-lg p-4 mt-4">
-                  <p className="font-semibold text-foreground">
+                  <p className="text-foreground">
                     After completion of the course, participants shall be
                     automatically enrolled in an ecosystem of professionals
                     belonging to different industries and geographical

@@ -26,14 +26,12 @@ const Individuals = () => {
       <WhoIsAIPractitioner />
       <SectionSeparator />
       <KnowHackBuild />
-      <SectionSeparator />
-      <AISpecialization />
-      <SectionSeparator />
       <WhatYouWillLearn />
       <HackVITA />
       <BuildProject />
-      <SectionSeparator />
       <ToolsUsed />
+      <SectionSeparator />
+      <AISpecialization />
       <SectionSeparator />
       <FinalCTA />
       <SectionSeparator />

@@ -8,7 +8,7 @@ const ReskillPartner = () => {
 </h2>
 
 <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-12">
-  <span className="text-primary">AI</span> Reskilling Partners
+  <span className="text-primary">AI</span> Reskilling Partner
 </h2>
 
 
@@ -17,7 +17,7 @@ const ReskillPartner = () => {
               At Digiculum, we don't position ourselves as another AI course
               provider. We are your{" "}
               <span className="text-foreground font-semibold">
-                AI Reskilling Partners
+                AI Reskilling Partner
               </span>
               .
             </p>
@@ -69,7 +69,7 @@ const ReskillPartner = () => {
             <span className="text-xl text-foreground">
               But AI reskilling isn't a
               <span className="font-bold"> one-size-fits-all </span>
-              <span>course</span>
+              <span>course.</span>
             </span>
           </div>
 

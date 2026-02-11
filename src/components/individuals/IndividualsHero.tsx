@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Calendar, Clock, Users } from "lucide-react";
 import BrochureDialog from "./BrochureDialog";
@@ -7,6 +7,19 @@ import brochurePdf from "@/assets/AI_Pract_Brochure.pdf";
 
 const IndividualsHero = () => {
   const [brochureOpen, setBrochureOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+useEffect(() => {
+  const handleResize = () => {
+    setIsMobile(window.innerWidth < 768); // md breakpoint
+  };
+
+  handleResize(); // run once on load
+  window.addEventListener("resize", handleResize);
+
+  return () => window.removeEventListener("resize", handleResize);
+}, []);
+
 
   const handleBrochureSubmit = (data: {
     name: string;
@@ -78,22 +91,27 @@ const IndividualsHero = () => {
             </div>
 
             {/* CTA */}
-            <div className="flex gap-4">
-              <a href={import.meta.env.VITE_CALENDLY_URL} target="_blank">
-                <Button size="lg" className="bg-primary hover:bg-primary/90">
-                  1:1 Consultation
-                </Button>
-              </a>
+  <div className="flex gap-4">
+  <a href={import.meta.env.VITE_CALENDLY_URL} target="_blank">
+    <Button
+      size={isMobile ? "sm" : "lg"}
+      className="bg-primary hover:bg-primary/90"
+    >
+      1:1 Consultation
+    </Button>
+  </a>
 
-              <Button
-                size="lg"
-                variant="outline"
-                className="bg-primary hover:bg-primary/90"
-                onClick={() => setBrochureOpen(true)}
-              >
-                Download Brochure
-              </Button>
-            </div>
+  <Button
+    size={isMobile ? "sm" : "lg"}
+    variant="outline"
+    className="bg-primary hover:bg-primary/90"
+    onClick={() => setBrochureOpen(true)}
+  >
+    Download Brochure
+  </Button>
+</div>
+
+
           </div>
 
           {/* RIGHT SIDE */}

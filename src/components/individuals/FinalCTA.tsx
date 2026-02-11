@@ -36,7 +36,7 @@ const FinalCTA = () => {
                 So the real question isn't "Will AI take my job?"
               </p>
               <p className="text-xl text-primary font-semibold">
-                It's "Will you allow AI to take your job?"
+                <span className="text-white">It's </span>"Will you allow AI to take your job?"
               </p>
             </div>
 
