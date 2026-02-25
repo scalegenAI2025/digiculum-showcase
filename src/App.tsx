@@ -18,6 +18,8 @@ import GenerativeAiTechnicalMasterclass from "./components/courses/instructor-co
 import AiGenaiTransformationStrategy from "./components/courses/instructor-courses/AiGenaiTransformationStrategy";
 import CultivatingAiGenaiMindset from "./components/courses/instructor-courses/CultivatingAiGenaiMindset";
 import AiGenaiOperationalReadiness from "./components/courses/instructor-courses/AiGenaiOperationalReadiness";
+import AIMindsetAssessment from "./pages/AIMindsetAssessment";
+import AIQAssessment from "./pages/AIQAssessment";
 import NotFound from "./pages/NotFound";
 import ScrollToTop from "./components/ScrollToTop";
 const queryClient = new QueryClient();
@@ -33,12 +35,14 @@ const App = () => (
           <Route path="/" element={<Index />} />
           <Route path="/leaders" element={<Leaders />} />
           <Route path="/individuals" element={<Individuals />} />
-          <Route path="/courses" element={<Courses />} />
+          <Route path="/reskilling" element={<Courses />} />
           <Route path="/ecosystem" element={<Ecosystem />} />
           <Route path="/privacy" element={<PrivacyPolicy />} />
           <Route path="/cookies" element={<CookiePolicy />} />
           <Route path="/terms" element={<GeneralTerms />} />
           <Route path="/refund" element={<RefundPolicy />} />
+          <Route path="/aiqassessment" element={<AIQAssessment />} />
+          <Route path="/aimindsetassessment" element={<AIMindsetAssessment />} />
           <Route path="/ecosystemform" element={<EcosystemFormUpdated />} />
           <Route
             path="/courses/Essential-Competencies-of-AI/GenAI-Leader"

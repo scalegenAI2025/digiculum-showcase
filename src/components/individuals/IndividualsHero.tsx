@@ -75,8 +75,8 @@ useEffect(() => {
             {/* Info Row */}
             <div className="flex flex-wrap gap-6 mb-10 text-sm">
               <div>
-                <p className="font-semibold">21 Days</p>
-                <p className="text-white/70">Start Date: 23rd Feb 2026</p>
+                <p className="font-semibold">14 Days</p>
+                <p className="text-white/70">Start Date: 9th Mar 2026</p>
               </div>
 
               <div>

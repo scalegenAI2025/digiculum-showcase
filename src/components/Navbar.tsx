@@ -5,7 +5,7 @@ import digiLogo from "@/assets/Digiculum-Logo.png";
 const navLinks = [
   { label: "Individuals", href: "/individuals" },
   { label: "Leaders", href: "/leaders" },
-  { label: "Courses", href: "/courses" },
+  { label: "Reskilling", href: "/reskilling" },
   { label: "Ecosystem", href: "/ecosystem" },
 ];
 

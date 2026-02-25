@@ -51,7 +51,7 @@ const Hero = () => {
                   Start Date:
                 </span>
                 <span className="text-white font-bold italic text-xs md:text-sm mb-2 md:mb-4">
-                  23rd Feb, 2026
+                  9th Mar, 2026
                 </span>
               </div>
 
