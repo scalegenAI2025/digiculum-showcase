@@ -1,8 +1,6 @@
 import { useState, useRef } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
 import {
-  Lightbulb, CheckCircle2, ChevronRight, Download,
+  Lightbulb, CheckCircle2, ChevronRight, ChevronLeft, Download,
   Mail, Phone, User, AlertCircle, Brain, Shield, Zap
 } from "lucide-react";
 import { downloadMindsetPdf } from "./generateMindsetPdf";
@@ -249,33 +247,56 @@ type Phase = "quiz" | "info" | "result";
 
 export default function AIMindsetAssessment() {
   const [phase, setPhase] = useState<Phase>("quiz");
+  const [currentIndex, setCurrentIndex] = useState(0);
   const [answers, setAnswers] = useState<Record<number, "a" | "b" | "c">>({});
+  const [unansweredWarning, setUnansweredWarning] = useState(false);
   const [userInfo, setUserInfo] = useState<UserInfo>({ name: "", email: "", phone: "", organization: "" });
   const [infoErrors, setInfoErrors] = useState<Partial<UserInfo>>({});
   const [counts, setCounts] = useState<Record<Mindset, number>>({ Optimistic: 0, Pragmatic: 0, Skeptic: 0 });
   const [dominant, setDominant] = useState<Mindset>("Pragmatic");
-  const topRef = useRef<HTMLDivElement>(null);
+  const cardRef = useRef<HTMLDivElement>(null);
 
-  function selectAnswer(scenarioId: number, label: "a" | "b" | "c") {
-    setAnswers((prev) => ({ ...prev, [scenarioId]: label }));
+  const currentScenario = SCENARIOS[currentIndex];
+  const isFirst = currentIndex === 0;
+  const isLast = currentIndex === SCENARIOS.length - 1;
+  const answeredCount = Object.keys(answers).length;
+
+  function scrollToCard() {
+    cardRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+
+  function goToNext() {
+    if (!answers[currentScenario.id]) {
+      setUnansweredWarning(true);
+      return;
+    }
+    setUnansweredWarning(false);
+    setCurrentIndex((i) => i + 1);
+    scrollToCard();
+  }
+
+  function goToPrev() {
+    setUnansweredWarning(false);
+    setCurrentIndex((i) => i - 1);
+    scrollToCard();
   }
 
   function submitQuiz() {
-    const unanswered = SCENARIOS.filter((s) => !answers[s.id]);
-    if (unanswered.length > 0) {
-      alert(`Please answer all scenarios. ${unanswered.length} remaining.`);
+    if (!answers[currentScenario.id]) {
+      setUnansweredWarning(true);
       return;
     }
+    setUnansweredWarning(false);
     const tally: Record<Mindset, number> = { Optimistic: 0, Pragmatic: 0, Skeptic: 0 };
     for (const s of SCENARIOS) {
       const chosen = answers[s.id];
-      tally[LEGEND[s.id][chosen]]++;
+      if (chosen) tally[LEGEND[s.id][chosen]]++;
     }
     setCounts(tally);
     const dom = (Object.keys(tally) as Mindset[]).reduce((a, b) => tally[a] >= tally[b] ? a : b);
     setDominant(dom);
     setPhase("info");
-    topRef.current?.scrollIntoView({ behavior: "smooth" });
+    scrollToCard();
   }
 
   function submitInfo() {
@@ -286,41 +307,58 @@ export default function AIMindsetAssessment() {
     setInfoErrors(errors);
     if (Object.keys(errors).length > 0) return;
     setPhase("result");
-    topRef.current?.scrollIntoView({ behavior: "smooth" });
+    scrollToCard();
   }
 
   const cfg = MINDSET_CONFIG[dominant];
   const Icon = cfg.icon;
-  const answered = Object.keys(answers).length;
+
+  const steps = [
+    { key: "quiz",   label: "Scenarios"      },
+    { key: "info",   label: "Your Info"      },
+    { key: "result", label: "Mindset Report" },
+  ];
+  const phaseOrder = ["quiz", "info", "result"];
+
+  // ─────────────────────────────────────────────────────────────────────────────
 
   return (
-    <div ref={topRef} className="min-h-screen bg-background">
-
+    <div
+      className="min-h-screen"
+      style={{ backgroundColor: "#ffffff", color: "#111111", fontFamily: "inherit" }}
+    >
       {/* ── Hero ── */}
-      <section className="pt-32 pb-12 px-6">
+      <section className="pt-32 pb-12 px-6" style={{ backgroundColor: "#ffffff" }}>
         <div className="container mx-auto max-w-4xl text-center">
-          <div className="inline-flex items-center gap-2 bg-primary/10 border border-primary/30 rounded-full px-4 py-2 mb-6">
-            <Lightbulb className="w-4 h-4 text-primary" />
-            <span className="text-sm text-primary">Discover Your AI Mindset</span>
+          <div className="inline-flex items-center gap-2 rounded-full px-4 py-2 mb-6 bg-primary text-primary-foreground">
+            <Lightbulb className="w-4 h-4" />
+            <span className="text-sm font-semibold">Discover Your AI Mindset</span>
           </div>
-          <h1 className="text-4xl font-bold mb-4">AI Mindset Assessment</h1>
-          <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
+          <h1 className="text-4xl font-bold mb-4" style={{ color: "#111111" }}>AI Mindset Assessment</h1>
+          <p className="text-lg max-w-2xl mx-auto" style={{ color: "#555555" }}>
             16 real-world case scenarios to reveal whether you're an Optimist, Pragmatist, or Skeptic when it comes to AI.
           </p>
 
           {/* Stepper */}
           <div className="flex items-center justify-center gap-2 mt-10">
-            {(["quiz", "info", "result"] as Phase[]).map((p, i) => {
-              const labels = ["Scenarios", "Your Info", "Mindset Report"];
-              const active = phase === p;
-              const done = (phase === "info" && i === 0) || (phase === "result" && i <= 1);
+            {steps.map((step, i) => {
+              const currentPhaseIdx = phaseOrder.indexOf(phase);
+              const state = i === currentPhaseIdx ? "active" : i < currentPhaseIdx ? "done" : "inactive";
               return (
-                <div key={p} className="flex items-center gap-2">
-                  <div className={`flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold transition-all ${active ? "bg-primary text-primary-foreground" : done ? "bg-primary/20 text-primary" : "bg-muted/50 text-muted-foreground"}`}>
-                    {done && !active ? <CheckCircle2 className="w-3 h-3" /> : <span>{i + 1}</span>}
-                    {labels[i]}
+                <div key={step.key} className="flex items-center gap-2">
+                  <div
+                    className={`flex items-center gap-1.5 rounded-full px-4 py-1.5 text-xs font-semibold transition-all ${
+                      state === "active"
+                        ? "bg-primary text-primary-foreground"
+                        : state === "done"
+                        ? "bg-primary/10 text-primary border border-primary/30"
+                        : "bg-gray-100 text-gray-400 border border-gray-200"
+                    }`}
+                  >
+                    {state === "done" ? <CheckCircle2 className="w-3 h-3" /> : <span>{i + 1}</span>}
+                    {step.label}
                   </div>
-                  {i < 2 && <ChevronRight className="w-3 h-3 text-muted-foreground" />}
+                  {i < steps.length - 1 && <ChevronRight className="w-3 h-3" style={{ color: "#d1d5db" }} />}
                 </div>
               );
             })}
@@ -328,66 +366,141 @@ export default function AIMindsetAssessment() {
         </div>
       </section>
 
-      <div className="container mx-auto max-w-4xl px-6 pb-24">
+      <div ref={cardRef} className="container mx-auto max-w-4xl px-6 pb-24">
 
-        {/* ════════════════ PHASE: QUIZ ════════════════ */}
+        {/* ════════════════ PHASE: QUIZ — one scenario per page ════════════════ */}
         {phase === "quiz" && (
           <div className="space-y-6">
+
+            {/* Progress bar */}
             <div className="flex items-center gap-3 mb-2">
-              <span className="text-sm text-muted-foreground">{answered} of {SCENARIOS.length} answered</span>
-              <div className="flex-1 bg-muted/30 rounded-full h-1.5 overflow-hidden">
-                <div className="h-full bg-primary rounded-full transition-all" style={{ width: `${(answered / SCENARIOS.length) * 100}%` }} />
+              <span className="text-sm whitespace-nowrap" style={{ color: "#555555" }}>
+                Scenario {currentIndex + 1} of {SCENARIOS.length}
+              </span>
+              <div className="flex-1 rounded-full h-1.5 overflow-hidden bg-gray-100">
+                <div
+                  className="h-full rounded-full bg-primary transition-all duration-300"
+                  style={{ width: `${((currentIndex + 1) / SCENARIOS.length) * 100}%` }}
+                />
+              </div>
+              <span className="text-sm whitespace-nowrap" style={{ color: "#555555" }}>
+                {answeredCount} answered
+              </span>
+            </div>
+
+            {/* Dot navigation */}
+            <div className="flex flex-wrap gap-1.5 mb-4">
+              {SCENARIOS.map((s, idx) => (
+                <button
+                  key={s.id}
+                  onClick={() => {
+                    setUnansweredWarning(false);
+                    setCurrentIndex(idx);
+                    scrollToCard();
+                  }}
+                  title={`Scenario ${idx + 1}`}
+                  className={`w-7 h-7 rounded-full text-xs font-semibold transition-all ${
+                    idx === currentIndex
+                      ? "bg-primary text-primary-foreground border-0"
+                      : answers[s.id]
+                      ? "bg-primary/10 text-primary border border-primary/30"
+                      : "bg-gray-100 text-gray-500 border border-gray-200"
+                  }`}
+                >
+                  {idx + 1}
+                </button>
+              ))}
+            </div>
+
+            {/* Single scenario card */}
+            <div
+              className="rounded-2xl overflow-hidden"
+              style={{ background: "#f9fafb", border: "1px solid #e5e7eb" }}
+            >
+              <div className="p-6">
+                <div className="flex items-start gap-3 mb-5">
+                  <span className="inline-flex items-center justify-center w-7 h-7 rounded-full text-xs font-bold shrink-0 mt-0.5 bg-primary/10 text-primary">
+                    {currentScenario.id}
+                  </span>
+                  <div className="flex-1">
+                    <p className="text-xs font-semibold uppercase tracking-widest mb-2 text-primary">
+                      {currentScenario.title}
+                    </p>
+                    <p className="text-base font-medium leading-relaxed" style={{ color: "#111111" }}>
+                      {currentScenario.context}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="space-y-2 ml-10">
+                  {currentScenario.options.map((opt) => {
+                    const isSelected = answers[currentScenario.id] === opt.label;
+                    return (
+                      <button
+                        key={opt.label}
+                        onClick={() => {
+                          setUnansweredWarning(false);
+                          setAnswers((prev) => ({ ...prev, [currentScenario.id]: opt.label }));
+                        }}
+                        className={`w-full flex items-start gap-3 text-left px-4 py-3 rounded-xl text-sm transition-all ${
+                          isSelected
+                            ? "bg-primary/10 border-2 border-primary"
+                            : "bg-white border border-gray-200 hover:border-primary/40"
+                        }`}
+                        style={{ color: "#374151" }}
+                      >
+                        <span
+                          className={`inline-flex items-center justify-center w-6 h-6 rounded-full text-xs font-bold shrink-0 mt-0.5 ${
+                            isSelected
+                              ? "bg-primary text-primary-foreground"
+                              : "bg-gray-100 text-gray-500"
+                          }`}
+                        >
+                          {opt.label.toUpperCase()}
+                        </span>
+                        <span className="flex-1 leading-relaxed">{opt.text}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+
+                {unansweredWarning && (
+                  <p className="mt-3 text-xs flex items-center gap-1.5 ml-10" style={{ color: "#f59e0b" }}>
+                    <AlertCircle className="w-3.5 h-3.5" />
+                    Please select an answer before proceeding.
+                  </p>
+                )}
               </div>
             </div>
 
-            {SCENARIOS.map((s) => {
-              const chosen = answers[s.id];
-              return (
-                <Card key={s.id} className="bg-card/50 border-border/50 overflow-hidden">
-                  <CardHeader className="pb-3">
-                    <div className="flex items-start gap-3">
-                      <span className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-primary/10 text-primary text-xs font-bold shrink-0 mt-0.5">
-                        {s.id}
-                      </span>
-                      <div>
-                        <p className="text-xs text-primary font-semibold uppercase tracking-widest mb-1">{s.title}</p>
-                        <CardTitle className="text-sm font-normal text-muted-foreground leading-relaxed">
-                          {s.context}
-                        </CardTitle>
-                      </div>
-                    </div>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-2">
-                      {s.options.map((opt) => {
-                        const isSelected = chosen === opt.label;
-                        return (
-                          <button
-                            key={opt.label}
-                            onClick={() => selectAnswer(s.id, opt.label)}
-                            className={`w-full flex items-start gap-3 text-left px-4 py-3 rounded-lg border transition-all text-sm ${
-                              isSelected
-                                ? "bg-primary/10 border-primary text-foreground"
-                                : "bg-card border-border/50 text-muted-foreground hover:border-primary/40 hover:text-foreground"
-                            }`}
-                          >
-                            <span className={`inline-flex items-center justify-center w-6 h-6 rounded-full text-xs font-bold shrink-0 mt-0.5 ${isSelected ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"}`}>
-                              {opt.label.toUpperCase()}
-                            </span>
-                            <span className="flex-1 leading-relaxed">{opt.text}</span>
-                          </button>
-                        );
-                      })}
-                    </div>
-                  </CardContent>
-                </Card>
-              );
-            })}
-
-            <div className="flex justify-end pt-4">
-              <button onClick={submitQuiz} className="btn-primary inline-flex items-center gap-2">
-                See My Mindset <ChevronRight className="w-4 h-4" />
+            {/* Navigation buttons */}
+            <div className="flex justify-between items-center pt-2">
+              <button
+                onClick={goToPrev}
+                disabled={isFirst}
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-medium transition-all border border-gray-200 text-gray-600 bg-white disabled:opacity-30 disabled:cursor-not-allowed"
+              >
+                <ChevronLeft className="w-4 h-4" />
+                Previous
               </button>
+
+              {isLast ? (
+                <button
+                  onClick={submitQuiz}
+                  className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl text-sm font-semibold transition-all bg-primary text-primary-foreground border-0"
+                >
+                  Next: Your Info
+                  <ChevronRight className="w-4 h-4" />
+                </button>
+              ) : (
+                <button
+                  onClick={goToNext}
+                  className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl text-sm font-semibold transition-all bg-primary text-primary-foreground border-0"
+                >
+                  Next
+                  <ChevronRight className="w-4 h-4" />
+                </button>
+              )}
             </div>
           </div>
         )}
@@ -395,48 +508,68 @@ export default function AIMindsetAssessment() {
         {/* ════════════════ PHASE: INFO ════════════════ */}
         {phase === "info" && (
           <div className="max-w-xl mx-auto">
-            <Card className="bg-card/50 border-border/50">
-              <CardHeader>
-                <div className="text-center mb-2">
-                  <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-primary/10 border border-primary/20 mb-4">
+            <div
+              className="rounded-2xl overflow-hidden"
+              style={{ background: "#f9fafb", border: "1px solid #e5e7eb" }}
+            >
+              <div className="p-8">
+                <div className="text-center mb-8">
+                  <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl mb-4 bg-primary/10 border border-primary/30">
                     <Lightbulb className="w-7 h-7 text-primary" />
                   </div>
-                  <CardTitle className="text-2xl">Almost there!</CardTitle>
-                  <p className="text-muted-foreground text-sm mt-1">Enter your details to reveal your AI Mindset Report.</p>
+                  <h2 className="text-2xl font-bold" style={{ color: "#111111" }}>Almost there!</h2>
+                  <p className="text-sm mt-1" style={{ color: "#555555" }}>
+                    Enter your details to reveal your AI Mindset Report.
+                  </p>
                 </div>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                {[
-                  { key: "name" as const,         label: "Full Name",               placeholder: "Jane Doe",         icon: User,  type: "text"  },
-                  { key: "email" as const,        label: "Email Address",           placeholder: "jane@example.com", icon: Mail,  type: "email" },
-                  { key: "phone" as const,        label: "Phone Number",            placeholder: "+91 98765 43210",  icon: Phone, type: "tel"   },
-                  { key: "organization" as const, label: "Organization (optional)", placeholder: "Acme Corp",        icon: null,  type: "text"  },
-                ].map(({ key, label, placeholder, icon: Ic, type }) => (
-                  <div key={key}>
-                    <label className="text-xs text-muted-foreground uppercase tracking-widest mb-1.5 block font-medium">{label}</label>
-                    <div className="relative">
-                      {Ic && <Ic className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />}
-                      <input
-                        type={type}
-                        placeholder={placeholder}
-                        value={userInfo[key]}
-                        onChange={(e) => setUserInfo((p) => ({ ...p, [key]: e.target.value }))}
-                        className={`w-full rounded-lg border bg-card text-foreground text-sm px-4 py-3 outline-none transition-all focus:border-primary focus:ring-1 focus:ring-primary/30 ${Ic ? "pl-9" : ""} ${infoErrors[key] ? "border-red-500" : "border-border/60"}`}
-                      />
+
+                <div className="space-y-4">
+                  {[
+                    { key: "name" as const,         label: "Full Name",               placeholder: "Jane Doe",         icon: User,  type: "text"  },
+                    { key: "email" as const,        label: "Email Address",           placeholder: "jane@example.com", icon: Mail,  type: "email" },
+                    { key: "phone" as const,        label: "Phone Number",            placeholder: "+91 98765 43210",  icon: Phone, type: "tel"   },
+                    { key: "organization" as const, label: "Organization (optional)", placeholder: "Acme Corp",        icon: null,  type: "text"  },
+                  ].map(({ key, label, placeholder, icon: Ic, type }) => (
+                    <div key={key}>
+                      <label className="text-xs uppercase tracking-widest mb-1.5 block font-medium" style={{ color: "#6b7280" }}>
+                        {label}
+                      </label>
+                      <div className="relative">
+                        {Ic && (
+                          <Ic className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 pointer-events-none text-gray-400" />
+                        )}
+                        <input
+                          type={type}
+                          placeholder={placeholder}
+                          value={userInfo[key]}
+                          onChange={(e) => setUserInfo((p) => ({ ...p, [key]: e.target.value }))}
+                          className="w-full rounded-xl text-sm px-4 py-3 outline-none transition-all bg-white text-gray-900"
+                          style={{
+                            paddingLeft: Ic ? "2.5rem" : "1rem",
+                            border: infoErrors[key] ? "1px solid #ef4444" : "1px solid #e5e7eb",
+                          }}
+                        />
+                      </div>
+                      {infoErrors[key] && (
+                        <p className="text-xs mt-1 flex items-center gap-1 text-red-500">
+                          <AlertCircle className="w-3 h-3" /> {infoErrors[key]}
+                        </p>
+                      )}
                     </div>
-                    {infoErrors[key] && (
-                      <p className="text-red-400 text-xs mt-1 flex items-center gap-1">
-                        <AlertCircle className="w-3 h-3" /> {infoErrors[key]}
-                      </p>
-                    )}
-                  </div>
-                ))}
-                <Separator className="my-2" />
-                <button onClick={submitInfo} className="btn-primary w-full inline-flex items-center justify-center gap-2 py-3">
-                  Reveal My AI Mindset <ChevronRight className="w-4 h-4" />
-                </button>
-              </CardContent>
-            </Card>
+                  ))}
+
+                  <div style={{ borderTop: "1px solid #e5e7eb", marginTop: "1rem", paddingTop: "1rem" }} />
+
+                  <button
+                    onClick={submitInfo}
+                    className="w-full inline-flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-semibold transition-all bg-primary text-primary-foreground border-0"
+                  >
+                    Reveal My AI Mindset
+                    <ChevronRight className="w-4 h-4" />
+                  </button>
+                </div>
+              </div>
+            </div>
           </div>
         )}
 
@@ -444,18 +577,28 @@ export default function AIMindsetAssessment() {
         {phase === "result" && (
           <div className="space-y-6 max-w-2xl mx-auto">
 
-            {/* Main result */}
-            <Card className="bg-card/50 border-border/50 overflow-hidden">
+            {/* Main result card */}
+            <div
+              className="rounded-2xl overflow-hidden"
+              style={{ background: "#f9fafb", border: "1px solid #e5e7eb" }}
+            >
               <div className="h-1.5" style={{ background: `linear-gradient(to right, ${cfg.color}44, ${cfg.color})` }} />
-              <CardContent className="pt-8 pb-6 text-center">
-                <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl mb-4 border" style={{ background: cfg.bg, borderColor: cfg.border }}>
+              <div className="pt-8 pb-6 text-center px-6">
+                <div
+                  className="inline-flex items-center justify-center w-16 h-16 rounded-2xl mb-4 border"
+                  style={{ background: cfg.bg, borderColor: cfg.border }}
+                >
                   <Icon className="w-8 h-8" style={{ color: cfg.color }} />
                 </div>
-                <p className="text-sm text-muted-foreground mb-1 uppercase tracking-widest font-medium">Your Predominant Mindset</p>
+                <p className="text-sm uppercase tracking-widest font-medium mb-1" style={{ color: "#6b7280" }}>
+                  Your Predominant Mindset
+                </p>
                 <h2 className="text-5xl font-bold mb-4" style={{ color: cfg.color }}>{dominant}</h2>
-                <p className="text-muted-foreground text-sm leading-relaxed max-w-lg mx-auto">{cfg.description}</p>
-              </CardContent>
-            </Card>
+                <p className="text-sm leading-relaxed max-w-lg mx-auto" style={{ color: "#555555" }}>
+                  {cfg.description}
+                </p>
+              </div>
+            </div>
 
             {/* Count breakdown */}
             <div className="grid grid-cols-3 gap-4">
@@ -463,59 +606,79 @@ export default function AIMindsetAssessment() {
                 const mc = MINDSET_CONFIG[m];
                 const MIcon = mc.icon;
                 return (
-                  <Card key={m} className="bg-card/50 border-border/50 text-center overflow-hidden">
+                  <div
+                    key={m}
+                    className="rounded-2xl text-center overflow-hidden"
+                    style={{ background: "#f9fafb", border: "1px solid #e5e7eb" }}
+                  >
                     <div className="h-0.5" style={{ background: m === dominant ? mc.color : "transparent" }} />
-                    <CardContent className="pt-5 pb-4">
+                    <div className="pt-5 pb-4 px-4">
                       <MIcon className="w-5 h-5 mx-auto mb-2" style={{ color: mc.color }} />
                       <p className="text-3xl font-bold font-mono" style={{ color: mc.color }}>{c}</p>
-                      <p className="text-xs text-muted-foreground mt-1">{m}</p>
-                      <p className="text-xs text-muted-foreground">responses</p>
+                      <p className="text-xs mt-1" style={{ color: "#6b7280" }}>{m}</p>
+                      <p className="text-xs" style={{ color: "#9ca3af" }}>responses</p>
                       {m === dominant && (
-                        <span className="inline-block mt-2 text-xs rounded-full px-2 py-0.5 font-medium" style={{ background: mc.bg, color: mc.color, border: `1px solid ${mc.border}` }}>
+                        <span
+                          className="inline-block mt-2 text-xs rounded-full px-2 py-0.5 font-medium"
+                          style={{ background: mc.bg, color: mc.color, border: `1px solid ${mc.border}` }}
+                        >
                           Dominant
                         </span>
                       )}
-                    </CardContent>
-                  </Card>
+                    </div>
+                  </div>
                 );
               })}
             </div>
 
             {/* Distribution */}
-            <Card className="bg-card/50 border-border/50">
-              <CardContent className="pt-6 pb-5">
-                <p className="text-xs text-muted-foreground uppercase tracking-widest mb-4 font-medium">Mindset Distribution</p>
-                <div className="space-y-3">
-                  {(Object.entries(counts) as [Mindset, number][]).map(([m, c]) => {
-                    const mc = MINDSET_CONFIG[m];
-                    return (
-                      <div key={m} className="flex items-center gap-3">
-                        <span className="text-xs w-20 text-right text-muted-foreground">{m}</span>
-                        <div className="flex-1 bg-muted/30 rounded-full h-2.5 overflow-hidden">
-                          <div className="h-full rounded-full transition-all" style={{ width: `${(c / 16) * 100}%`, background: mc.color }} />
-                        </div>
-                        <span className="text-xs font-mono font-semibold w-6" style={{ color: mc.color }}>{c}</span>
+            <div
+              className="rounded-2xl p-6"
+              style={{ background: "#f9fafb", border: "1px solid #e5e7eb" }}
+            >
+              <p className="text-xs uppercase tracking-widest mb-4 font-medium" style={{ color: "#6b7280" }}>
+                Mindset Distribution
+              </p>
+              <div className="space-y-3">
+                {(Object.entries(counts) as [Mindset, number][]).map(([m, c]) => {
+                  const mc = MINDSET_CONFIG[m];
+                  return (
+                    <div key={m} className="flex items-center gap-3">
+                      <span className="text-xs w-20 text-right" style={{ color: "#6b7280" }}>{m}</span>
+                      <div className="flex-1 rounded-full h-2.5 overflow-hidden bg-gray-100">
+                        <div
+                          className="h-full rounded-full transition-all"
+                          style={{ width: `${(c / 16) * 100}%`, background: mc.color }}
+                        />
                       </div>
-                    );
-                  })}
-                </div>
-              </CardContent>
-            </Card>
+                      <span className="text-xs font-mono font-semibold w-6" style={{ color: mc.color }}>{c}</span>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
 
             {/* Traits */}
-            <Card className="bg-card/50 border-border/50">
-              <CardContent className="pt-6 pb-5">
-                <p className="text-xs text-muted-foreground uppercase tracking-widest mb-4 font-medium">Key Traits</p>
-                <div className="grid grid-cols-2 gap-2">
-                  {cfg.traits.map((t) => (
-                    <div key={t} className="flex items-center gap-2 text-sm rounded-lg px-3 py-2" style={{ background: cfg.bg, border: `1px solid ${cfg.border}` }}>
-                      <span className="w-1.5 h-1.5 rounded-full shrink-0" style={{ background: cfg.color }} />
-                      <span style={{ color: cfg.color }}>{t}</span>
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
+            <div
+              className="rounded-2xl p-6"
+              style={{ background: "#f9fafb", border: "1px solid #e5e7eb" }}
+            >
+              <p className="text-xs uppercase tracking-widest mb-4 font-medium" style={{ color: "#6b7280" }}>
+                Key Traits
+              </p>
+              <div className="grid grid-cols-2 gap-2">
+                {cfg.traits.map((t) => (
+                  <div
+                    key={t}
+                    className="flex items-center gap-2 text-sm rounded-xl px-3 py-2"
+                    style={{ background: cfg.bg, border: `1px solid ${cfg.border}` }}
+                  >
+                    <span className="w-1.5 h-1.5 rounded-full shrink-0" style={{ background: cfg.color }} />
+                    <span style={{ color: cfg.color }}>{t}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
 
             {/* Actions */}
             <div className="flex flex-col sm:flex-row gap-3">
@@ -531,7 +694,7 @@ export default function AIMindsetAssessment() {
                   description: cfg.description,
                   traits: cfg.traits,
                 })}
-                className="btn-primary flex-1 inline-flex items-center justify-center gap-2 py-3"
+                className="flex-1 inline-flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-semibold transition-all bg-primary text-primary-foreground border-0"
               >
                 <Download className="w-4 h-4" /> Download Report
               </button>
@@ -539,18 +702,21 @@ export default function AIMindsetAssessment() {
                 onClick={() => {
                   setPhase("quiz");
                   setAnswers({});
+                  setCurrentIndex(0);
                   setUserInfo({ name: "", email: "", phone: "", organization: "" });
-                  topRef.current?.scrollIntoView({ behavior: "smooth" });
+                  scrollToCard();
                 }}
-                className="flex-1 inline-flex items-center justify-center gap-2 py-3 rounded-lg border border-border/60 text-sm font-medium text-foreground hover:bg-muted/30 transition-all"
+                className="flex-1 inline-flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-medium transition-all border border-gray-200 text-gray-600 bg-white"
               >
                 Retake Assessment
               </button>
             </div>
 
-            <p className="text-center text-xs text-muted-foreground">
+            <p className="text-center text-xs" style={{ color: "#9ca3af" }}>
               For queries, reach us at{" "}
-              <a href="mailto:info@digiculum.com" className="text-primary underline">info@digiculum.com</a>
+              <a href="mailto:info@digiculum.com" className="text-primary">
+                info@digiculum.com
+              </a>
             </p>
           </div>
         )}

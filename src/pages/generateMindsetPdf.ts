@@ -1,141 +1,31 @@
 // generateMindsetPdf.ts
-// Generates a downloadable PDF report for AI Mindset Assessment.
-// Uses the same raw PDF 1.4 byte-construction approach — zero dependencies.
+// Browser-side PDF generation using jsPDF
+// Install: npm install jspdf
 
-export type Mindset = "Optimistic" | "Pragmatic" | "Skeptic";
+import jsPDF from "jspdf";
 
-export interface MindsetReportData {
+type Mindset = "Optimistic" | "Pragmatic" | "Skeptic";
+
+interface MindsetPdfParams {
   name: string;
   email: string;
   phone: string;
   organization: string;
   counts: Record<Mindset, number>;
   dominant: Mindset;
+  dominantColor: string; // e.g. "#22c55e"
   description: string;
   traits: string[];
-  dominantColor: string;
 }
 
-// ─── Raw PDF builder (identical core to generateAIQPdf) ───────────────────────
+// ── Constants ─────────────────────────────────────────────────────────────────
 
-class RawPDF {
-  private objOffsets: number[] = [];
-  private stream: string[] = [];
-  private w = 595;
-  private h = 842;
-
-  private col(hex: string) {
-    const n = parseInt(hex.replace("#", ""), 16);
-    const r = ((n >> 16) & 255) / 255;
-    const g = ((n >> 8) & 255) / 255;
-    const b = (n & 255) / 255;
-    return `${r.toFixed(3)} ${g.toFixed(3)} ${b.toFixed(3)}`;
-  }
-
-  private py(y: number) {
-    return this.h - y;
-  }
-
-  fillRect(x: number, y: number, w: number, h: number, hex: string) {
-    this.stream.push(`${this.col(hex)} rg ${x} ${this.py(y + h)} ${w} ${h} re f`);
-  }
-
-  strokeRect(x: number, y: number, w: number, h: number, hex: string, lw = 0.5) {
-    this.stream.push(`${lw} w ${this.col(hex)} RG ${x} ${this.py(y + h)} ${w} ${h} re S`);
-  }
-
-  line(x1: number, y1: number, x2: number, y2: number, hex: string, lw = 0.5) {
-    this.stream.push(`${lw} w ${this.col(hex)} RG ${x1} ${this.py(y1)} m ${x2} ${this.py(y2)} l S`);
-  }
-
-  text(
-    str: string,
-    x: number,
-    y: number,
-    size: number,
-    hex: string,
-    bold = false,
-    align: "left" | "center" | "right" = "left",
-    maxWidth?: number
-  ) {
-    const safe = str.replace(/[^\x20-\x7E]/g, "?");
-    const charW = size * 0.55;
-    let finalStr = safe;
-    if (maxWidth) {
-      const maxChars = Math.floor(maxWidth / charW);
-      finalStr = safe.length > maxChars ? safe.slice(0, maxChars - 1) + "..." : safe;
-    }
-    let tx = x;
-    if (align === "center") tx = x - (finalStr.length * charW) / 2;
-    if (align === "right") tx = x - finalStr.length * charW;
-    const font = bold ? "/F2" : "/F1";
-    const escaped = finalStr.replace(/\\/g, "\\\\").replace(/\(/g, "\\(").replace(/\)/g, "\\)");
-    this.stream.push(`BT ${font} ${size} Tf ${this.col(hex)} rg ${tx} ${this.py(y)} Td (${escaped}) Tj ET`);
-  }
-
-  // Wrap text across multiple lines, return next Y position
-  textWrapped(str: string, x: number, y: number, size: number, hex: string, maxWidth: number, lineHeight: number): number {
-    const safe = str.replace(/[^\x20-\x7E]/g, "?");
-    const charW = size * 0.55;
-    const maxChars = Math.floor(maxWidth / charW);
-    const words = safe.split(" ");
-    let line = "";
-    let curY = y;
-    for (const word of words) {
-      if ((line + word).length > maxChars) {
-        this.text(line.trim(), x, curY, size, hex);
-        curY += lineHeight;
-        line = word + " ";
-      } else {
-        line += word + " ";
-      }
-    }
-    if (line.trim()) {
-      this.text(line.trim(), x, curY, size, hex);
-      curY += lineHeight;
-    }
-    return curY;
-  }
-
-  build(): Uint8Array {
-    const content = this.stream.join("\n");
-    const contentLen = new TextEncoder().encode(content).length;
-    const parts: string[] = [];
-
-    const addObj = (body: string) => {
-      this.objOffsets.push(parts.join("").length);
-      parts.push(`${this.objOffsets.length} 0 obj\n${body}\nendobj\n`);
-    };
-
-    addObj("<< /Type /Catalog /Pages 2 0 R >>");
-    addObj(`<< /Type /Pages /Kids [3 0 R] /Count 1 >>`);
-    addObj(`<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ${this.w} ${this.h}] /Contents 4 0 R /Resources << /Font << /F1 5 0 R /F2 6 0 R >> >> >>`);
-    addObj(`<< /Length ${contentLen} >>\nstream\n${content}\nendstream`);
-    addObj(`<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>`);
-    addObj(`<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding >>`);
-
-    const header = "%PDF-1.4\n";
-    const body = parts.join("");
-    const xrefOffset = header.length + body.length;
-
-    const xref = [
-      "xref",
-      `0 ${this.objOffsets.length + 1}`,
-      "0000000000 65535 f \n" +
-        this.objOffsets.map((o) => `${String(header.length + o).padStart(10, "0")} 00000 n `).join("\n"),
-      "",
-      "trailer",
-      `<< /Size ${this.objOffsets.length + 1} /Root 1 0 R >>`,
-      "startxref",
-      String(xrefOffset),
-      "%%EOF",
-    ].join("\n");
-
-    return new TextEncoder().encode(header + body + xref);
-  }
-}
-
-// ─── Mindset colours ──────────────────────────────────────────────────────────
+const MAGENTA = "#C2185B";
+const BLACK   = "#111111";
+const DARK    = "#374151";
+const GRAY    = "#6B7280";
+const LGRAY   = "#9CA3AF";
+const BORDER  = "#E5E7EB";
 
 const MINDSET_COLORS: Record<Mindset, string> = {
   Optimistic: "#22c55e",
@@ -143,160 +33,336 @@ const MINDSET_COLORS: Record<Mindset, string> = {
   Skeptic:    "#f97316",
 };
 
-// ─── Main export ──────────────────────────────────────────────────────────────
+// ── Helpers ───────────────────────────────────────────────────────────────────
 
-export function downloadMindsetPdf(data: MindsetReportData) {
-  const pdf = new RawPDF();
+function hexToRgb(hex: string): [number, number, number] {
+  const h = hex.replace("#", "");
+  return [
+    parseInt(h.substring(0, 2), 16),
+    parseInt(h.substring(2, 4), 16),
+    parseInt(h.substring(4, 6), 16),
+  ];
+}
 
-  const BG     = "#09090b";
-  const CARD   = "#18181b";
-  const BORDER = "#27272a";
-  const WHITE  = "#fafafa";
-  const MUTED  = "#71717a";
-  const PRIMARY = "#6366f1";
-  const DC = data.dominantColor;
+function setFill(doc: jsPDF, hex: string) {
+  const [r, g, b] = hexToRgb(hex);
+  doc.setFillColor(r, g, b);
+}
+function setStroke(doc: jsPDF, hex: string) {
+  const [r, g, b] = hexToRgb(hex);
+  doc.setDrawColor(r, g, b);
+}
+function setTxt(doc: jsPDF, hex: string) {
+  const [r, g, b] = hexToRgb(hex);
+  doc.setTextColor(r, g, b);
+}
 
-  const date = new Date().toLocaleDateString("en-GB", {
-    day: "2-digit", month: "long", year: "numeric",
+function wrap(doc: jsPDF, text: string, maxW: number): string[] {
+  return doc.splitTextToSize(text, maxW);
+}
+
+function PW(doc: jsPDF) { return doc.internal.pageSize.getWidth(); }
+function PH(doc: jsPDF) { return doc.internal.pageSize.getHeight(); }
+
+// ── Shared header & footer ────────────────────────────────────────────────────
+
+function drawHeader(doc: jsPDF) {
+  const w = PW(doc);
+  setFill(doc, MAGENTA);
+  doc.rect(0, 0, w, 8, "F");
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(7);
+  setTxt(doc, "#ffffff");
+  doc.text("AI MINDSET ASSESSMENT REPORT", 20, 5.5);
+  doc.setFont("helvetica", "normal");
+  doc.text("Digiculum", w - 20, 5.5, { align: "right" });
+}
+
+function drawFooter(doc: jsPDF, page: number, name: string, date: string) {
+  const w = PW(doc);
+  const h = PH(doc);
+  setStroke(doc, BORDER);
+  doc.setLineWidth(0.3);
+  doc.line(20, h - 13, w - 20, h - 13);
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(7);
+  setTxt(doc, LGRAY);
+  doc.text(
+    `AI Mindset Assessment  •  ${name}  •  ${date}  •  Prepared by Digiculum  •  info@digiculum.com`,
+    w / 2, h - 8, { align: "center" }
+  );
+  doc.text(`Page ${page} of 2`, w / 2, h - 4, { align: "center" });
+}
+
+function sectionLabel(doc: jsPDF, text: string, x: number, y: number, uw: number): number {
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(7.5);
+  setTxt(doc, MAGENTA);
+  doc.text(text, x, y);
+  y += 2.5;
+  setStroke(doc, BORDER);
+  doc.setLineWidth(0.3);
+  doc.line(x, y, x + uw, y);
+  return y + 4;
+}
+
+// ── PAGE 1: All report details ────────────────────────────────────────────────
+
+function buildPage1(
+  doc: jsPDF,
+  name: string,
+  date: string,
+  email: string,
+  phone: string,
+  organization: string,
+  dominant: Mindset,
+  dominantColor: string,
+  description: string,
+  counts: Record<Mindset, number>,
+  traits: string[],
+  focus: string,
+) {
+  const w  = PW(doc);
+  const ML = 20;
+  const UW = w - 40;
+  let y = 14;
+
+  drawHeader(doc);
+  y = 14;
+
+  // ── Report title ──
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(16);
+  setTxt(doc, BLACK);
+  doc.text("AI Mindset Assessment Report", ML, y);
+  y += 4;
+  setStroke(doc, MAGENTA);
+  doc.setLineWidth(0.6);
+  doc.line(ML, y, ML + UW, y);
+  y += 7;
+
+  // ── Report details ──
+  y = sectionLabel(doc, "REPORT DETAILS", ML, y, UW);
+
+  const details: [string, string][] = [
+    ["Name",            name],
+    ["Assessment Date", date],
+    ["Prepared by",     "Digiculum"],
+    ["Email",           email],
+    ["Phone",           phone],
+  ];
+  if (organization.trim()) details.push(["Organisation", organization]);
+
+  const rowH = 6.5;
+  details.forEach(([label, value], i) => {
+    const ry = y + i * rowH;
+    if (i % 2 === 0) {
+      setFill(doc, "#F9FAFB");
+      doc.rect(ML, ry - 4.5, UW, rowH, "F");
+    }
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(9);
+    setTxt(doc, GRAY);
+    doc.text(label, ML + 2, ry);
+    doc.setFont("helvetica", "normal");
+    setTxt(doc, BLACK);
+    doc.text(value || "—", ML + 48, ry);
+  });
+  y += details.length * rowH + 7;
+
+  // ── Predominant mindset ──
+  y = sectionLabel(doc, "YOUR PREDOMINANT MINDSET", ML, y, UW);
+
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(24);
+  setTxt(doc, dominantColor);
+  doc.text(dominant, w / 2, y + 9, { align: "center" });
+  y += 13;
+
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(9.5);
+  setTxt(doc, DARK);
+  const descLines = wrap(doc, description, UW);
+  descLines.forEach((line: string, i: number) => {
+    doc.text(line, w / 2, y + i * 4.8, { align: "center" });
+  });
+  y += descLines.length * 4.8 + 7;
+
+  // ── Focus ──
+  y = sectionLabel(doc, "YOUR FOCUS", ML, y, UW);
+
+  const [mr, mg, mb] = hexToRgb(dominantColor);
+  const focusLines = wrap(doc, focus, UW - 8);
+  const focusH = focusLines.length * 5 + 4;
+  doc.setFillColor(mr, mg, mb);
+  doc.rect(ML, y - 1, 2.5, focusH, "F");
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(9.5);
+  setTxt(doc, DARK);
+  focusLines.forEach((line: string, i: number) => {
+    doc.text(line, ML + 6, y + 2 + i * 5);
+  });
+  y += focusH + 7;
+
+  // ── Mindset distribution ──
+  y = sectionLabel(doc, "MINDSET DISTRIBUTION", ML, y, UW);
+
+  const total    = Object.values(counts).reduce((a, b) => a + b, 0);
+  const barTrackW = UW - 50;
+
+  (Object.entries(counts) as [Mindset, number][]).forEach(([m, c]) => {
+    const color  = MINDSET_COLORS[m];
+    const filled = total > 0 ? (c / total) * barTrackW : 0;
+
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(9);
+    setTxt(doc, GRAY);
+    doc.text(m, ML, y + 3.5);
+
+    setFill(doc, "#F3F4F6");
+    doc.roundedRect(ML + 28, y, barTrackW, 5, 1, 1, "F");
+    if (filled > 0) {
+      setFill(doc, color);
+      doc.roundedRect(ML + 28, y, filled, 5, 1, 1, "F");
+    }
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(9);
+    setTxt(doc, color);
+    doc.text(String(c), ML + 28 + barTrackW + 4, y + 3.8);
+    y += 9;
+  });
+  y += 5;
+
+  // ── Key traits ──
+  y = sectionLabel(doc, "KEY TRAITS", ML, y, UW);
+
+  const colW   = (UW - 4) / 2;
+  const traitH = 9;
+
+  traits.forEach((t, i) => {
+    const col = i % 2;
+    const row = Math.floor(i / 2);
+    const tx  = ML + col * (colW + 4);
+    const ty  = y + row * (traitH + 2);
+
+    const lr = Math.round(mr + (255 - mr) * 0.88);
+    const lg = Math.round(mg + (255 - mg) * 0.88);
+    const lb = Math.round(mb + (255 - mb) * 0.88);
+    doc.setFillColor(lr, lg, lb);
+    doc.roundedRect(tx, ty, colW, traitH, 1.5, 1.5, "F");
+    setStroke(doc, dominantColor);
+    doc.setLineWidth(0.25);
+    doc.roundedRect(tx, ty, colW, traitH, 1.5, 1.5, "S");
+
+    doc.setFillColor(mr, mg, mb);
+    doc.circle(tx + 4.5, ty + 4.5, 1, "F");
+
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(8.5);
+    doc.setTextColor(mr, mg, mb);
+    doc.text(t, tx + 8.5, ty + 6);
   });
 
-  // ── Background ──────────────────────────────────────────────────────────────
-  pdf.fillRect(0, 0, 595, 842, BG);
+  drawFooter(doc, 1, name, date);
+}
 
-  // ── Header ──────────────────────────────────────────────────────────────────
-  pdf.fillRect(0, 0, 595, 56, CARD);
-  pdf.line(0, 56, 595, 56, BORDER, 0.5);
-  pdf.text("digiculum", 40, 34, 18, PRIMARY, true);
-  pdf.text("AI Mindset Assessment Report", 192, 34, 11, MUTED);
-  pdf.text(date, 555, 34, 10, MUTED, false, "right");
+// ── PAGE 2: How Different Mindsets Work ──────────────────────────────────────
 
-  // ── Title ───────────────────────────────────────────────────────────────────
-  pdf.text("Artificial Intelligence Mindset Evaluation", 297, 94, 11, MUTED, false, "center");
-  pdf.text("AI Mindset Report", 297, 120, 26, WHITE, true, "center");
-  pdf.fillRect(247, 130, 101, 2, DC);
+function buildPage2(doc: jsPDF, name: string, date: string) {
+  doc.addPage();
+  const w  = PW(doc);
+  const ML = 20;
+  const UW = w - 40;
+  let y = 14;
 
-  // ── User card ───────────────────────────────────────────────────────────────
-  pdf.fillRect(40, 150, 515, 88, CARD);
-  pdf.strokeRect(40, 150, 515, 88, BORDER);
+  drawHeader(doc);
+  y = 14;
 
-  const fields = [
-    { label: "FULL NAME",     value: data.name,                x: 60,  y: 174 },
-    { label: "EMAIL",         value: data.email,               x: 330, y: 174 },
-    { label: "PHONE",         value: data.phone,               x: 60,  y: 214 },
-    { label: "ORGANIZATION",  value: data.organization || "-", x: 330, y: 214 },
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(14);
+  setTxt(doc, BLACK);
+  doc.text("How Different Mindsets Work", ML, y);
+  y += 4;
+  setStroke(doc, MAGENTA);
+  doc.setLineWidth(0.6);
+  doc.line(ML, y, ML + UW, y);
+  y += 9;
+
+  const blocks: { mindset: Mindset; body: string }[] = [
+    {
+      mindset: "Optimistic",
+      body: "People with an optimistic mindset are enthusiastic early adopters of AI, believing in its potential to revolutionize various industries, transform their businesses, and create significant value for their customers. They wholeheartedly embrace the hype surrounding AI, viewing it as a harbinger of groundbreaking innovations to develop new products, services, and solutions. They are excited about the new job prospects and opportunities opened by AI. They are willing to take risks with the expectation that the technology will yield significant benefits in terms of innovation, efficiency, and competitive advantage. They weigh profits more than ethics.",
+    },
+    {
+      mindset: "Skeptic",
+      body: "People with a skeptic mindset approach AI with caution and a degree of doubt, adopting a \"wait-and-see\" attitude, monitoring the technology's progress, and demanding concrete evidence of its value before considering its adoption. They are highly concerned about the ethical implications and the potential job losses caused by its large-scale adoption. They are hesitant to rush into adopting it without careful evaluation and risk mitigation. They weigh ethics more than profits.",
+    },
+    {
+      mindset: "Pragmatic",
+      body: "People with a pragmatic mindset fall somewhere between optimistic and skeptic firms. They are neither too excited about the promises of AI, nor doubt its potential to enable digital transformation. They take a balanced approach to AI adoption, measuring the technology benefits and identifying and fixing the underlying issues. They also consider the challenges such as bias and safety and invest in developing guardrails to ensure that AI is used responsibly and ethically. They normally prefer to reserve their opinions about the speculations around the job prospects or job losses likely to be caused by it. They balance profits and ethics.",
+    },
   ];
-  for (const f of fields) {
-    pdf.text(f.label, f.x, f.y, 7.5, PRIMARY, true);
-    pdf.text(f.value, f.x, f.y + 16, 11, WHITE, false, "left", 220);
-  }
 
-  // ── Dominant mindset banner ──────────────────────────────────────────────────
-  const bannerY = 258;
-  pdf.fillRect(40, bannerY, 515, 100, CARD);
-  pdf.strokeRect(40, bannerY, 515, 100, DC + "55");
-  pdf.fillRect(40, bannerY, 4, 100, DC); // left accent
+  blocks.forEach(({ mindset, body }, idx) => {
+    const color = MINDSET_COLORS[mindset];
+    const [cr, cg, cb] = hexToRgb(color);
 
-  pdf.text("YOUR PREDOMINANT MINDSET", 297, bannerY + 20, 8, MUTED, true, "center");
-  pdf.text(data.dominant, 297, bannerY + 46, 24, DC, true, "center");
+    const bodyLines = wrap(doc, body, UW - 10);
+    const blockH    = 12 + bodyLines.length * 4.8;
 
-  // Description wrapped
-  pdf.textWrapped(data.description, 56, bannerY + 64, 8.5, MUTED, 490, 13);
+    // Left colour accent bar
+    doc.setFillColor(cr, cg, cb);
+    doc.rect(ML, y, 3, blockH, "F");
 
-  // ── Score boxes ─────────────────────────────────────────────────────────────
-  const boxY = 378;
-  const mindsets: Mindset[] = ["Optimistic", "Pragmatic", "Skeptic"];
-  const boxW = 163;
-  const boxGap = 8;
+    // Mindset name
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(11);
+    doc.setTextColor(cr, cg, cb);
+    doc.text(mindset, ML + 8, y + 7);
 
-  for (let i = 0; i < 3; i++) {
-    const m = mindsets[i];
-    const bx = 40 + i * (boxW + boxGap);
-    const isDominant = m === data.dominant;
-    const mc = MINDSET_COLORS[m];
+    // Body
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(9.5);
+    setTxt(doc, DARK);
+    bodyLines.forEach((line: string, i: number) => {
+      doc.text(line, ML + 8, y + 13 + i * 4.8);
+    });
 
-    pdf.fillRect(bx, boxY, boxW, 82, CARD);
-    pdf.strokeRect(bx, boxY, boxW, 82, isDominant ? mc : BORDER);
-    if (isDominant) pdf.fillRect(bx, boxY, boxW, 2, mc);
+    y += blockH + 4;
 
-    pdf.text(String(data.counts[m]), bx + boxW / 2, boxY + 36, 28, mc, true, "center");
-    pdf.text(m, bx + boxW / 2, boxY + 54, 9, isDominant ? WHITE : MUTED, isDominant, "center");
-    pdf.text("responses", bx + boxW / 2, boxY + 66, 8, MUTED, false, "center");
-
-    if (isDominant) {
-      pdf.fillRect(bx + boxW / 2 - 24, boxY + 74, 48, 1, mc);
-      pdf.text("Dominant", bx + boxW / 2, boxY + 79, 7.5, mc, true, "center");
+    // Separator between blocks (not after last)
+    if (idx < blocks.length - 1) {
+      setStroke(doc, BORDER);
+      doc.setLineWidth(0.2);
+      doc.line(ML, y, ML + UW, y);
+      y += 6;
     }
-  }
+  });
 
-  // ── Distribution bar ────────────────────────────────────────────────────────
-  const barSecY = 480;
-  pdf.text("MINDSET DISTRIBUTION", 40, barSecY, 8, MUTED, true);
-  pdf.line(40, barSecY + 6, 555, barSecY + 6, BORDER, 0.4);
+  drawFooter(doc, 2, name, date);
+}
 
-  for (let i = 0; i < 3; i++) {
-    const m = mindsets[i];
-    const ry = barSecY + 18 + i * 30;
-    const mc = MINDSET_COLORS[m];
-    const pct = data.counts[m] / 16;
+// ── Main export ───────────────────────────────────────────────────────────────
 
-    pdf.text(m, 40, ry, 9, m === data.dominant ? WHITE : MUTED, m === data.dominant);
-    pdf.fillRect(140, ry - 9, 370, 10, "#27272a");
-    pdf.fillRect(140, ry - 9, Math.round(pct * 370), 10, mc + "cc");
-    pdf.text(`${data.counts[m]} / 16`, 555, ry, 9, mc, true, "right");
-  }
+export function downloadMindsetPdf(params: MindsetPdfParams) {
+  const {
+    name, email, phone, organization,
+    counts, dominant, dominantColor, description, traits,
+  } = params;
 
-  // ── Key traits ───────────────────────────────────────────────────────────────
-  const traitY = 588;
-  pdf.text("KEY TRAITS OF YOUR MINDSET", 40, traitY, 8, MUTED, true);
-  pdf.line(40, traitY + 6, 555, traitY + 6, BORDER, 0.4);
+  const doc = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
 
-  const col1 = data.traits.slice(0, 2);
-  const col2 = data.traits.slice(2, 4);
+  const date = new Date().toLocaleDateString("en-GB", {
+    year: "numeric", month: "long", day: "numeric",
+  });
 
-  for (let i = 0; i < col1.length; i++) {
-    const ty = traitY + 22 + i * 36;
-    pdf.fillRect(40, ty - 12, 247, 28, DC + "15");
-    pdf.strokeRect(40, ty - 12, 247, 28, DC + "44");
-    pdf.fillRect(40, ty - 12, 3, 28, DC);
-    pdf.text(col1[i], 52, ty + 3, 9, WHITE, false, "left", 220);
-  }
-  for (let i = 0; i < col2.length; i++) {
-    const ty = traitY + 22 + i * 36;
-    pdf.fillRect(308, ty - 12, 247, 28, DC + "15");
-    pdf.strokeRect(308, ty - 12, 247, 28, DC + "44");
-    pdf.fillRect(308, ty - 12, 3, 28, DC);
-    pdf.text(col2[i], 320, ty + 3, 9, WHITE, false, "left", 220);
-  }
+  const focus =
+    dominant === "Pragmatic"
+      ? "Your focus should be to make decisions and take actions based on a pragmatic mindset — continuing to evaluate AI thoughtfully, balancing innovation with oversight, and championing measured, responsible adoption across your organisation."
+      : `Your predominant mindset is ${dominant}. Your focus should be to transition your mindset to Pragmatic — taking a balanced, evidence-based approach that weighs both the promise and the risks of AI, ensuring responsible adoption with appropriate human oversight.`;
 
-  // ── What this means section ─────────────────────────────────────────────────
-  const whatY = 700;
-  pdf.fillRect(40, whatY, 515, 80, CARD);
-  pdf.strokeRect(40, whatY, 515, 80, BORDER);
-  pdf.fillRect(40, whatY, 515, 2, DC);
+  buildPage1(doc, name, date, email, phone, organization, dominant, dominantColor, description, counts, traits, focus);
+  buildPage2(doc, name, date);
 
-  pdf.text("WHAT THIS MEANS FOR YOU", 297, whatY + 18, 8, DC, true, "center");
-
-  const tips: Record<Mindset, string> = {
-    Optimistic: "You are a natural AI champion. Channel your enthusiasm by leading pilots, building business cases, and helping your organisation embrace AI-driven transformation.",
-    Pragmatic:  "You bring balance and rigour to AI adoption. Your instinct to evaluate, test, and govern AI responsibly makes you an invaluable asset in any AI strategy team.",
-    Skeptic:    "Your critical lens is essential. Use it to advocate for ethics, risk management, and human-centred AI design - ensuring AI serves people, not the other way around.",
-  };
-
-  pdf.textWrapped(tips[data.dominant], 56, whatY + 34, 8.5, MUTED, 490, 13);
-
-  // ── Footer ──────────────────────────────────────────────────────────────────
-  pdf.fillRect(0, 800, 595, 42, CARD);
-  pdf.line(0, 800, 595, 800, BORDER, 0.5);
-  pdf.text("Generated by Digiculum AI Mindset Assessment Platform", 297, 820, 8.5, MUTED, false, "center");
-  pdf.text("info@digiculum.com", 297, 834, 8.5, PRIMARY, false, "center");
-
-  // ── Download ────────────────────────────────────────────────────────────────
-  const bytes = pdf.build();
-  const blob = new Blob([bytes.buffer as ArrayBuffer], { type: "application/pdf" });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = `AIMindset_Report_${data.name.replace(/\s+/g, "_")}.pdf`;
-  a.click();
-  URL.revokeObjectURL(url);
+  doc.save(`AI_Mindset_Report_${name.replace(/\s+/g, "_")}.pdf`);
 }
