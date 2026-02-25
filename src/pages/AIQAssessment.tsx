@@ -1,6 +1,6 @@
 import { useState, useRef } from "react";
 import { Brain, CheckCircle2, ChevronRight, ChevronLeft, Download, Mail, Phone, User, AlertCircle } from "lucide-react";
-import { downloadAIQPdf } from "./generateAIQPdf";
+import { downloadAIQPdf } from "./generateAIQPdf.ts";
 import MRI_IMAGE from '@/assets/Aiq-Q10.png'
 
 // ─── Types ────────────────────────────────────────────────────────────────────
