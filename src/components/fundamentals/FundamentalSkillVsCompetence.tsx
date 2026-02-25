@@ -142,7 +142,7 @@ const FundamentalSkillVsCompetence = () => {
         <div className="rounded-xl overflow-hidden transition-all duration-300 hover:ring-2 hover:ring-primary hover:bg-primary/5">
           <img
             src={SkillsCompetence}
-            alt="AI Skill vs AI Competence Diagram"
+            alt="AI Skill vs AI Competence"
             className="max-w-full h-auto"
           />
         </div>
