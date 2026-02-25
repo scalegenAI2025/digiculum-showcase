@@ -287,7 +287,7 @@ const FundamentalRoleVsJob = () => {
         <div className="rounded-xl overflow-hidden transition-all duration-300 hover:ring-2 hover:ring-primary hover:bg-primary/5">
           <img
             src={RoleJob}
-            alt="AI Role vs AI Job Diagram"
+            alt="AI Role vs AI Job"
             className="max-w-full h-auto"
           />
         </div>
