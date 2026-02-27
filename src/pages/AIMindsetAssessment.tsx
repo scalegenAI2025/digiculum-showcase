@@ -1,13 +1,14 @@
 import { useState, useRef } from "react";
 import {
   Lightbulb, CheckCircle2, ChevronRight, ChevronLeft, Download,
-  Mail, Phone, User, AlertCircle, Brain, Shield, Zap
+  Mail, Phone, User, AlertCircle, Brain, Shield, Zap, PlayCircle, Calendar
 } from "lucide-react";
 import { downloadMindsetPdf } from "./generateMindset";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
 type Mindset = "Optimistic" | "Pragmatic" | "Skeptic";
+type Phase = "intro" | "quiz" | "info" | "result";
 
 interface ScenarioOption {
   label: "a" | "b" | "c";
@@ -241,17 +242,81 @@ const MINDSET_CONFIG: Record<Mindset, {
   },
 };
 
+// ─── Tie-breaking logic ───────────────────────────────────────────────────────
+// Optimistic vs Pragmatic → Optimistic wins
+// Skeptic vs Pragmatic    → Skeptic wins
+// Optimistic vs Skeptic   → Skeptic wins
+
+function resolveDominant(counts: Record<Mindset, number>): Mindset {
+  const { Optimistic, Pragmatic, Skeptic } = counts;
+  const max = Math.max(Optimistic, Pragmatic, Skeptic);
+
+  const tied = (Object.keys(counts) as Mindset[]).filter(m => counts[m] === max);
+
+  if (tied.length === 1) return tied[0];
+
+  // Three-way tie
+  if (tied.length === 3) return "Skeptic";
+
+  // Two-way ties
+  const tiedSet = new Set(tied);
+  if (tiedSet.has("Optimistic") && tiedSet.has("Pragmatic")) return "Optimistic";
+  if (tiedSet.has("Skeptic") && tiedSet.has("Pragmatic")) return "Skeptic";
+  if (tiedSet.has("Optimistic") && tiedSet.has("Skeptic")) return "Skeptic";
+
+  return tied[0];
+}
+
+// ─── Google Sheets Integration ────────────────────────────────────────────────
+
+async function saveToGoogleSheets(data: {
+  name: string;
+  email: string;
+  phone: string;
+  organization: string;
+  counts: Record<Mindset, number>;
+  dominant: Mindset;
+}) {
+  const APPS_SCRIPT_URL = import.meta.env.VITE_ASSESSMENTS_URL;
+  if (!APPS_SCRIPT_URL) {
+    console.warn("VITE_ASSESSMENTS_URL is not set. Skipping Google Sheets save.");
+    return;
+  }
+  try {
+    await fetch(APPS_SCRIPT_URL, {
+      method: "POST",
+      mode: "no-cors",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        sheetName: "AI Mindset Assessment",
+        row: [
+          new Date().toISOString(),
+          data.name,
+          data.email,
+          data.phone,
+          data.organization || "",
+          data.counts.Optimistic,
+          data.counts.Pragmatic,
+          data.counts.Skeptic,
+          data.dominant,
+        ],
+      }),
+    });
+  } catch (err) {
+    console.error("Failed to save to Google Sheets:", err);
+  }
+}
+
 // ─── Component ────────────────────────────────────────────────────────────────
 
-type Phase = "quiz" | "info" | "result";
-
 export default function AIMindsetAssessment() {
-  const [phase, setPhase] = useState<Phase>("quiz");
+  const [phase, setPhase] = useState<Phase>("intro");
   const [currentIndex, setCurrentIndex] = useState(0);
   const [answers, setAnswers] = useState<Record<number, "a" | "b" | "c">>({});
   const [unansweredWarning, setUnansweredWarning] = useState(false);
   const [userInfo, setUserInfo] = useState<UserInfo>({ name: "", email: "", phone: "", organization: "" });
   const [infoErrors, setInfoErrors] = useState<Partial<UserInfo>>({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [counts, setCounts] = useState<Record<Mindset, number>>({ Optimistic: 0, Pragmatic: 0, Skeptic: 0 });
   const [dominant, setDominant] = useState<Mindset>("Pragmatic");
   const cardRef = useRef<HTMLDivElement>(null);
@@ -266,10 +331,7 @@ export default function AIMindsetAssessment() {
   }
 
   function goToNext() {
-    if (!answers[currentScenario.id]) {
-      setUnansweredWarning(true);
-      return;
-    }
+    if (!answers[currentScenario.id]) { setUnansweredWarning(true); return; }
     setUnansweredWarning(false);
     setCurrentIndex((i) => i + 1);
     scrollToCard();
@@ -282,10 +344,7 @@ export default function AIMindsetAssessment() {
   }
 
   function submitQuiz() {
-    if (!answers[currentScenario.id]) {
-      setUnansweredWarning(true);
-      return;
-    }
+    if (!answers[currentScenario.id]) { setUnansweredWarning(true); return; }
     setUnansweredWarning(false);
     const tally: Record<Mindset, number> = { Optimistic: 0, Pragmatic: 0, Skeptic: 0 };
     for (const s of SCENARIOS) {
@@ -293,434 +352,440 @@ export default function AIMindsetAssessment() {
       if (chosen) tally[LEGEND[s.id][chosen]]++;
     }
     setCounts(tally);
-    const dom = (Object.keys(tally) as Mindset[]).reduce((a, b) => tally[a] >= tally[b] ? a : b);
-    setDominant(dom);
+    setDominant(resolveDominant(tally));
     setPhase("info");
     scrollToCard();
   }
 
-  function submitInfo() {
+  async function submitInfo() {
+    if (isSubmitting) return;
     const errors: Partial<UserInfo> = {};
     if (!userInfo.name.trim()) errors.name = "Name is required";
     if (!userInfo.email.trim() || !/\S+@\S+\.\S+/.test(userInfo.email)) errors.email = "Valid email is required";
     if (!userInfo.phone.trim() || !/^\+?[\d\s\-]{7,15}$/.test(userInfo.phone)) errors.phone = "Valid phone is required";
     setInfoErrors(errors);
     if (Object.keys(errors).length > 0) return;
+
+    setIsSubmitting(true);
+
+    // Navigate instantly — fire-and-forget the sheet save
     setPhase("result");
     scrollToCard();
+
+    saveToGoogleSheets({
+      name: userInfo.name,
+      email: userInfo.email,
+      phone: userInfo.phone,
+      organization: userInfo.organization,
+      counts,
+      dominant,
+    }).catch(err => console.error("Background sheet save failed:", err));
   }
 
   const cfg = MINDSET_CONFIG[dominant];
   const Icon = cfg.icon;
 
+  // Stepper: only shown on quiz, info, result (not intro)
+  const showStepper = phase !== "intro";
   const steps = [
     { key: "quiz",   label: "Scenarios"      },
     { key: "info",   label: "Your Info"      },
     { key: "result", label: "Mindset Report" },
   ];
-  const phaseOrder = ["quiz", "info", "result"];
+  const phaseOrder: Phase[] = ["quiz", "info", "result"];
 
-  // ─────────────────────────────────────────────────────────────────────────────
+  function stepState(key: string) {
+    const ci = phaseOrder.indexOf(phase as any);
+    const si = phaseOrder.indexOf(key as any);
+    if (ci === -1) return "inactive";
+    return si === ci ? "active" : si < ci ? "done" : "inactive";
+  }
+
+  // Whether a mindset is tied for dominant (for bar thickness)
+  const maxCount = Math.max(counts.Optimistic, counts.Pragmatic, counts.Skeptic);
+  function isTied(m: Mindset) {
+    return counts[m] === maxCount && m !== dominant;
+  }
+
+  // ────────────────────────────────────────────────────────────────────────────
 
   return (
-    <div
-      className="min-h-screen"
-      style={{ backgroundColor: "#ffffff", color: "#111111", fontFamily: "inherit" }}
-    >
-      {/* ── Hero ── */}
-      <section className="pt-32 pb-12 px-6" style={{ backgroundColor: "#ffffff" }}>
-        <div className="container mx-auto max-w-4xl text-center">
-          <div className="inline-flex items-center gap-2 rounded-full px-4 py-2 mb-6 bg-primary text-primary-foreground">
-            <Lightbulb className="w-4 h-4" />
-            <span className="text-sm font-semibold">Discover Your AI Mindset</span>
-          </div>
-          <h1 className="text-4xl font-bold mb-4" style={{ color: "#111111" }}>AI Mindset Assessment</h1>
-          <p className="text-lg max-w-2xl mx-auto" style={{ color: "#555555" }}>
-            16 real-world case scenarios to reveal whether you're an Optimist, Pragmatist, or Skeptic when it comes to AI.
-          </p>
+    <div className="min-h-screen" style={{ backgroundColor: "#ffffff", color: "#111111", fontFamily: "inherit" }}>
 
-          {/* Stepper */}
-          <div className="flex items-center justify-center gap-2 mt-10">
-            {steps.map((step, i) => {
-              const currentPhaseIdx = phaseOrder.indexOf(phase);
-              const state = i === currentPhaseIdx ? "active" : i < currentPhaseIdx ? "done" : "inactive";
-              return (
-                <div key={step.key} className="flex items-center gap-2">
-                  <div
-                    className={`flex items-center gap-1.5 rounded-full px-4 py-1.5 text-xs font-semibold transition-all ${
-                      state === "active"
-                        ? "bg-primary text-primary-foreground"
-                        : state === "done"
-                        ? "bg-primary/10 text-primary border border-primary/30"
-                        : "bg-gray-100 text-gray-400 border border-gray-200"
-                    }`}
-                  >
-                    {state === "done" ? <CheckCircle2 className="w-3 h-3" /> : <span>{i + 1}</span>}
-                    {step.label}
-                  </div>
-                  {i < steps.length - 1 && <ChevronRight className="w-3 h-3" style={{ color: "#d1d5db" }} />}
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-
-      <div ref={cardRef} className="container mx-auto max-w-4xl px-6 pb-24">
-
-        {/* ════════════════ PHASE: QUIZ — one scenario per page ════════════════ */}
-        {phase === "quiz" && (
-          <div className="space-y-6">
-
-            {/* Progress bar */}
-            <div className="flex items-center gap-3 mb-2">
-              <span className="text-sm whitespace-nowrap" style={{ color: "#555555" }}>
-                Scenario {currentIndex + 1} of {SCENARIOS.length}
-              </span>
-              <div className="flex-1 rounded-full h-1.5 overflow-hidden bg-gray-100">
-                <div
-                  className="h-full rounded-full bg-primary transition-all duration-300"
-                  style={{ width: `${((currentIndex + 1) / SCENARIOS.length) * 100}%` }}
-                />
-              </div>
-              <span className="text-sm whitespace-nowrap" style={{ color: "#555555" }}>
-                {answeredCount} answered
-              </span>
-            </div>
-
-            {/* Dot navigation */}
-            <div className="flex flex-wrap gap-1.5 mb-4">
-              {SCENARIOS.map((s, idx) => (
-                <button
-                  key={s.id}
-                  onClick={() => {
-                    setUnansweredWarning(false);
-                    setCurrentIndex(idx);
-                    scrollToCard();
-                  }}
-                  title={`Scenario ${idx + 1}`}
-                  className={`w-7 h-7 rounded-full text-xs font-semibold transition-all ${
-                    idx === currentIndex
-                      ? "bg-primary text-primary-foreground border-0"
-                      : answers[s.id]
-                      ? "bg-primary/10 text-primary border border-primary/30"
-                      : "bg-gray-100 text-gray-500 border border-gray-200"
-                  }`}
-                >
-                  {idx + 1}
-                </button>
-              ))}
-            </div>
-
-            {/* Single scenario card */}
-            <div
-              className="rounded-2xl overflow-hidden"
-              style={{ background: "#f9fafb", border: "1px solid #e5e7eb" }}
-            >
-              <div className="p-6">
-                <div className="flex items-start gap-3 mb-5">
-                  <span className="inline-flex items-center justify-center w-7 h-7 rounded-full text-xs font-bold shrink-0 mt-0.5 bg-primary/10 text-primary">
-                    {currentScenario.id}
-                  </span>
-                  <div className="flex-1">
-                    <p className="text-xs font-semibold uppercase tracking-widest mb-2 text-primary">
-                      {currentScenario.title}
-                    </p>
-                    <p className="text-base font-medium leading-relaxed" style={{ color: "#111111" }}>
-                      {currentScenario.context}
-                    </p>
-                  </div>
-                </div>
-
-                <div className="space-y-2 ml-10">
-                  {currentScenario.options.map((opt) => {
-                    const isSelected = answers[currentScenario.id] === opt.label;
-                    return (
-                      <button
-                        key={opt.label}
-                        onClick={() => {
-                          setUnansweredWarning(false);
-                          setAnswers((prev) => ({ ...prev, [currentScenario.id]: opt.label }));
-                        }}
-                        className={`w-full flex items-start gap-3 text-left px-4 py-3 rounded-xl text-sm transition-all ${
-                          isSelected
-                            ? "bg-primary/10 border-2 border-primary"
-                            : "bg-white border border-gray-200 hover:border-primary/40"
-                        }`}
-                        style={{ color: "#374151" }}
-                      >
-                        <span
-                          className={`inline-flex items-center justify-center w-6 h-6 rounded-full text-xs font-bold shrink-0 mt-0.5 ${
-                            isSelected
-                              ? "bg-primary text-primary-foreground"
-                              : "bg-gray-100 text-gray-500"
-                          }`}
-                        >
-                          {opt.label.toUpperCase()}
-                        </span>
-                        <span className="flex-1 leading-relaxed">{opt.text}</span>
-                      </button>
-                    );
-                  })}
-                </div>
-
-                {unansweredWarning && (
-                  <p className="mt-3 text-xs flex items-center gap-1.5 ml-10" style={{ color: "#f59e0b" }}>
-                    <AlertCircle className="w-3.5 h-3.5" />
-                    Please select an answer before proceeding.
-                  </p>
-                )}
-              </div>
-            </div>
-
-            {/* Navigation buttons */}
-            <div className="flex justify-between items-center pt-2">
-              <button
-                onClick={goToPrev}
-                disabled={isFirst}
-                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-medium transition-all border border-gray-200 text-gray-600 bg-white disabled:opacity-30 disabled:cursor-not-allowed"
-              >
-                <ChevronLeft className="w-4 h-4" />
-                Previous
-              </button>
-
-              {isLast ? (
-                <button
-                  onClick={submitQuiz}
-                  className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl text-sm font-semibold transition-all bg-primary text-primary-foreground border-0"
-                >
-                  Next: Your Info
-                  <ChevronRight className="w-4 h-4" />
-                </button>
-              ) : (
-                <button
-                  onClick={goToNext}
-                  className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl text-sm font-semibold transition-all bg-primary text-primary-foreground border-0"
-                >
-                  Next
-                  <ChevronRight className="w-4 h-4" />
-                </button>
-              )}
-            </div>
-          </div>
-        )}
-
-        {/* ════════════════ PHASE: INFO ════════════════ */}
-        {phase === "info" && (
-          <div className="max-w-xl mx-auto">
-            <div
-              className="rounded-2xl overflow-hidden"
-              style={{ background: "#f9fafb", border: "1px solid #e5e7eb" }}
-            >
-              <div className="p-8">
-                <div className="text-center mb-8">
-                  <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl mb-4 bg-primary/10 border border-primary/30">
-                    <Lightbulb className="w-7 h-7 text-primary" />
-                  </div>
-                  <h2 className="text-2xl font-bold" style={{ color: "#111111" }}>Almost there!</h2>
-                  <p className="text-sm mt-1" style={{ color: "#555555" }}>
-                    Enter your details to reveal your AI Mindset Report.
-                  </p>
-                </div>
-
-                <div className="space-y-4">
-                  {[
-                    { key: "name" as const,         label: "Full Name",               placeholder: "Jane Doe",         icon: User,  type: "text"  },
-                    { key: "email" as const,        label: "Email Address",           placeholder: "jane@example.com", icon: Mail,  type: "email" },
-                    { key: "phone" as const,        label: "Phone Number",            placeholder: "+91 98765 43210",  icon: Phone, type: "tel"   },
-                    { key: "organization" as const, label: "Organization (optional)", placeholder: "Acme Corp",        icon: null,  type: "text"  },
-                  ].map(({ key, label, placeholder, icon: Ic, type }) => (
-                    <div key={key}>
-                      <label className="text-xs uppercase tracking-widest mb-1.5 block font-medium" style={{ color: "#6b7280" }}>
-                        {label}
-                      </label>
-                      <div className="relative">
-                        {Ic && (
-                          <Ic className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 pointer-events-none text-gray-400" />
-                        )}
-                        <input
-                          type={type}
-                          placeholder={placeholder}
-                          value={userInfo[key]}
-                          onChange={(e) => setUserInfo((p) => ({ ...p, [key]: e.target.value }))}
-                          className="w-full rounded-xl text-sm px-4 py-3 outline-none transition-all bg-white text-gray-900"
-                          style={{
-                            paddingLeft: Ic ? "2.5rem" : "1rem",
-                            border: infoErrors[key] ? "1px solid #ef4444" : "1px solid #e5e7eb",
-                          }}
-                        />
-                      </div>
-                      {infoErrors[key] && (
-                        <p className="text-xs mt-1 flex items-center gap-1 text-red-500">
-                          <AlertCircle className="w-3 h-3" /> {infoErrors[key]}
-                        </p>
-                      )}
-                    </div>
-                  ))}
-
-                  <div style={{ borderTop: "1px solid #e5e7eb", marginTop: "1rem", paddingTop: "1rem" }} />
-
-                  <button
-                    onClick={submitInfo}
-                    className="w-full inline-flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-semibold transition-all bg-primary text-primary-foreground border-0"
-                  >
-                    Reveal My AI Mindset
-                    <ChevronRight className="w-4 h-4" />
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* ════════════════ PHASE: RESULT ════════════════ */}
-        {phase === "result" && (
-          <div className="space-y-6 max-w-2xl mx-auto">
-
-            {/* Main result card */}
-            <div
-              className="rounded-2xl overflow-hidden"
-              style={{ background: "#f9fafb", border: "1px solid #e5e7eb" }}
-            >
-              <div className="h-1.5" style={{ background: `linear-gradient(to right, ${cfg.color}44, ${cfg.color})` }} />
-              <div className="pt-8 pb-6 text-center px-6">
-                <div
-                  className="inline-flex items-center justify-center w-16 h-16 rounded-2xl mb-4 border"
-                  style={{ background: cfg.bg, borderColor: cfg.border }}
-                >
-                  <Icon className="w-8 h-8" style={{ color: cfg.color }} />
-                </div>
-                <p className="text-sm uppercase tracking-widest font-medium mb-1" style={{ color: "#6b7280" }}>
-                  Your Predominant Mindset
-                </p>
-                <h2 className="text-5xl font-bold mb-4" style={{ color: cfg.color }}>{dominant}</h2>
-                <p className="text-sm leading-relaxed max-w-lg mx-auto" style={{ color: "#555555" }}>
-                  {cfg.description}
-                </p>
-              </div>
-            </div>
-
-            {/* Count breakdown */}
-            <div className="grid grid-cols-3 gap-4">
-              {(Object.entries(counts) as [Mindset, number][]).map(([m, c]) => {
-                const mc = MINDSET_CONFIG[m];
-                const MIcon = mc.icon;
+      {/* ── Stepper — shown on quiz / info / result only ── */}
+      {showStepper && (
+        <section className="pt-6 pb-4 px-6" style={{ backgroundColor: "#ffffff" }}>
+          <div className="container mx-auto max-w-4xl flex justify-center">
+            <div className="flex items-center gap-2">
+              {steps.map((step, i) => {
+                const state = stepState(step.key);
                 return (
-                  <div
-                    key={m}
-                    className="rounded-2xl text-center overflow-hidden"
-                    style={{ background: "#f9fafb", border: "1px solid #e5e7eb" }}
-                  >
-                    <div className="h-0.5" style={{ background: m === dominant ? mc.color : "transparent" }} />
-                    <div className="pt-5 pb-4 px-4">
-                      <MIcon className="w-5 h-5 mx-auto mb-2" style={{ color: mc.color }} />
-                      <p className="text-3xl font-bold font-mono" style={{ color: mc.color }}>{c}</p>
-                      <p className="text-xs mt-1" style={{ color: "#6b7280" }}>{m}</p>
-                      <p className="text-xs" style={{ color: "#9ca3af" }}>responses</p>
-                      {m === dominant && (
-                        <span
-                          className="inline-block mt-2 text-xs rounded-full px-2 py-0.5 font-medium"
-                          style={{ background: mc.bg, color: mc.color, border: `1px solid ${mc.border}` }}
-                        >
-                          Dominant
-                        </span>
-                      )}
+                  <div key={step.key} className="flex items-center gap-2">
+                    <div className={`flex items-center gap-1.5 rounded-full px-4 py-1.5 text-xs font-semibold transition-all
+                      ${state === "active"   ? "bg-primary text-primary-foreground"
+                      : state === "done"     ? "bg-primary/10 text-primary border border-primary/30"
+                      :                        "bg-gray-100 text-gray-400 border border-gray-200"}`}>
+                      {state === "done" ? <CheckCircle2 className="w-3 h-3" /> : <span>{i + 1}</span>}
+                      {step.label}
                     </div>
+                    {i < steps.length - 1 && <ChevronRight className="w-3 h-3" style={{ color: "#d1d5db" }} />}
                   </div>
                 );
               })}
             </div>
+          </div>
+        </section>
+      )}
 
-            {/* Distribution */}
-            <div
-              className="rounded-2xl p-6"
-              style={{ background: "#f9fafb", border: "1px solid #e5e7eb" }}
-            >
-              <p className="text-xs uppercase tracking-widest mb-4 font-medium" style={{ color: "#6b7280" }}>
-                Mindset Distribution
-              </p>
-              <div className="space-y-3">
-                {(Object.entries(counts) as [Mindset, number][]).map(([m, c]) => {
-                  const mc = MINDSET_CONFIG[m];
-                  return (
-                    <div key={m} className="flex items-center gap-3">
-                      <span className="text-xs w-20 text-right" style={{ color: "#6b7280" }}>{m}</span>
-                      <div className="flex-1 rounded-full h-2.5 overflow-hidden bg-gray-100">
-                        <div
-                          className="h-full rounded-full transition-all"
-                          style={{ width: `${(c / 16) * 100}%`, background: mc.color }}
-                        />
-                      </div>
-                      <span className="text-xs font-mono font-semibold w-6" style={{ color: mc.color }}>{c}</span>
-                    </div>
-                  );
-                })}
+      {/* ════════ INTRO — full viewport centered ════════ */}
+      {phase === "intro" && (
+        <div
+          ref={cardRef}
+          style={{
+            position: "fixed",
+            inset: 0,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            padding: "1.5rem",
+            overflowY: "auto",
+          }}
+        >
+          <div className="w-full max-w-2xl mx-auto">
+            <div className="rounded-2xl overflow-hidden" style={{ background: "#f9fafb", border: "1px solid #e5e7eb" }}>
+              <div className="h-1.5 bg-primary" />
+              <div className="p-10">
+                <div className="text-center mb-8">
+                  <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl mb-5 bg-primary/10 border border-primary/20">
+                    <Lightbulb className="w-8 h-8 text-primary" />
+                  </div>
+                  <h2 className="text-2xl font-bold mb-2" style={{ color: "#111111" }}>AI Mindset Assessment</h2>
+                  <p className="text-sm" style={{ color: "#6b7280" }}>Read the instructions carefully before you begin</p>
+                </div>
+
+                <div className="space-y-4 mb-8">
+                  <div className="rounded-xl p-5" style={{ background: "#ffffff", border: "1px solid #e5e7eb" }}>
+                    <p className="text-sm leading-relaxed" style={{ color: "#555555" }}>
+                      You will be given a set of <strong>16 real case scenarios</strong>. Select the option which is most applicable to you.
+                      Make sure you answer all the scenarios.
+                    </p>
+                  </div>
+                  <div className="rounded-xl p-5" style={{ background: "#fffbeb", border: "1px solid #fde68a" }}>
+                    <p className="text-sm" style={{ color: "#92400e" }}>
+                      <strong>⏱ Estimated time:</strong> 10–15 minutes.
+                    </p>
+                  </div>
+                </div>
+
+                <button
+                  onClick={() => { setPhase("quiz"); scrollToCard(); }}
+                  className="w-full inline-flex items-center justify-center gap-2 py-3.5 rounded-xl text-sm font-semibold bg-primary text-primary-foreground border-0">
+                  <PlayCircle className="w-4 h-4" /> Start Assessment
+                </button>
               </div>
             </div>
+          </div>
+        </div>
+      )}
 
-            {/* Traits */}
-            <div
-              className="rounded-2xl p-6"
-              style={{ background: "#f9fafb", border: "1px solid #e5e7eb" }}
-            >
-              <p className="text-xs uppercase tracking-widest mb-4 font-medium" style={{ color: "#6b7280" }}>
-                Key Traits
-              </p>
-              <div className="grid grid-cols-2 gap-2">
-                {cfg.traits.map((t) => (
+      {/* ════════ QUIZ / INFO / RESULT — normal scrollable container ════════ */}
+      {(phase === "quiz" || phase === "info" || phase === "result") && (
+        <div ref={cardRef} className="container mx-auto max-w-4xl px-6 pb-24 pt-6">
+
+          {/* ════════ PHASE: QUIZ ════════ */}
+          {phase === "quiz" && (
+            <div className="space-y-6">
+
+              {/* Progress bar */}
+              <div className="flex items-center gap-3 mb-2">
+                <span className="text-sm whitespace-nowrap" style={{ color: "#555555" }}>
+                  Scenario {currentIndex + 1} of {SCENARIOS.length}
+                </span>
+                <div className="flex-1 rounded-full h-1.5 overflow-hidden bg-gray-100">
                   <div
-                    key={t}
-                    className="flex items-center gap-2 text-sm rounded-xl px-3 py-2"
-                    style={{ background: cfg.bg, border: `1px solid ${cfg.border}` }}
+                    className="h-full rounded-full bg-primary transition-all duration-300"
+                    style={{ width: `${((currentIndex + 1) / SCENARIOS.length) * 100}%` }}
+                  />
+                </div>
+                <span className="text-sm whitespace-nowrap" style={{ color: "#555555" }}>
+                  {answeredCount} answered
+                </span>
+              </div>
+
+              {/* Dot navigation */}
+              <div className="flex flex-wrap gap-1.5 mb-4">
+                {SCENARIOS.map((s, idx) => (
+                  <button
+                    key={s.id}
+                    onClick={() => { setUnansweredWarning(false); setCurrentIndex(idx); scrollToCard(); }}
+                    title={`Scenario ${idx + 1}`}
+                    className={`w-7 h-7 rounded-full text-xs font-semibold transition-all ${
+                      idx === currentIndex
+                        ? "bg-primary text-primary-foreground border-0"
+                        : answers[s.id]
+                        ? "bg-primary/10 text-primary border border-primary/30"
+                        : "bg-gray-100 text-gray-500 border border-gray-200"
+                    }`}
                   >
-                    <span className="w-1.5 h-1.5 rounded-full shrink-0" style={{ background: cfg.color }} />
-                    <span style={{ color: cfg.color }}>{t}</span>
-                  </div>
+                    {idx + 1}
+                  </button>
                 ))}
               </div>
-            </div>
 
-            {/* Actions */}
-            <div className="flex flex-col sm:flex-row gap-3">
-              <button
-                onClick={() => downloadMindsetPdf({
-                  name: userInfo.name,
-                  email: userInfo.email,
-                  phone: userInfo.phone,
-                  organization: userInfo.organization,
-                  counts,
-                  dominant,
-                  dominantColor: cfg.color,
-                  description: cfg.description,
-                  traits: cfg.traits,
-                })}
-                className="flex-1 inline-flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-semibold transition-all bg-primary text-primary-foreground border-0"
-              >
-                <Download className="w-4 h-4" /> Download Report
-              </button>
-              <button
-                onClick={() => {
-                  setPhase("quiz");
-                  setAnswers({});
-                  setCurrentIndex(0);
-                  setUserInfo({ name: "", email: "", phone: "", organization: "" });
-                  scrollToCard();
-                }}
-                className="flex-1 inline-flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-medium transition-all border border-gray-200 text-gray-600 bg-white"
-              >
-                Retake Assessment
-              </button>
-            </div>
+              {/* Scenario card */}
+              <div className="rounded-2xl overflow-hidden" style={{ background: "#f9fafb", border: "1px solid #e5e7eb" }}>
+                <div className="p-6">
+                  <div className="flex items-start gap-3 mb-5">
+                    <span className="inline-flex items-center justify-center w-7 h-7 rounded-full text-xs font-bold shrink-0 mt-0.5 bg-primary/10 text-primary">
+                      {currentScenario.id}
+                    </span>
+                    <div className="flex-1">
+                      <p className="text-xs font-semibold uppercase tracking-widest mb-2 text-primary">
+                        {currentScenario.title}
+                      </p>
+                      <p className="text-base font-medium leading-relaxed" style={{ color: "#111111" }}>
+                        {currentScenario.context}
+                      </p>
+                    </div>
+                  </div>
 
-            <p className="text-center text-xs" style={{ color: "#9ca3af" }}>
-              For queries, reach us at{" "}
-              <a href="mailto:info@digiculum.com" className="text-primary">
-                info@digiculum.com
-              </a>
-            </p>
-          </div>
-        )}
-      </div>
+                  <div className="space-y-2 ml-10">
+                    {currentScenario.options.map((opt) => {
+                      const isSelected = answers[currentScenario.id] === opt.label;
+                      return (
+                        <button
+                          key={opt.label}
+                          onClick={() => {
+                            setUnansweredWarning(false);
+                            setAnswers((prev) => ({ ...prev, [currentScenario.id]: opt.label }));
+                          }}
+                          className={`w-full flex items-start gap-3 text-left px-4 py-3 rounded-xl text-sm transition-all ${
+                            isSelected
+                              ? "bg-primary/10 border-2 border-primary"
+                              : "bg-white border border-gray-200 hover:border-primary/40"
+                          }`}
+                          style={{ color: "#374151" }}
+                        >
+                          <span className={`inline-flex items-center justify-center w-6 h-6 rounded-full text-xs font-bold shrink-0 mt-0.5 ${
+                            isSelected ? "bg-primary text-primary-foreground" : "bg-gray-100 text-gray-500"
+                          }`}>
+                            {opt.label.toUpperCase()}
+                          </span>
+                          <span className="flex-1 leading-relaxed">{opt.text}</span>
+                        </button>
+                      );
+                    })}
+                  </div>
+
+                  {unansweredWarning && (
+                    <p className="mt-3 text-xs flex items-center gap-1.5 ml-10" style={{ color: "#f59e0b" }}>
+                      <AlertCircle className="w-3.5 h-3.5" />
+                      Please select an answer before proceeding.
+                    </p>
+                  )}
+                </div>
+              </div>
+
+              {/* Navigation */}
+              <div className="flex justify-between items-center pt-2">
+                <button
+                  onClick={goToPrev}
+                  disabled={isFirst}
+                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-medium transition-all border border-gray-200 text-gray-600 bg-white disabled:opacity-30 disabled:cursor-not-allowed"
+                >
+                  <ChevronLeft className="w-4 h-4" /> Previous
+                </button>
+                {isLast ? (
+                  <button onClick={submitQuiz} className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl text-sm font-semibold bg-primary text-primary-foreground border-0">
+                    Next: Your Info <ChevronRight className="w-4 h-4" />
+                  </button>
+                ) : (
+                  <button onClick={goToNext} className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl text-sm font-semibold bg-primary text-primary-foreground border-0">
+                    Next <ChevronRight className="w-4 h-4" />
+                  </button>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* ════════ PHASE: INFO ════════ */}
+          {phase === "info" && (
+            <div className="max-w-xl mx-auto">
+              <div className="rounded-2xl overflow-hidden" style={{ background: "#f9fafb", border: "1px solid #e5e7eb" }}>
+                <div className="p-8">
+                  <div className="text-center mb-8">
+                    <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl mb-4 bg-primary/10 border border-primary/30">
+                      <Lightbulb className="w-7 h-7 text-primary" />
+                    </div>
+                    <h2 className="text-2xl font-bold" style={{ color: "#111111" }}>Almost there!</h2>
+                    <p className="text-sm mt-1" style={{ color: "#555555" }}>
+                      Enter your details to reveal your AI Mindset Report.
+                    </p>
+                  </div>
+
+                  <div className="space-y-4">
+                    {([
+                      { key: "name"         as const, label: "Full Name",               placeholder: "Jane Doe",         icon: User,  type: "text"  },
+                      { key: "email"        as const, label: "Email Address",           placeholder: "jane@example.com", icon: Mail,  type: "email" },
+                      { key: "phone"        as const, label: "Phone Number",            placeholder: "+91 98765 43210",  icon: Phone, type: "tel"   },
+                      { key: "organization" as const, label: "Organization (optional)", placeholder: "Acme Corp",        icon: null,  type: "text"  },
+                    ]).map(({ key, label, placeholder, icon: Ic, type }) => (
+                      <div key={key}>
+                        <label className="text-xs uppercase tracking-widest mb-1.5 block font-medium" style={{ color: "#6b7280" }}>
+                          {label}
+                        </label>
+                        <div className="relative">
+                          {Ic && <Ic className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 pointer-events-none text-gray-400" />}
+                          <input
+                            type={type}
+                            placeholder={placeholder}
+                            value={userInfo[key]}
+                            onChange={(e) => setUserInfo((p) => ({ ...p, [key]: e.target.value }))}
+                            className="w-full rounded-xl text-sm px-4 py-3 outline-none transition-all bg-white text-gray-900"
+                            style={{ paddingLeft: Ic ? "2.5rem" : "1rem", border: infoErrors[key] ? "1px solid #ef4444" : "1px solid #e5e7eb" }}
+                          />
+                        </div>
+                        {infoErrors[key] && (
+                          <p className="text-xs mt-1 flex items-center gap-1 text-red-500">
+                            <AlertCircle className="w-3 h-3" /> {infoErrors[key]}
+                          </p>
+                        )}
+                      </div>
+                    ))}
+
+                    <div style={{ borderTop: "1px solid #e5e7eb", marginTop: "1rem", paddingTop: "1rem" }} />
+
+                    <button
+                      onClick={submitInfo}
+                      disabled={isSubmitting}
+                      className="w-full inline-flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-semibold transition-all bg-primary text-primary-foreground border-0"
+                      style={{ opacity: isSubmitting ? 0.6 : 1, cursor: isSubmitting ? "not-allowed" : "pointer" }}
+                    >
+                      {isSubmitting ? "Generating…" : <>Reveal My AI Mindset <ChevronRight className="w-4 h-4" /></>}
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* ════════ PHASE: RESULT ════════ */}
+          {phase === "result" && (
+            <div className="space-y-6 max-w-2xl mx-auto">
+
+              {/* Main result card */}
+              <div className="rounded-2xl overflow-hidden" style={{ background: "#f9fafb", border: "1px solid #e5e7eb" }}>
+                <div className="h-1.5" style={{ background: `linear-gradient(to right, ${cfg.color}44, ${cfg.color})` }} />
+                <div className="pt-8 pb-6 text-center px-6">
+                  <div
+                    className="inline-flex items-center justify-center w-16 h-16 rounded-2xl mb-4 border"
+                    style={{ background: cfg.bg, borderColor: cfg.border }}
+                  >
+                    <Icon className="w-8 h-8" style={{ color: cfg.color }} />
+                  </div>
+                  <p className="text-sm uppercase tracking-widest font-medium mb-1" style={{ color: "#6b7280" }}>
+                    Your Predominant Mindset
+                  </p>
+                  <h2 className="text-5xl font-bold mb-4" style={{ color: cfg.color }}>{dominant}</h2>
+                  <p className="text-sm leading-relaxed max-w-lg mx-auto" style={{ color: "#555555" }}>
+                    {cfg.description}
+                  </p>
+                </div>
+              </div>
+
+              {/* Traits */}
+              <div className="rounded-2xl p-6" style={{ background: "#f9fafb", border: "1px solid #e5e7eb" }}>
+                <p className="text-xs uppercase tracking-widest mb-4 font-medium" style={{ color: "#6b7280" }}>
+                  Key Traits
+                </p>
+                <div className="grid grid-cols-2 gap-2">
+                  {cfg.traits.map((t) => (
+                    <div
+                      key={t}
+                      className="flex items-center gap-2 text-sm rounded-xl px-3 py-2"
+                      style={{ background: cfg.bg, border: `1px solid ${cfg.border}` }}
+                    >
+                      <span className="w-1.5 h-1.5 rounded-full shrink-0" style={{ background: cfg.color }} />
+                      <span style={{ color: cfg.color }}>{t}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Mindset Distribution bar chart */}
+              <div className="rounded-2xl p-6" style={{ background: "#f9fafb", border: "1px solid #e5e7eb" }}>
+                <p className="text-xs uppercase tracking-widest mb-4 font-medium" style={{ color: "#6b7280" }}>
+                  Mindset Distribution
+                </p>
+                <div className="space-y-3">
+                  {(Object.entries(counts) as [Mindset, number][]).map(([m, c]) => {
+                    const mc = MINDSET_CONFIG[m];
+                    const isDominant = m === dominant;
+                    const tied = isTied(m);
+                    // Dominant bar: full height. Tied-but-not-dominant: slightly thinner. Others: normal.
+                    const barH = isDominant ? "h-3.5" : tied ? "h-2.5" : "h-2.5";
+                    const labelW = isDominant ? "font-bold" : tied ? "opacity-70" : "";
+                    return (
+                      <div key={m} className="flex items-center gap-3">
+                        <span className={`text-xs w-20 text-right ${labelW}`} style={{ color: isDominant ? mc.color : "#6b7280" }}>
+                          {m}
+                          {isDominant && <span className="ml-1 text-[10px] opacity-70">★</span>}
+                        </span>
+                        <div className="flex-1 rounded-full overflow-hidden bg-gray-100" style={{ height: isDominant ? "14px" : "10px" }}>
+                          <div
+                            className={`rounded-full transition-all ${isDominant ? "" : "opacity-70"}`}
+                            style={{
+                              width: `${(c / 16) * 100}%`,
+                              height: "100%",
+                              background: mc.color,
+                            }}
+                          />
+                        </div>
+                        {/* <span className={`text-xs font-mono font-semibold w-6 ${isDominant ? "" : "opacity-70"}`} style={{ color: mc.color }}>{c}</span> */}
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* Actions */}
+              <div className="flex flex-col sm:flex-row gap-3">
+                <button
+                  onClick={() => downloadMindsetPdf({
+                    name: userInfo.name,
+                    email: userInfo.email,
+                    phone: userInfo.phone,
+                    organization: userInfo.organization,
+                    counts,
+                    dominant,
+                    dominantColor: cfg.color,
+                    description: cfg.description,
+                    traits: cfg.traits,
+                  })}
+                  className="flex-1 inline-flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-semibold bg-primary text-primary-foreground border-0"
+                >
+                  <Download className="w-4 h-4" /> Download Report
+                </button>
+                <a
+                  href={import.meta.env.VITE_CALENDLY_URL || "#"}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex-1 inline-flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-semibold bg-primary text-primary-foreground border-0 no-underline"
+                >
+                  <Calendar className="w-4 h-4" /> 1:1 Consultation
+                </a>
+              </div>
+
+              <p className="text-center text-xs" style={{ color: "#9ca3af" }}>
+                For queries, reach us at{" "}
+                <a href="mailto:info@digiculum.com" className="text-primary">info@digiculum.com</a>
+              </p>
+            </div>
+          )}
+
+        </div>
+      )}
+
     </div>
   );
 }

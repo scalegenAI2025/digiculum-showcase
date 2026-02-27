@@ -81,7 +81,7 @@ useEffect(() => {
 
               <div>
                 <p className="font-semibold">Live Learning</p>
-                <p className="text-white/70">8:30 PM IST / 4 PM CET</p>
+                <p className="text-white/70">8 PM IST / 4.30 PM CET</p>
               </div>
 
               <div>

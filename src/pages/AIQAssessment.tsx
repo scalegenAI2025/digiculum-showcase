@@ -1,5 +1,5 @@
 import { useState, useRef } from "react";
-import { Brain, CheckCircle2, ChevronRight, ChevronLeft, Download, Mail, Phone, User, AlertCircle } from "lucide-react";
+import { Brain, CheckCircle2, ChevronRight, ChevronLeft, Download, Mail, Phone, User, AlertCircle, PlayCircle, ClipboardList, Calendar } from "lucide-react";
 import { downloadAIQPdf } from "./generateAIQPdf.ts";
 import MRI_IMAGE from '@/assets/Aiq-Q10.png'
 
@@ -28,7 +28,6 @@ interface UserInfo {
 
 // ─── Data ─────────────────────────────────────────────────────────────────────
 
-
 const QUESTIONS: Question[] = [
     {
         id: 1, text: "Which of the following statement best describes AI?",
@@ -38,7 +37,7 @@ const QUESTIONS: Question[] = [
     {
         id: 2, text: "Which of the following are the ethical concerns associated with Generative AI?",
         options: [{ label: "A", text: "Job displacement" }, { label: "B", text: "Decreased device durability" }, { label: "C", text: "Potential for creating misleading information" }, { label: "D", text: "Over-reliance on cloud storage" }],
-        correct: ["C"], multi: false
+        correct: ["C"], multi: true
     },
     {
         id: 3, text: "I am a class teacher. I want to build an app which tells me which students are more likely to pass the exam. Which AI technology can provide me the most cost-effective solution?",
@@ -53,7 +52,7 @@ const QUESTIONS: Question[] = [
     {
         id: 5, text: "I am a class teacher. I build an app which tells me which students are more likely to pass the exam. After identifying the students, the app auto-decides to send an email to their parents. It is a use case of:",
         options: [{ label: "A", text: "AI Agent" }, { label: "B", text: "Bot" }, { label: "C", text: "Agentic AI" }, { label: "D", text: "AI Copilot" }],
-        correct: ["C"], multi: false
+        correct: ["C"], multi: true
     },
     {
         id: 6, text: "What is the primary function of Generative AI?",
@@ -133,7 +132,6 @@ const QUESTIONS: Question[] = [
     },
 ];
 
-// Rating ids 1–13 = Hack  |  ids 14–20 = Build
 const RATING_STATEMENTS: RatingStatement[] = [
     { id: 1, text: "I can effectively write structured prompts that consistently generate high-quality outputs from AI tools (e.g., reports, summaries, analysis)" },
     { id: 2, text: "I have automated any recurring task using AI tools (e.g., email drafting, meeting summaries, report generation)" },
@@ -148,7 +146,6 @@ const RATING_STATEMENTS: RatingStatement[] = [
     { id: 11, text: "I can quantify the time or cost savings created by my AI usage" },
     { id: 12, text: "I manually validate or review the AI output before using it in my daily tasks" },
     { id: 13, text: "I often experiment with new AI tools" },
-    // Build ↓
     { id: 14, text: "I can identify a real-world business problem and determine whether AI is an appropriate solution" },
     { id: 15, text: "I have designed a structured AI use case document" },
     { id: 16, text: "I can assess whether available data is sufficient and suitable for building an AI solution" },
@@ -159,12 +156,6 @@ const RATING_STATEMENTS: RatingStatement[] = [
 ];
 
 // ─── Scoring ──────────────────────────────────────────────────────────────────
-// Know  : correct MCQ answers × 10          →  0 – 200
-// Hack  : sum of ratings (ids 1–13) × 10    →  0 – 650
-// Build : sum of ratings (ids 14–20) × 10   →  0 – 350
-// Total : Know + Hack + Build                → 200 – 1200  (min 20+0+0 realistic = 200 after first MCQ)
-// Note  : minimum total from scoring formula = 200 (20 MCQs each at least attempted; ratings at least 1)
-//         but instructions say range 200-1200, so we enforce minimum 200 at display
 
 function scoreQuestion(question: Question, selected: string[]): boolean {
     return [...selected].sort().join(",") === [...question.correct].sort().join(",");
@@ -190,41 +181,83 @@ function getDescription(total: number): string {
     return "You operate at an advanced level of AI capability, combining conceptual depth, operational execution, and strategic thinking. Your focus should now shift from individual excellence to organizational transformation and ecosystem influence. Standardizing AI governance, risk management, and performance measurement frameworks will ensure sustainable scale. You are well-positioned to architect enterprise-wide AI adoption strategies and drive measurable ROI. Expanding into advanced areas such as Agentic AI systems, AI architecture optimization, and policy alignment will further differentiate you. At this level, your opportunity is not just to use AI effectively, but to shape how AI creates competitive advantage at scale.";
 }
 
-// ─── Types ────────────────────────────────────────────────────────────────────
+// ─── Google Sheets Integration ────────────────────────────────────────────────
 
-type Phase = "assessment" | "info" | "result";
-type AssessmentSubPhase = "mcq" | "rating";
+async function saveToGoogleSheets(data: {
+    name: string;
+    email: string;
+    phone: string;
+    organization: string;
+    knowScore: number;
+    hackScore: number;
+    buildScore: number;
+    total: number;
+    aiqLabel: string;
+}) {
+    const APPS_SCRIPT_URL = import.meta.env.VITE_ASSESSMENTS_URL;
+    if (!APPS_SCRIPT_URL) {
+        console.warn("VITE_ASSESSMENTS_URL is not set. Skipping Google Sheets save.");
+        return;
+    }
+
+    try {
+        await fetch(APPS_SCRIPT_URL, {
+            method: "POST",
+            mode: "no-cors", // Google Apps Script requires no-cors
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                sheetName: "AIQ Assessment",
+                row: [
+                    new Date().toISOString(),
+                    data.name,
+                    data.email,
+                    data.phone,
+                    data.organization || "",
+                    data.knowScore,
+                    data.hackScore,
+                    data.buildScore,
+                    data.total,
+                    data.aiqLabel,
+                ],
+            }),
+        });
+    } catch (err) {
+        console.error("Failed to save to Google Sheets:", err);
+    }
+}
+
+// ─── Phase Types ──────────────────────────────────────────────────────────────
+
+type Phase = "intro" | "mcq" | "ratingIntro" | "rating" | "info" | "result";
 
 // ─── Component ────────────────────────────────────────────────────────────────
 
 export default function AIQAssessment() {
-    const [phase, setPhase] = useState<Phase>("assessment");
-    const [subPhase, setSubPhase] = useState<AssessmentSubPhase>("mcq");
+    const [phase, setPhase] = useState<Phase>("intro");
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const [currentRatingIndex, setCurrentRatingIndex] = useState(0);
     const [answers, setAnswers] = useState<Record<number, string[]>>({});
     const [ratings, setRatings] = useState<Record<number, number>>({});
     const [userInfo, setUserInfo] = useState<UserInfo>({ name: "", email: "", phone: "", organization: "" });
     const [infoErrors, setInfoErrors] = useState<Partial<UserInfo>>({});
-    const [knowScore, setKnowScore] = useState(0);   // 0–200
-    const [hackScore, setHackScore] = useState(0);   // 0–650
-    const [buildScore, setBuildScore] = useState(0);   // 0–350
+    const [knowScore, setKnowScore] = useState(0);
+    const [hackScore, setHackScore] = useState(0);
+    const [buildScore, setBuildScore] = useState(0);
     const [unansweredWarning, setUnansweredWarning] = useState(false);
     const [ratingWarning, setRatingWarning] = useState(false);
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     const cardRef = useRef<HTMLDivElement>(null);
     const currentQuestion = QUESTIONS[currentQuestionIndex];
     const currentRatingStatement = RATING_STATEMENTS[currentRatingIndex];
-    const isFirstQuestion = currentQuestionIndex === 0;
     const isLastQuestion = currentQuestionIndex === QUESTIONS.length - 1;
-    const isFirstRating = currentRatingIndex === 0;
     const isLastRating = currentRatingIndex === RATING_STATEMENTS.length - 1;
     const answeredMCQ = Object.keys(answers).length;
     const answeredRating = Object.keys(ratings).length;
 
     function scrollToCard() { cardRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }); }
 
-    // ── MCQ handlers ─────────────────────────────────────────────────────────────
+    // ── MCQ handlers ──────────────────────────────────────────────────────────
 
     function toggleAnswer(qId: number, label: string, multi: boolean) {
         setUnansweredWarning(false);
@@ -244,7 +277,11 @@ export default function AIQAssessment() {
 
     function goToPrevQuestion() {
         setUnansweredWarning(false);
-        setCurrentQuestionIndex(i => i - 1);
+        if (currentQuestionIndex === 0) {
+            setPhase("intro");
+        } else {
+            setCurrentQuestionIndex(i => i - 1);
+        }
         scrollToCard();
     }
 
@@ -253,13 +290,12 @@ export default function AIQAssessment() {
         setUnansweredWarning(false);
         let correct = 0;
         for (const q of QUESTIONS) { if (scoreQuestion(q, answers[q.id] ?? [])) correct++; }
-        setKnowScore(correct * 10); // 0–200
-        setSubPhase("rating");
-        setCurrentRatingIndex(0);
+        setKnowScore(correct * 10);
+        setPhase("ratingIntro");
         scrollToCard();
     }
 
-    // ── Rating handlers ───────────────────────────────────────────────────────────
+    // ── Rating handlers ───────────────────────────────────────────────────────
 
     function goToNextRating() {
         if (!ratings[currentRatingStatement.id]) { setRatingWarning(true); return; }
@@ -270,7 +306,11 @@ export default function AIQAssessment() {
 
     function goToPrevRating() {
         setRatingWarning(false);
-        setCurrentRatingIndex(i => i - 1);
+        if (currentRatingIndex === 0) {
+            setPhase("ratingIntro");
+        } else {
+            setCurrentRatingIndex(i => i - 1);
+        }
         scrollToCard();
     }
 
@@ -283,88 +323,215 @@ export default function AIQAssessment() {
             if (s.id <= 13) hack += v;
             else build += v;
         }
-        setHackScore(hack * 10);   // max 13×5×10 = 650
-        setBuildScore(build * 10); // max  7×5×10 = 350
+        setHackScore(hack * 10);
+        setBuildScore(build * 10);
         setPhase("info");
         scrollToCard();
     }
 
-    // ── Info handler ─────────────────────────────────────────────────────────────
+    // ── Info handler ──────────────────────────────────────────────────────────
 
-    function submitInfo() {
+    async function submitInfo() {
+        if (isSubmitting) return; // prevent double-submit
+
         const errors: Partial<UserInfo> = {};
         if (!userInfo.name.trim()) errors.name = "Name is required";
         if (!userInfo.email.trim() || !/\S+@\S+\.\S+/.test(userInfo.email)) errors.email = "Valid email is required";
         if (!userInfo.phone.trim() || !/^\+?[\d\s\-]{7,15}$/.test(userInfo.phone)) errors.phone = "Valid phone is required";
         setInfoErrors(errors);
         if (Object.keys(errors).length > 0) return;
+
+        // Lock button immediately to prevent double-submit
+        setIsSubmitting(true);
+
+        const total = knowScore + hackScore + buildScore;
+        const aiqInfo = getAIQLabel(total);
+
+        // Navigate to result instantly — don't block on the network call
         setPhase("result");
         scrollToCard();
+
+        // Fire-and-forget: save to Google Sheets in the background
+        saveToGoogleSheets({
+            name: userInfo.name,
+            email: userInfo.email,
+            phone: userInfo.phone,
+            organization: userInfo.organization,
+            knowScore,
+            hackScore,
+            buildScore,
+            total,
+            aiqLabel: aiqInfo.label,
+        }).catch(err => console.error("Background sheet save failed:", err));
     }
 
-    // ── Derived values ────────────────────────────────────────────────────────────
+    // ── Derived ───────────────────────────────────────────────────────────────
 
-    const total = knowScore + hackScore + buildScore; // 200–1200
+    const total = knowScore + hackScore + buildScore;
     const aiqInfo = getAIQLabel(total);
-    const isHack = (idx: number) => idx < 13; // rating index 0–12 = Hack, 13–19 = Build
 
+    // Stepper state — only shown during non-intro phases (but NOT on ratingIntro)
+    const showStepper = phase !== "intro" && phase !== "ratingIntro";
     const steps = [
         { key: "assessment", label: "Assessment" },
         { key: "info", label: "Your Info" },
         { key: "result", label: "Report" },
     ];
     function stepState(key: string) {
-        const order = ["assessment", "info", "result"];
-        const ci = order.indexOf(phase), si = order.indexOf(key);
+        const phaseToIdx: Record<Phase, number> = {
+            intro: -1, mcq: 0, ratingIntro: 0, rating: 0, info: 1, result: 2,
+        };
+        const stepOrder = ["assessment", "info", "result"];
+        const ci = phaseToIdx[phase];
+        const si = stepOrder.indexOf(key);
         return si === ci ? "active" : si < ci ? "done" : "inactive";
     }
 
-    // ─────────────────────────────────────────────────────────────────────────────
+    // ─────────────────────────────────────────────────────────────────────────
 
     return (
         <div className="min-h-screen" style={{ backgroundColor: "#ffffff", color: "#111111", fontFamily: "inherit" }}>
 
-            {/* ── Hero ── */}
-            <section className="pt-32 pb-12 px-6" style={{ backgroundColor: "#ffffff" }}>
-                <div className="container mx-auto max-w-4xl text-center">
-                    <div className="inline-flex items-center gap-2 rounded-full px-4 py-2 mb-6 bg-primary text-primary-foreground">
-                        <Brain className="w-4 h-4" />
-                        <span className="text-sm font-semibold">Artificial Intelligence Quotient</span>
-                    </div>
-                    <h1 className="text-4xl font-bold mb-4" style={{ color: "#111111" }}>AIQ Assessment</h1>
-                    <p className="text-lg max-w-2xl mx-auto" style={{ color: "#555555" }}>
-                        Measure your AI knowledge and application skills across 40 questions. Get a personalised AIQ report.
-                    </p>
-
-                    {/* Stepper */}
-                    <div className="flex items-center justify-center gap-2 mt-10">
-                        {steps.map((step, i) => {
-                            const state = stepState(step.key);
-                            return (
-                                <div key={step.key} className="flex items-center gap-2">
-                                    <div className={`flex items-center gap-1.5 rounded-full px-4 py-1.5 text-xs font-semibold transition-all
-                    ${state === "active" ? "bg-primary text-primary-foreground"
-                                            : state === "done" ? "bg-primary/10 text-primary border border-primary/30"
-                                                : "bg-gray-100 text-gray-400 border border-gray-200"}`}>
-                                        {state === "done" ? <CheckCircle2 className="w-3 h-3" /> : <span>{i + 1}</span>}
-                                        {step.label}
+            {/* ── Stepper — shown after intro, but NOT on ratingIntro ── */}
+            {showStepper && (
+                <section className="pt-6 pb-4 px-6" style={{ backgroundColor: "#ffffff" }}>
+                    <div className="container mx-auto max-w-4xl flex justify-center">
+                        <div className="flex items-center gap-2">
+                            {steps.map((step, i) => {
+                                const state = stepState(step.key);
+                                return (
+                                    <div key={step.key} className="flex items-center gap-2">
+                                        <div className={`flex items-center gap-1.5 rounded-full px-4 py-1.5 text-xs font-semibold transition-all
+                          ${state === "active" ? "bg-primary text-primary-foreground"
+                                                : state === "done" ? "bg-primary/10 text-primary border border-primary/30"
+                                                    : "bg-gray-100 text-gray-400 border border-gray-200"}`}>
+                                            {state === "done" ? <CheckCircle2 className="w-3 h-3" /> : <span>{i + 1}</span>}
+                                            {step.label}
+                                        </div>
+                                        {i < steps.length - 1 && <ChevronRight className="w-3 h-3" style={{ color: "#d1d5db" }} />}
                                     </div>
-                                    {i < steps.length - 1 && <ChevronRight className="w-3 h-3" style={{ color: "#d1d5db" }} />}
-                                </div>
-                            );
-                        })}
+                                );
+                            })}
+                        </div>
                     </div>
-                </div>
-            </section>
+                </section>
+            )}
 
-            <div ref={cardRef} className="container mx-auto max-w-4xl px-6 pb-24">
+            {/* ════════ INTRO & RATING INTRO — full viewport centered ════════ */}
+            {(phase === "intro" || phase === "ratingIntro") && (
+                <div
+                    ref={cardRef}
+                    style={{
+                        position: "fixed",
+                        inset: 0,
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        padding: "1.5rem",
+                        overflowY: "auto",
+                    }}
+                >
+
+                {/* ════════ INTRO ════════ */}
+                {phase === "intro" && (
+                    <div className="w-full max-w-2xl mx-auto">
+                        <div className="rounded-2xl overflow-hidden" style={{ background: "#f9fafb", border: "1px solid #e5e7eb" }}>
+                            <div className="h-1.5 bg-primary" />
+                            <div className="p-10">
+                                <div className="text-center mb-8">
+                                    <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl mb-5 bg-primary/10 border border-primary/20">
+                                        <ClipboardList className="w-8 h-8 text-primary" />
+                                    </div>
+                                    <h2 className="text-2xl font-bold mb-2" style={{ color: "#111111" }}>AIQ Assessment</h2>
+                                    <h4 className="text-sm font-semibold mb-3 uppercase tracking-widest" style={{ color: "#374151" }}>Part 1</h4>
+                                    <p className="text-sm" style={{ color: "#6b7280" }}>Read the instructions carefully before you begin</p>
+                                </div>
+
+                                <div className="space-y-4 mb-8">
+                                    <div className="rounded-xl p-5" style={{ background: "#ffffff", border: "1px solid #e5e7eb" }}>
+                                        <p className="text-sm leading-relaxed" style={{ color: "#555555" }}>
+                                            You will be given a set of <strong>20 questions</strong>. Make sure you attempt all of them.
+                                            Your responses will be used to calculate your personal AIQ Score.
+                                        </p>
+                                    </div>
+                                    <div className="rounded-xl p-5" style={{ background: "#fffbeb", border: "1px solid #fde68a" }}>
+                                        <p className="text-sm" style={{ color: "#92400e" }}>
+                                            <strong>⏱ Estimated time:</strong> 10–15 minutes.
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <button
+                                    onClick={() => { setPhase("mcq"); scrollToCard(); }}
+                                    className="w-full inline-flex items-center justify-center gap-2 py-3.5 rounded-xl text-sm font-semibold bg-primary text-primary-foreground border-0">
+                                    <PlayCircle className="w-4 h-4" /> Start Assessment
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                )}
+
+                {/* ════════ RATING INTRO ════════ */}
+                {phase === "ratingIntro" && (
+                    <div className="w-full max-w-2xl mx-auto">
+                        <div className="rounded-2xl overflow-hidden" style={{ background: "#f9fafb", border: "1px solid #e5e7eb" }}>
+                            <div className="h-1.5 bg-primary" />
+                            <div className="p-10">
+                                <div className="text-center mb-8">
+                                    <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl mb-5 bg-primary/10 border border-primary/20">
+                                        <Brain className="w-8 h-8 text-primary" />
+                                    </div>
+                                    <h2 className="text-2xl font-bold mb-2" style={{ color: "#111111" }}>AIQ Assessment</h2>
+                                    <h4 className="text-sm font-semibold mb-3 uppercase tracking-widest" style={{ color: "#374151" }}>Part 2</h4>
+                                </div>
+
+                                <div className="space-y-4 mb-8">
+                                    <div className="rounded-xl p-5" style={{ background: "#ffffff", border: "1px solid #e5e7eb" }}>
+                                        <h3 className="text-sm font-semibold mb-3 uppercase tracking-widest" style={{ color: "#374151" }}>Instructions</h3>
+                                        <p className="text-sm leading-relaxed" style={{ color: "#555555" }}>
+                                            Rate each of the following <strong>20 statements</strong> on a scale of 1 to 5.
+                                        </p>
+                                    </div>
+
+                                    <div className="grid grid-cols-1 sm:grid-cols-5 gap-2">
+                                        {[
+                                            { val: 1, label: "Never", color: "#111111" },
+                                            { val: 2, label: "Rarely", color: "#111111" },
+                                            { val: 3, label: "Sometimes", color: "#111111" },
+                                            { val: 4, label: "Frequently", color: "#111111" },
+                                            { val: 5, label: "Systematically", color: "#111111" },
+                                        ].map(item => (
+                                            <div key={item.val} className="flex flex-col items-center gap-1 rounded-xl py-3 px-2 text-center" style={{ background: "#ffffff", border: "1px solid #e5e7eb" }}>
+                                                <span className="text-xl font-bold" style={{ color: item.color }}>{item.val}</span>
+                                                <span className="text-xs" style={{ color: "#6b7280" }}>{item.label}</span>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+
+                                <button
+                                    onClick={() => { setCurrentRatingIndex(0); setPhase("rating"); scrollToCard(); }}
+                                    className="w-full inline-flex items-center justify-center gap-2 py-3.5 rounded-xl text-sm font-semibold bg-primary text-primary-foreground border-0">
+                                    Start <ChevronRight className="w-4 h-4" />
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                )}
+
+                </div>
+            )}
+
+            {/* ════════ MCQ / RATING / INFO / RESULT — normal scrollable container ════════ */}
+            {(phase === "mcq" || phase === "rating" || phase === "info" || phase === "result") && (
+                <div ref={cardRef} className="container mx-auto max-w-4xl px-6 pb-24 pt-6">
 
                 {/* ════════ MCQ ════════ */}
-                {phase === "assessment" && subPhase === "mcq" && (
+                {phase === "mcq" && (
                     <div className="space-y-6">
                         {/* Progress */}
                         <div className="flex items-center gap-3">
-                            <span className="text-sm whitespace-nowrap" style={{ color: "#555555" }}>Know Q{currentQuestionIndex + 1} of {QUESTIONS.length}</span>
+                            <span className="text-sm whitespace-nowrap" style={{ color: "#555555" }}>Question {currentQuestionIndex + 1} of {QUESTIONS.length}</span>
                             <div className="flex-1 rounded-full h-1.5 overflow-hidden bg-gray-100">
                                 <div className="h-full rounded-full bg-primary transition-all duration-300" style={{ width: `${((currentQuestionIndex + 1) / QUESTIONS.length) * 100}%` }} />
                             </div>
@@ -394,16 +561,12 @@ export default function AIQAssessment() {
                                     <div className="flex-1">
                                         {currentQuestion.multi && (
                                             <span className="inline-block text-xs rounded-full px-2 py-0.5 mb-2 font-medium bg-primary/10 text-primary border border-primary/30">
-                                                Multiple correct answers
+                                                Select all the correct answers
                                             </span>
                                         )}
                                         {currentQuestion.image && (
                                             <div className="mb-4 rounded-lg overflow-hidden flex justify-center bg-white p-3" style={{ border: "1px solid #e5e7eb" }}>
-                                                <img
-                                                    src={currentQuestion.image}
-                                                    alt="Question image"
-                                                    className="max-w-full h-auto object-contain"
-                                                />
+                                                <img src={currentQuestion.image} alt="Question image" className="max-w-full h-auto object-contain" />
                                             </div>
                                         )}
                                         <p className="text-base font-medium leading-relaxed" style={{ color: "#111111" }}>{currentQuestion.text}</p>
@@ -438,13 +601,13 @@ export default function AIQAssessment() {
 
                         {/* Nav */}
                         <div className="flex justify-between items-center pt-2">
-                            <button onClick={goToPrevQuestion} disabled={isFirstQuestion}
-                                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-medium border border-gray-200 text-gray-600 bg-white disabled:opacity-30 disabled:cursor-not-allowed">
+                            <button onClick={goToPrevQuestion}
+                                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-medium border border-gray-200 text-gray-600 bg-white">
                                 <ChevronLeft className="w-4 h-4" /> Previous
                             </button>
                             {isLastQuestion
                                 ? <button onClick={submitMCQ} className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl text-sm font-semibold bg-primary text-primary-foreground border-0">
-                                    Next: Hack &amp; Build <ChevronRight className="w-4 h-4" />
+                                    Next <ChevronRight className="w-4 h-4" />
                                 </button>
                                 : <button onClick={goToNextQuestion} className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl text-sm font-semibold bg-primary text-primary-foreground border-0">
                                     Next <ChevronRight className="w-4 h-4" />
@@ -455,30 +618,12 @@ export default function AIQAssessment() {
                 )}
 
                 {/* ════════ RATING ════════ */}
-                {phase === "assessment" && subPhase === "rating" && (
+                {phase === "rating" && (
                     <div className="space-y-6">
-                        <div className="rounded-xl p-4 text-sm bg-primary/10 border border-primary/30 text-primary">
-                            Rate each statement <strong>1–5</strong> based on how often it applies to you.&nbsp;
-                            <span className="opacity-80">(1 = Never | 2 = Rarely | 3 = Sometimes | 4 = Frequently | 5 = Systematically)</span>
-                        </div>
-
-                        {/* Hack / Build sub-label */}
-                        <div className="flex items-center gap-2">
-                            <span className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold
-                ${!isHack(currentRatingIndex) ? "bg-gray-100 text-gray-500 border border-gray-200" : "bg-primary text-primary-foreground"}`}>
-                                Hack (Q1–13)
-                            </span>
-                            <ChevronRight className="w-3 h-3 text-gray-300" />
-                            <span className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold
-                ${isHack(currentRatingIndex) ? "bg-gray-100 text-gray-500 border border-gray-200" : "bg-primary text-primary-foreground"}`}>
-                                Build (Q14–20)
-                            </span>
-                        </div>
-
                         {/* Progress */}
                         <div className="flex items-center gap-3">
                             <span className="text-sm whitespace-nowrap" style={{ color: "#555555" }}>
-                                {isHack(currentRatingIndex) ? "Hack" : "Build"} Q{currentRatingIndex + 1} of {RATING_STATEMENTS.length}
+                                Statement {currentRatingIndex + 1} of {RATING_STATEMENTS.length}
                             </span>
                             <div className="flex-1 rounded-full h-1.5 overflow-hidden bg-gray-100">
                                 <div className="h-full rounded-full bg-primary transition-all duration-300" style={{ width: `${((currentRatingIndex + 1) / RATING_STATEMENTS.length) * 100}%` }} />
@@ -507,9 +652,6 @@ export default function AIQAssessment() {
                                         {currentRatingIndex + 1}
                                     </span>
                                     <div className="flex-1">
-                                        <span className="inline-block text-xs rounded-full px-2 py-0.5 mb-2 font-medium bg-primary/10 text-primary border border-primary/30">
-                                            {isHack(currentRatingIndex) ? "Hack" : "Build"}
-                                        </span>
                                         <p className="text-base font-medium leading-relaxed" style={{ color: "#111111" }}>{currentRatingStatement.text}</p>
                                     </div>
                                 </div>
@@ -539,7 +681,7 @@ export default function AIQAssessment() {
 
                         {/* Nav */}
                         <div className="flex justify-between items-center pt-2">
-                            <button onClick={() => { if (isFirstRating) { setSubPhase("mcq"); setCurrentQuestionIndex(QUESTIONS.length - 1); scrollToCard(); } else { goToPrevRating(); } }}
+                            <button onClick={goToPrevRating}
                                 className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-medium border border-gray-200 text-gray-600 bg-white">
                                 <ChevronLeft className="w-4 h-4" /> Previous
                             </button>
@@ -588,8 +730,12 @@ export default function AIQAssessment() {
                                         </div>
                                     ))}
                                     <div style={{ borderTop: "1px solid #e5e7eb", marginTop: "1rem", paddingTop: "1rem" }} />
-                                    <button onClick={submitInfo} className="w-full inline-flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-semibold bg-primary text-primary-foreground border-0">
-                                        Generate My AIQ Report <ChevronRight className="w-4 h-4" />
+                                    <button
+                                        onClick={submitInfo}
+                                        disabled={isSubmitting}
+                                        className="w-full inline-flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-semibold bg-primary text-primary-foreground border-0"
+                                        style={{ opacity: isSubmitting ? 0.6 : 1, cursor: isSubmitting ? "not-allowed" : "pointer" }}>
+                                        {isSubmitting ? "Generating…" : <>Generate My AIQ Report <ChevronRight className="w-4 h-4" /></>}
                                     </button>
                                 </div>
                             </div>
@@ -616,7 +762,7 @@ export default function AIQAssessment() {
                             </div>
                         </div>
 
-                        {/* Know / Hack / Build breakdown */}
+                        {/* Score breakdown */}
                         <div className="grid grid-cols-3 gap-4">
                             {[
                                 { score: knowScore, label: "Know", sub: "MCQ Knowledge", max: 200 },
@@ -634,15 +780,15 @@ export default function AIQAssessment() {
 
                         {/* Score range visual */}
                         <div className="rounded-2xl p-6" style={{ background: "#f9fafb", border: "1px solid #e5e7eb" }}>
-                            <p className="text-xs uppercase tracking-widest mb-3 font-medium" style={{ color: "#6b7280" }}>Score Range</p>
+                            <p className="text-xs uppercase tracking-widest mb-3 font-medium" style={{ color: "#0b0b0b" }}>AIQ Score Range</p>
                             <div className="relative h-4 rounded-full overflow-hidden" style={{ background: "linear-gradient(to right,#ef4444,#f97316,#eab308,#22c55e,#6366f1)" }}>
-                                <div className="absolute top-0 h-full w-1 bg-white rounded-full shadow-lg"
-                                    style={{ left: `calc(${Math.min(((total - 200) / 1000) * 100, 99)}% - 2px)` }} />
+                                {/* <div className="absolute top-0 h-full w-1 bg-white rounded-full shadow-lg"
+                                    style={{ left: `calc(${Math.min(((total - 200) / 1000) * 100, 99)}% - 2px)` }} /> */}
                             </div>
-                            <div className="flex justify-between mt-2 text-xs" style={{ color: "#9ca3af" }}>
+                            <div className="flex justify-between mt-2 text-xs" style={{ color: "#121212" }}>
                                 <span>Very Low</span><span>Low</span><span>Medium</span><span>High</span><span>Very High</span>
                             </div>
-                            <div className="flex justify-between mt-1 text-xs" style={{ color: "#d1d5db" }}>
+                            <div className="flex justify-between mt-1 text-xs" style={{ color: "#121212" }}>
                                 <span>200</span><span>400</span><span>600</span><span>800</span><span>1000</span><span>1200</span>
                             </div>
                         </div>
@@ -659,11 +805,13 @@ export default function AIQAssessment() {
                                 className="flex-1 inline-flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-semibold bg-primary text-primary-foreground border-0">
                                 <Download className="w-4 h-4" /> Download Report
                             </button>
-                            <button
-                                onClick={() => { setPhase("assessment"); setSubPhase("mcq"); setAnswers({}); setRatings({}); setCurrentQuestionIndex(0); setCurrentRatingIndex(0); setUserInfo({ name: "", email: "", phone: "", organization: "" }); scrollToCard(); }}
-                                className="flex-1 inline-flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-medium border border-gray-200 text-gray-600 bg-white">
-                                Retake Assessment
-                            </button>
+                            <a
+                                href={import.meta.env.VITE_CALENDLY_URL || "#"}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="flex-1 inline-flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-medium border border-gray-200 text-white bg-primary no-underline">
+                                <Calendar className="w-4 h-4" /> 1:1 Consultation
+                            </a>
                         </div>
 
                         <p className="text-center text-xs" style={{ color: "#9ca3af" }}>
@@ -672,6 +820,7 @@ export default function AIQAssessment() {
                     </div>
                 )}
             </div>
+            )}
         </div>
     );
 }

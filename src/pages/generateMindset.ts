@@ -177,7 +177,7 @@ function buildPage1(
   doc.setFontSize(24);
   setTxt(doc, dominantColor);
   doc.text(dominant, w / 2, y + 9, { align: "center" });
-  y += 13;
+  y += 20; // extra space between name and description
 
   doc.setFont("helvetica", "normal");
   doc.setFontSize(9.5);
@@ -207,28 +207,31 @@ function buildPage1(
   // ── Mindset distribution ──
   y = sectionLabel(doc, "MINDSET DISTRIBUTION", ML, y, UW);
 
-  const total    = Object.values(counts).reduce((a, b) => a + b, 0);
-  const barTrackW = UW - 50;
+  const total     = Object.values(counts).reduce((a, b) => a + b, 0);
+  // Bar now uses full UW minus label space — no space reserved for count number
+  const barTrackW = UW - 28;
 
   (Object.entries(counts) as [Mindset, number][]).forEach(([m, c]) => {
     const color  = MINDSET_COLORS[m];
     const filled = total > 0 ? (c / total) * barTrackW : 0;
 
+    // Mindset label on the left
     doc.setFont("helvetica", "normal");
     doc.setFontSize(9);
     setTxt(doc, GRAY);
     doc.text(m, ML, y + 3.5);
 
+    // Gray track
     setFill(doc, "#F3F4F6");
     doc.roundedRect(ML + 28, y, barTrackW, 5, 1, 1, "F");
+
+    // Coloured fill
     if (filled > 0) {
       setFill(doc, color);
       doc.roundedRect(ML + 28, y, filled, 5, 1, 1, "F");
     }
-    doc.setFont("helvetica", "bold");
-    doc.setFontSize(9);
-    setTxt(doc, color);
-    doc.text(String(c), ML + 28 + barTrackW + 4, y + 3.8);
+
+    // No count number — bar extends to full track width
     y += 9;
   });
   y += 5;

@@ -72,7 +72,7 @@ const ToolsUsed = () => {
               key={index}
               className={`glass-card flex flex-col items-center justify-center p-6 rounded-xl
                          hover:border-primary/50 transition-all duration-300 gap-4 ${
-                           index === 10 ? "lg:col-start-2" : ""
+                           index === 10 ? "lg:col-start-1" : ""
                          }`}
             >
               <img
@@ -85,13 +85,15 @@ const ToolsUsed = () => {
                 {tool.name}
               </p>
             </div>
+            
           ))}
+          <p className="mt-20 ml-8">...and many more</p>
         </div>
 
         {/* CTA */}
         <div className="text-center">
           <p className="text-foreground/70 mb-6">
-            Know more about the AI Practitioners Bootcamp and AI Specialization
+            Know more about the AI Practitioner Bootcamp and AI Specialization
             Program
           </p>
 

@@ -1,5 +1,6 @@
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
+import RedirectAssessment from "@/components/RedirectAssessment";
 import ReskillPartner from "@/components/ReskillPartner";
 import JourneyFlowchart from "@/components/JourneyFlowchart";
 import Fundamentals from "@/components/Fundamentals";
@@ -12,6 +13,7 @@ const Index = () => {
     <div className="min-h-screen bg-background">
       <Navbar />
       <Hero />
+      <RedirectAssessment />
       <SectionSeparator />
       <ReskillPartner />
       <SectionSeparator />

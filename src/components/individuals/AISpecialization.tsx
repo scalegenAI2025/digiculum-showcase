@@ -42,13 +42,13 @@ const AISpecialization = () => {
           <div className="flex flex-col gap-2">
           <div className="flex flex-col text-foreground/70">
           <p>
-            After completion of 21-day AI Practitioner Bootcamp, an individual can enroll in a 1-month
+            After completion of 14-day AI Practitioner Bootcamp, an individual can enroll in a 21-day
           </p>
           <span>AI Specialization Program.</span>
           </div>
           <div className="flex flex-col text-foreground/70">
           <p>
-            The 1-month AI Specialization Program helps you turn the general AI skills and capabilities into
+            The AI Specialization Program helps you turn the general AI skills and capabilities into
           </p>
           <span>job-specific advantage.</span>
           </div>

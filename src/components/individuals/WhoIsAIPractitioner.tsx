@@ -40,7 +40,7 @@ const cards = [
   },
   {
     icon: Layers,
-    question: "What will you learn in the 21 day bootcamp?",
+    question: "What will you learn in the 14-day bootcamp?",
     answer:
       "You will learn essential AI concepts, important AI tools, and work on practical AI projects, based on our unique Know-Hack-Build model.",
   },
@@ -66,11 +66,11 @@ const cards = [
     icon: Clock,
     question: "What are the bootcamp timings ?",
     answer:
-      "The program duration is 60 hours spanning over 21 consecutive days including weekends. Timings 8:30 - 10:30 pm IST ( 4 - 6 pm CET) on weekdays. 12 - 6 pm ( 7:30 am - 1:30 pm CET) on Saturdays and 12 - 4 pm (7:30 am - 11:30 pm CET) ",
+      "The program duration is 50 hours spanning over 14 consecutive days including weekends. Timings 8 - 11 pm IST ( 4.30 - 7.30 pm CET) on weekdays. 1 - 7 pm ( 9:30 am - 3:30 pm CET) on Saturdays and 1 - 5 pm (9:30 am - 1:30 pm CET) on Sundays.",
   },
   {
     icon: Award,
-    question: "What do you get at the end of 21 day bootcamp ?",
+    question: "What do you get at the end of 14-day bootcamp ?",
     answer:
       "You’ll receive an AI Practitioner certificate, followed by coaching and enrollment into an ecosystem.",
   },
@@ -78,13 +78,13 @@ const cards = [
     icon: ArrowRightCircle,
     question: "What's next after the AI Practitioner Bootcamp ?",
     answer:
-      "After completion of 21-day AI Practitioner Bootcamp, an individual can enroll in a 1-month AI Specialization Program.",
+      "After completion of 14-day AI Practitioner Bootcamp, an individual can enroll in a 21-day AI Specialization Program.",
   },
   {
     icon: GraduationCap,
     question: "Why should I enroll in AI Specialization Program ?",
     answer:
-      "The 1-month AI Specialization Program helps you turn the general AI skills and capabilities into job-specific advantage. ",
+      "The 21-day AI Specialization Program helps you turn the general AI skills and capabilities into job-specific advantage. ",
   },
 ];
 

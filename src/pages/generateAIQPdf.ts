@@ -3,6 +3,7 @@
 // Uses jsPDF  (npm install jspdf)
 
 import jsPDF from "jspdf";
+import digiLogo from "@/assets/digi-logo.png";
 
 export interface AIQReportData {
   name: string;
@@ -18,7 +19,7 @@ export interface AIQReportData {
   description: string;
 }
 
-// ── Constants (identical palette to Mindset report) ───────────────────────────
+// ── Constants ─────────────────────────────────────────────────────────────────
 const MAGENTA = "#C2185B";
 const BLACK   = "#111111";
 const DARK    = "#374151";
@@ -26,11 +27,6 @@ const GRAY    = "#6B7280";
 const LGRAY   = "#9CA3AF";
 const BORDER  = "#E5E7EB";
 const ROWBG   = "#F9FAFB";
-
-// Know / Hack / Build brand colours
-const KNOW_COLOR  = "#6366f1";
-const HACK_COLOR  = "#22c55e";
-const BUILD_COLOR = "#f97316";
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
@@ -45,16 +41,33 @@ function wrap(doc: jsPDF, text: string, maxW: number): string[] { return doc.spl
 function PW(doc: jsPDF) { return doc.internal.pageSize.getWidth();  }
 function PH(doc: jsPDF) { return doc.internal.pageSize.getHeight(); }
 
+// ── Load image as base64 (works with bundled assets) ─────────────────────────
+
+async function loadImageAsBase64(src: string): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.crossOrigin = "anonymous";
+    img.onload = () => {
+      const canvas = document.createElement("canvas");
+      canvas.width  = img.naturalWidth;
+      canvas.height = img.naturalHeight;
+      const ctx = canvas.getContext("2d");
+      if (!ctx) { reject("canvas context failed"); return; }
+      ctx.drawImage(img, 0, 0);
+      resolve(canvas.toDataURL("image/png"));
+    };
+    img.onerror = reject;
+    img.src = src;
+  });
+}
+
 // ── Shared header & footer ────────────────────────────────────────────────────
 
 function drawHeader(doc: jsPDF) {
   const w = PW(doc);
+  // Pink bar — no text
   setFill(doc, MAGENTA);
   doc.rect(0, 0, w, 8, "F");
-  doc.setFont("helvetica","bold"); doc.setFontSize(7); setTxt(doc,"#ffffff");
-  doc.text("AIQ ASSESSMENT REPORT", 20, 5.5);
-  doc.setFont("helvetica","normal");
-  doc.text("Digiculum", w-20, 5.5, { align:"right" });
 }
 
 function drawFooter(doc: jsPDF, page: number, totalPages: number, name: string, date: string) {
@@ -79,33 +92,30 @@ function sectionLabel(doc: jsPDF, text: string, x: number, y: number, uw: number
   return y + 4;
 }
 
-// Thin colour bar on left side of a block; return same y (caller advances)
-function accentBar(doc: jsPDF, hex: string, x: number, y: number, h: number) {
-  const [r,g,b] = hexToRgb(hex);
-  doc.setFillColor(r,g,b);
-  doc.rect(x, y, 2.5, h, "F");
-}
+// ── PAGE 1 ────────────────────────────────────────────────────────────────────
 
-// Draw a mini horizontal progress bar, return new y
-function progressBar(doc: jsPDF, x: number, y: number, w: number, filled: number, max: number, color: string): number {
-  const trackH = 3;
-  setFill(doc, "#F3F4F6");
-  doc.roundedRect(x, y, w, trackH, 0.8, 0.8, "F");
-  const fillW = max > 0 ? (filled/max)*w : 0;
-  if (fillW > 0) { setFill(doc, color); doc.roundedRect(x, y, fillW, trackH, 0.8, 0.8, "F"); }
-  return y + trackH;
-}
-
-// ── PAGE 1: Full report ───────────────────────────────────────────────────────
-
-function buildPage1(doc: jsPDF, data: AIQReportData, date: string) {
+async function buildPage1(doc: jsPDF, data: AIQReportData, date: string) {
   const w = PW(doc); const ML = 20; const UW = w - 40;
   let y = 14;
 
   drawHeader(doc);
   y = 14;
 
-  // ─── Report title ─────────────────────────────────────────────────────────
+  // ─── Report title + Digiculum logo ───────────────────────────────────────
+  const logoW = 20;   // mm width of logo
+  const logoH = 7;    // mm height of logo
+  const logoX = ML + UW - logoW;
+  const logoY = y - 4.5; // vertically align with title text
+
+  // Draw Digiculum logo to the right of the title
+  try {
+    const logoData = await loadImageAsBase64(digiLogo);
+    doc.addImage(logoData, "PNG", logoX, logoY, logoW, logoH);
+  } catch {
+    doc.setFont("helvetica","bold"); doc.setFontSize(8); setTxt(doc, MAGENTA);
+    doc.text("Digiculum", logoX, y);
+  }
+
   doc.setFont("helvetica","bold"); doc.setFontSize(16); setTxt(doc, BLACK);
   doc.text("AIQ Assessment Report", ML, y);
   y += 4;
@@ -114,12 +124,21 @@ function buildPage1(doc: jsPDF, data: AIQReportData, date: string) {
   y += 7;
 
   // ─── Report details ───────────────────────────────────────────────────────
-  y = sectionLabel(doc, "REPORT DETAILS", ML, y, UW);
+  const sectionLabelY = y;
 
+  doc.setFont("helvetica","bold"); doc.setFontSize(7.5); setTxt(doc, MAGENTA);
+  doc.text("REPORT DETAILS", ML, sectionLabelY);
+
+  // Hairline below label
+  y = sectionLabelY + 2.5;
+  setStroke(doc, BORDER); doc.setLineWidth(0.3);
+  doc.line(ML, y, ML+UW, y);
+  y += 4;
+
+  // Details rows — "Prepared by" row removed
   const details: [string,string][] = [
     ["Name",            data.name],
     ["Assessment Date", date],
-    ["Prepared by",     "Digiculum"],
     ["Email",           data.email],
     ["Phone",           data.phone],
   ];
@@ -157,65 +176,97 @@ function buildPage1(doc: jsPDF, data: AIQReportData, date: string) {
   doc.text(data.aiqLabel, w/2, y+26.5, { align:"center" });
   y += 33;
 
-  // Score range colour bar
+  // ── Score range colour bar ──────────────────────────────────────────────
   setStroke(doc, BORDER); doc.setLineWidth(0.3);
   doc.line(ML, y, ML+UW, y);
   y += 4;
 
-  const segW  = UW/5;
-  const segs  = ["#ef4444","#f97316","#eab308","#22c55e","#6366f1"];
-  segs.forEach((c,i) => { setFill(doc,c); doc.rect(ML+i*segW, y, segW, 4, "F"); });
-  // white position marker (score range 200–1200)
-  const pct = Math.min(Math.max((data.total-200)/1000, 0), 1);
-  doc.setFillColor(255,255,255);
-  doc.rect(ML+pct*UW-1, y-1, 2, 6, "F");
+  const barY   = y;
+  const barH   = 4;
+  const segW   = UW / 5;
+  const segs   = ["#ef4444","#f97316","#eab308","#22c55e","#6366f1"];
 
-  y += 5;
+  segs.forEach((c, i) => {
+    setFill(doc, c);
+    doc.rect(ML + i * segW, barY, segW, barH, "F");
+  });
+
+  const clampedTotal = Math.min(Math.max(data.total, 200), 1200);
+  const markerPct    = (clampedTotal - 200) / 1000;
+  const markerX      = ML + markerPct * UW;
+
+  doc.setFillColor(255, 255, 255);
+  doc.rect(markerX - 0.8, barY - 0.5, 1.6, barH + 1, "F");
+
+  setFill(doc, BLACK);
+  doc.triangle(
+    markerX - 2, barY - 2.5,
+    markerX + 2, barY - 2.5,
+    markerX,     barY - 0.5,
+    "F"
+  );
+
+  doc.setFont("helvetica","bold"); doc.setFontSize(7.5); setTxt(doc, BLACK);
+  const scoreLabelX = Math.min(Math.max(markerX, ML + 6), ML + UW - 6);
+  doc.text(String(data.total), scoreLabelX, barY - 4, { align:"center" });
+
+  y = barY + barH + 4;
+
   const rangeLbls = ["200","400","600","800","1000","1200"];
   const levelLbls = ["Very Low","Low","Medium","High","Very High"];
+
   doc.setFont("helvetica","normal"); doc.setFontSize(7); setTxt(doc, LGRAY);
-  rangeLbls.forEach((l,i) => {
-    const rx = i<5 ? ML+i*segW+segW/2 : ML+UW;
-    doc.text(l, rx, y+3, { align:"center" });
+  rangeLbls.forEach((l, i) => {
+    const rx = i < 5 ? ML + i * segW : ML + UW;
+    doc.text(l, rx, y + 3, { align: i < 5 ? "left" : "right" });
   });
+
   setTxt(doc, GRAY); doc.setFontSize(7);
-  levelLbls.forEach((l,i) => { doc.text(l, ML+i*segW+segW/2, y+7, { align:"center" }); });
+  levelLbls.forEach((l, i) => {
+    doc.text(l, ML + i * segW + segW / 2, y + 7, { align:"center" });
+  });
   y += 13;
 
   // ─── Score breakdown: Know / Hack / Build ─────────────────────────────────
   y = sectionLabel(doc, "SCORE BREAKDOWN", ML, y, UW);
 
   const cols = [
-    { label:"Know",  sub:"Core AI Concepts & Trends",        score:data.knowScore,  max:200,  color:KNOW_COLOR  },
-    { label:"Hack",  sub:"Apply AI Tools & Automate Tasks",  score:data.hackScore,  max:650,  color:HACK_COLOR  },
-    { label:"Build", sub:"Create AI-Powered Apps",           score:data.buildScore, max:350,  color:BUILD_COLOR },
+    { label:"Know",  sub:"Core AI Concepts & Trends",        score:data.knowScore,  max:200 },
+    { label:"Hack",  sub:"Apply AI Tools & Automate Tasks",  score:data.hackScore,  max:650 },
+    { label:"Build", sub:"Create AI-Powered Apps",           score:data.buildScore, max:350 },
   ];
-  const colW3 = (UW-8)/3;
+  const colW3 = (UW - 8) / 3;
 
-  cols.forEach(({ label, sub, score, max, color }, i) => {
-    const bx = ML + i*(colW3+4);
-    const [cr,cg,cb] = hexToRgb(color);
-    const lr = Math.round(cr+(255-cr)*0.88), lg = Math.round(cg+(255-cg)*0.88), lb = Math.round(cb+(255-cb)*0.88);
+  cols.forEach(({ label, sub, score, max }, i) => {
+    const bx = ML + i * (colW3 + 4);
 
-    // Card bg
-    doc.setFillColor(lr,lg,lb);
+    setFill(doc, ROWBG);
     doc.roundedRect(bx, y, colW3, 38, 2, 2, "F");
-    doc.setDrawColor(cr,cg,cb); doc.setLineWidth(0.3);
+    setStroke(doc, BORDER); doc.setLineWidth(0.3);
     doc.roundedRect(bx, y, colW3, 38, 2, 2, "S");
-    // Top colour strip
-    doc.setFillColor(cr,cg,cb);
+
+    setFill(doc, MAGENTA);
     doc.roundedRect(bx, y, colW3, 3, 1, 1, "F");
-    // Score number
-    doc.setFont("helvetica","bold"); doc.setFontSize(18); doc.setTextColor(cr,cg,cb);
-    doc.text(String(score), bx+colW3/2, y+16, { align:"center" });
-    // Label
-    doc.setFont("helvetica","bold"); doc.setFontSize(8.5); doc.setTextColor(cr,cg,cb);
-    doc.text(label, bx+colW3/2, y+23, { align:"center" });
-    // Sub + max
+
+    doc.setFont("helvetica","bold"); doc.setFontSize(18); setTxt(doc, BLACK);
+    doc.text(String(score), bx + colW3 / 2, y + 16, { align:"center" });
+
+    doc.setFont("helvetica","bold"); doc.setFontSize(8.5); setTxt(doc, MAGENTA);
+    doc.text(label, bx + colW3 / 2, y + 23, { align:"center" });
+
     doc.setFont("helvetica","normal"); doc.setFontSize(7); setTxt(doc, GRAY);
-    doc.text(`out of ${max}`, bx+colW3/2, y+28, { align:"center" });
-    // Progress bar
-    progressBar(doc, bx+4, y+31, colW3-8, score, max, color);
+    doc.text(`out of ${max}`, bx + colW3 / 2, y + 28, { align:"center" });
+
+    const trackY  = y + 31;
+    const trackH2 = 3;
+    const trackW  = colW3 - 8;
+    setFill(doc, "#F3F4F6");
+    doc.roundedRect(bx + 4, trackY, trackW, trackH2, 0.8, 0.8, "F");
+    const fillW = max > 0 ? (score / max) * trackW : 0;
+    if (fillW > 0) {
+      setFill(doc, MAGENTA);
+      doc.roundedRect(bx + 4, trackY, fillW, trackH2, 0.8, 0.8, "F");
+    }
   });
   y += 43;
 
@@ -225,23 +276,30 @@ function buildPage1(doc: jsPDF, data: AIQReportData, date: string) {
   const intro = "The Know–Hack–Build model is a framework for measuring an individual's AIQ or AI Quotient — the level of AI literacy and capability that will increasingly influence how people are evaluated and hired in the future.";
   doc.setFont("helvetica","normal"); doc.setFontSize(9); setTxt(doc, DARK);
   const introLines = wrap(doc, intro, UW);
-  introLines.forEach((l:string,i:number) => { doc.text(l, ML, y+i*4.5); });
-  y += introLines.length*4.5 + 5;
+  introLines.forEach((l: string, i: number) => { doc.text(l, ML, y + i * 4.5); });
+  y += introLines.length * 4.5 + 5;
 
   const fwBlocks = [
-    { label:"Know",  color:KNOW_COLOR,  text:"Understand core AI concepts, trends, and use cases that matter for your role." },
-    { label:"Hack",  color:HACK_COLOR,  text:"Apply AI tools to automate everyday tasks and boost productivity without coding." },
-    { label:"Build", color:BUILD_COLOR, text:"Create practical AI apps that improve your work and give you an edge." },
+    { label:"Know",  text:"Understand core AI concepts, trends, and use cases that matter for your role." },
+    { label:"Hack",  text:"Apply AI tools to automate everyday tasks and boost productivity without coding." },
+    { label:"Build", text:"Create practical AI apps that improve your work and give you an edge." },
   ];
-  fwBlocks.forEach(({ label, color, text }) => {
-    const [cr,cg,cb] = hexToRgb(color);
-    const lines = wrap(doc, text, UW-30);
-    const bh = lines.length*4.5 + 4;
-    accentBar(doc, color, ML, y, bh);
-    doc.setFont("helvetica","bold"); doc.setFontSize(9); doc.setTextColor(cr,cg,cb);
-    doc.text(label+" —", ML+5, y+4.5);
+
+  fwBlocks.forEach(({ label, text }) => {
+    const lines = wrap(doc, text, UW - 30);
+    const bh = lines.length * 4.5 + 4;
+
+    setFill(doc, MAGENTA);
+    doc.rect(ML, y, 2.5, bh, "F");
+
+    doc.setFont("helvetica","bold"); doc.setFontSize(9); setTxt(doc, MAGENTA);
+    doc.text(label + " —", ML + 5, y + 4.5);
+
     doc.setFont("helvetica","normal"); setTxt(doc, DARK);
-    lines.forEach((l:string,i:number) => { doc.text(l, ML+5+label.length*2.6+4, y+4.5+i*4.5); });
+    const labelOffset = label.length * 2.6 + 4;
+    lines.forEach((l: string, i: number) => {
+      doc.text(l, ML + 5 + labelOffset, y + 4.5 + i * 4.5);
+    });
     y += bh + 3;
   });
   y += 4;
@@ -249,22 +307,23 @@ function buildPage1(doc: jsPDF, data: AIQReportData, date: string) {
   // ─── Recommendation ───────────────────────────────────────────────────────
   y = sectionLabel(doc, "RECOMMENDATION", ML, y, UW);
 
-  const recLines = wrap(doc, data.description, UW-8);
-  const recH = recLines.length*5 + 4;
-  const [rr,rg,rb] = hexToRgb(data.aiqColor);
-  doc.setFillColor(rr,rg,rb);
-  doc.rect(ML, y-1, 2.5, recH, "F");
-  doc.setFont("helvetica","normal"); doc.setFontSize(9.5); setTxt(doc, DARK);
-  recLines.forEach((l:string,i:number) => { doc.text(l, ML+6, y+2+i*5); });
+  const recLines = wrap(doc, data.description, UW - 8);  // UW already = page width - 40mm margins; subtract indent offset
+  const recH = recLines.length * 5 + 4;
+
+  setFill(doc, MAGENTA);
+  doc.rect(ML, y - 1, 2.5, recH, "F");
+
+  doc.setFont("helvetica","normal"); doc.setFontSize(9); setTxt(doc, DARK);
+  recLines.forEach((l: string, i: number) => { doc.text(l, ML + 6, y + 2 + i * 5); });
 
   drawFooter(doc, 1, 1, data.name, date);
 }
 
 // ── Main export ───────────────────────────────────────────────────────────────
 
-export function downloadAIQPdf(data: AIQReportData) {
+export async function downloadAIQPdf(data: AIQReportData) {
   const doc  = new jsPDF({ orientation:"portrait", unit:"mm", format:"a4" });
   const date = new Date().toLocaleDateString("en-GB", { year:"numeric", month:"long", day:"numeric" });
-  buildPage1(doc, data, date);
+  await buildPage1(doc, data, date);
   doc.save(`AIQ_Report_${data.name.replace(/\s+/g,"_")}.pdf`);
 }
