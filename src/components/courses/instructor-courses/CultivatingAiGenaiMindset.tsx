@@ -51,11 +51,18 @@ const CultivatingAiGenaiMindset = () => {
             Develop the right mindset to accelerate GenAI adoption and
             transformation in your organization
           </p>
+          <div className="flex gap-2 justify-center">
           <a href={import.meta.env.VITE_CALENDLY_URL} target="_blank">
             <Button size="lg" className="bg-primary hover:bg-primary/90">
               1:1 Consultation →
             </Button>
           </a>
+          <a href='/assessment' target="_blank">
+            <Button size="lg" className="bg-primary hover:bg-primary/90">
+              Assessment →
+            </Button>
+          </a>
+          </div>
         </div>
       </section>
 

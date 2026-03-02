@@ -3,6 +3,7 @@
 // Install: npm install jspdf
 
 import jsPDF from "jspdf";
+import digiLogo from "@/assets/digi-logo.png";
 
 type Mindset = "Optimistic" | "Pragmatic" | "Skeptic";
 
@@ -64,18 +65,33 @@ function wrap(doc: jsPDF, text: string, maxW: number): string[] {
 function PW(doc: jsPDF) { return doc.internal.pageSize.getWidth(); }
 function PH(doc: jsPDF) { return doc.internal.pageSize.getHeight(); }
 
+// ── Load image as base64 (works with bundled assets) ─────────────────────────
+
+async function loadImageAsBase64(src: string): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.crossOrigin = "anonymous";
+    img.onload = () => {
+      const canvas = document.createElement("canvas");
+      canvas.width  = img.naturalWidth;
+      canvas.height = img.naturalHeight;
+      const ctx = canvas.getContext("2d");
+      if (!ctx) { reject("canvas context failed"); return; }
+      ctx.drawImage(img, 0, 0);
+      resolve(canvas.toDataURL("image/png"));
+    };
+    img.onerror = reject;
+    img.src = src;
+  });
+}
+
 // ── Shared header & footer ────────────────────────────────────────────────────
 
 function drawHeader(doc: jsPDF) {
   const w = PW(doc);
+  // Pink bar — no text
   setFill(doc, MAGENTA);
   doc.rect(0, 0, w, 8, "F");
-  doc.setFont("helvetica", "bold");
-  doc.setFontSize(7);
-  setTxt(doc, "#ffffff");
-  doc.text("AI MINDSET ASSESSMENT REPORT", 20, 5.5);
-  doc.setFont("helvetica", "normal");
-  doc.text("Digiculum", w - 20, 5.5, { align: "right" });
 }
 
 function drawFooter(doc: jsPDF, page: number, name: string, date: string) {
@@ -108,7 +124,7 @@ function sectionLabel(doc: jsPDF, text: string, x: number, y: number, uw: number
 
 // ── PAGE 1: All report details ────────────────────────────────────────────────
 
-function buildPage1(
+async function buildPage1(
   doc: jsPDF,
   name: string,
   date: string,
@@ -130,7 +146,22 @@ function buildPage1(
   drawHeader(doc);
   y = 14;
 
-  // ── Report title ──
+  // ── Report title + Digiculum logo ──
+  const logoW = 20;  // mm width of logo
+  const logoH = 7;   // mm height of logo
+  const logoX = ML + UW - logoW;
+  const logoY = y - 4.5; // vertically align with title text
+
+  try {
+    const logoData = await loadImageAsBase64(digiLogo);
+    doc.addImage(logoData, "PNG", logoX, logoY, logoW, logoH);
+  } catch {
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(8);
+    setTxt(doc, MAGENTA);
+    doc.text("Digiculum", logoX, y);
+  }
+
   doc.setFont("helvetica", "bold");
   doc.setFontSize(16);
   setTxt(doc, BLACK);
@@ -177,7 +208,7 @@ function buildPage1(
   doc.setFontSize(24);
   setTxt(doc, dominantColor);
   doc.text(dominant, w / 2, y + 9, { align: "center" });
-  y += 20; // extra space between name and description
+  y += 20;
 
   doc.setFont("helvetica", "normal");
   doc.setFontSize(9.5);
@@ -208,30 +239,25 @@ function buildPage1(
   y = sectionLabel(doc, "MINDSET DISTRIBUTION", ML, y, UW);
 
   const total     = Object.values(counts).reduce((a, b) => a + b, 0);
-  // Bar now uses full UW minus label space — no space reserved for count number
   const barTrackW = UW - 28;
 
   (Object.entries(counts) as [Mindset, number][]).forEach(([m, c]) => {
     const color  = MINDSET_COLORS[m];
     const filled = total > 0 ? (c / total) * barTrackW : 0;
 
-    // Mindset label on the left
     doc.setFont("helvetica", "normal");
     doc.setFontSize(9);
     setTxt(doc, GRAY);
     doc.text(m, ML, y + 3.5);
 
-    // Gray track
     setFill(doc, "#F3F4F6");
     doc.roundedRect(ML + 28, y, barTrackW, 5, 1, 1, "F");
 
-    // Coloured fill
     if (filled > 0) {
       setFill(doc, color);
       doc.roundedRect(ML + 28, y, filled, 5, 1, 1, "F");
     }
 
-    // No count number — bar extends to full track width
     y += 9;
   });
   y += 5;
@@ -313,17 +339,14 @@ function buildPage2(doc: jsPDF, name: string, date: string) {
     const bodyLines = wrap(doc, body, UW - 10);
     const blockH    = 12 + bodyLines.length * 4.8;
 
-    // Left colour accent bar
     doc.setFillColor(cr, cg, cb);
     doc.rect(ML, y, 3, blockH, "F");
 
-    // Mindset name
     doc.setFont("helvetica", "bold");
     doc.setFontSize(11);
     doc.setTextColor(cr, cg, cb);
     doc.text(mindset, ML + 8, y + 7);
 
-    // Body
     doc.setFont("helvetica", "normal");
     doc.setFontSize(9.5);
     setTxt(doc, DARK);
@@ -333,7 +356,6 @@ function buildPage2(doc: jsPDF, name: string, date: string) {
 
     y += blockH + 4;
 
-    // Separator between blocks (not after last)
     if (idx < blocks.length - 1) {
       setStroke(doc, BORDER);
       doc.setLineWidth(0.2);
@@ -347,7 +369,7 @@ function buildPage2(doc: jsPDF, name: string, date: string) {
 
 // ── Main export ───────────────────────────────────────────────────────────────
 
-export function downloadMindsetPdf(params: MindsetPdfParams) {
+export async function downloadMindsetPdf(params: MindsetPdfParams) {
   const {
     name, email, phone, organization,
     counts, dominant, dominantColor, description, traits,
@@ -364,7 +386,7 @@ export function downloadMindsetPdf(params: MindsetPdfParams) {
       ? "Your focus should be to make decisions and take actions based on a pragmatic mindset — continuing to evaluate AI thoughtfully, balancing innovation with oversight, and championing measured, responsible adoption across your organisation."
       : `Your predominant mindset is ${dominant}. Your focus should be to transition your mindset to Pragmatic — taking a balanced, evidence-based approach that weighs both the promise and the risks of AI, ensuring responsible adoption with appropriate human oversight.`;
 
-  buildPage1(doc, name, date, email, phone, organization, dominant, dominantColor, description, counts, traits, focus);
+  await buildPage1(doc, name, date, email, phone, organization, dominant, dominantColor, description, counts, traits, focus);
   buildPage2(doc, name, date);
 
   doc.save(`AI_Mindset_Report_${name.replace(/\s+/g, "_")}.pdf`);
