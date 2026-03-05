@@ -15,7 +15,7 @@ const LeadersContact = () => {
           </h2>
 
           <p className="text-lg text-muted-foreground mb-8">
-            Write to us at info@digiculum.com
+            Write to us at amit@digiculum.com
         
           </p>
 

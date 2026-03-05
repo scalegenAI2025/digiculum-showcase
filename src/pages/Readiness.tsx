@@ -1,6 +1,9 @@
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import SectionSeparator from "@/components/SectionSeparator";
+import ReadinessAreas from "@/components/readiness/ReadinessAreas";
+import ReadinessRocketFramework from "@/components/readiness/ReadinessRocketFramework";
+import ReadinessBook from "@/components/readiness/ReadinessBook";
 import ReadinessHero from "@/components/readiness/ReadinessHero";
 import EmpowerReadiness from "@/components/readiness/EmpowerReadiness"
 import ReadinessAdoptionStages from "@/components/readiness/ReadinessAdoptionStages"
@@ -15,9 +18,11 @@ const Leaders = () => {
       <Navbar />
       <ReadinessHero />
       <SectionSeparator />
-      <ReadinessAdoptionStages />
-      <ReadinessChallenges />
-      <EmpowerReadiness />
+      <ReadinessRocketFramework />
+      <SectionSeparator />
+      <ReadinessBook />
+      <SectionSeparator />
+      <ReadinessAreas />
       <SectionSeparator />
       <ReadinessProgramFlow />
       <SectionSeparator />
