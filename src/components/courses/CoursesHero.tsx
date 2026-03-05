@@ -63,6 +63,16 @@ const CoursesHero = () => {
                 Self-paced Courses
               </Button>
             </a>
+            <a href="/individuals">
+              <Button
+                size={isMobile ? "sm" : "lg"}
+                className={`bg-primary hover:bg-primary/90 ${
+                  !isMobile ? "text-base px-8 py-6" : ""
+                }`}
+              >
+                AI Practitioner Bootcamp
+              </Button>
+            </a>
           </div>
         </div>
       </div>

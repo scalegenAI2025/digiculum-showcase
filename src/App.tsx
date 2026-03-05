@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import Leaders from "./pages/Leaders";
 import Individuals from "./pages/Individuals";
+import Readiness from "./pages/Readiness"
 import Courses from "./pages/Courses";
 import Ecosystem from "./pages/Ecosystem";
 import PrivacyPolicy from "./components/PrivacyPolicy";
@@ -35,6 +36,7 @@ const App = () => (
           <Route path="/" element={<Index />} />
           <Route path="/leaders" element={<Leaders />} />
           <Route path="/individuals" element={<Individuals />} />
+          <Route path="/readiness" element={<Readiness />} />
           <Route path="/reskilling" element={<Courses />} />
           <Route path="/ecosystem" element={<Ecosystem />} />
           <Route path="/privacy" element={<PrivacyPolicy />} />

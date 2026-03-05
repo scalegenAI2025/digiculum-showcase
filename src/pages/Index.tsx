@@ -2,6 +2,7 @@ import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
 import RedirectAssessment from "@/components/RedirectAssessment";
 import ReskillPartner from "@/components/ReskillPartner";
+import ReadinessPartner from "@/components/ReadinessPartner";
 import JourneyFlowchart from "@/components/JourneyFlowchart";
 import Fundamentals from "@/components/Fundamentals";
 import FAQ from "@/components/FAQ";
@@ -13,11 +14,13 @@ const Index = () => {
     <div className="min-h-screen bg-background">
       <Navbar />
       <Hero />
-      <RedirectAssessment />
       <SectionSeparator />
       <ReskillPartner />
-      <SectionSeparator />
       <JourneyFlowchart />
+      <SectionSeparator />
+      <ReadinessPartner />
+      <SectionSeparator />
+      <RedirectAssessment />
       <SectionSeparator />
       <Fundamentals />
       <SectionSeparator />

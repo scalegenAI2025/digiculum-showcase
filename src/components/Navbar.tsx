@@ -3,9 +3,9 @@ import { Menu, X } from "lucide-react";
 import digiLogo from "@/assets/Digiculum-Logo.png";
 
 const navLinks = [
-  { label: "Individuals", href: "/individuals" },
-  { label: "Leaders", href: "/leaders" },
+  
   { label: "Reskilling", href: "/reskilling" },
+  { label: "Readiness", href: "/readiness" },
   { label: "Ecosystem", href: "/ecosystem" },
 ];
 

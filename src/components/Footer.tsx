@@ -108,7 +108,7 @@ const Footer = () => {
           {/* Column 4: CTA - Hidden on mobile */}
           <div className="hidden md:flex items-center justify-end">
             <a
-              href="https://mail.google.com/mail/?view=cm&fs=1&to=info@digiculum.com"
+              href="https://mail.google.com/mail/?view=cm&fs=1&to=amit@digiculum.com"
               className="btn-primary text-center"
               target="_blank"
               rel="noopener noreferrer"

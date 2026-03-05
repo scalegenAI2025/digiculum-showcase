@@ -5,7 +5,7 @@ const RedirectAssessment = () => {
     <div className="flex justify-center mt-12">
       <div className="bg-gradient-to-r from-primary/10 to-primary/5 border border-primary/30 rounded-lg p-8 w-3/4 text-center">
         <h3 className="text-2xl font-semibold text-foreground mb-4">
-          Ready to know your Artificial Intelligence Quotient (AIQ) ?
+          Know your Artificial Intelligence Quotient (AIQ)
         </h3>
         <p className="text-muted-foreground mb-6">
           First step towards your AI Reskilling Journey
