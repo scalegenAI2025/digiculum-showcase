@@ -55,6 +55,9 @@ const ReadinessAreas = () => {
   return (
     <section className="py-24 bg-black">
       <div className="container mx-auto px-6 space-y-40">
+        <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-12 text-center">
+            Readiness Areas
+        </h2>
         {readinessData.map((section, index) => {
           const isReversed = index % 2 !== 0;
 

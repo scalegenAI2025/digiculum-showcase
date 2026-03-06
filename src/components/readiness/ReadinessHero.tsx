@@ -41,7 +41,7 @@ const LeadersHero = () => {
           </h1>
 
           <p className="text-xl md:text-2xl text-foreground/80 mb-4 animate-fade-in-delay-1">
-            Empowering leaders to think, evaluate, and scale AI
+            Through Readiness Rocket Framework
           </p>
 
           <p className="text-lg text-primary font-medium mb-10 animate-fade-in-delay-1">

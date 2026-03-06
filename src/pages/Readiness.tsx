@@ -5,6 +5,7 @@ import ReadinessAreas from "@/components/readiness/ReadinessAreas";
 import ReadinessRocketFramework from "@/components/readiness/ReadinessRocketFramework";
 import ReadinessBook from "@/components/readiness/ReadinessBook";
 import ReadinessHero from "@/components/readiness/ReadinessHero";
+import RedirectAssessment from "@/components/RedirectAssessment";
 import EmpowerReadiness from "@/components/readiness/EmpowerReadiness"
 import ReadinessAdoptionStages from "@/components/readiness/ReadinessAdoptionStages"
 import ReadinessChallenges from "@/components/readiness/ReadinessChallenges"
@@ -19,12 +20,11 @@ const Leaders = () => {
       <ReadinessHero />
       <SectionSeparator />
       <ReadinessRocketFramework />
-      <SectionSeparator />
       <ReadinessBook />
       <SectionSeparator />
       <ReadinessAreas />
       <SectionSeparator />
-      <ReadinessProgramFlow />
+      <RedirectAssessment />
       <SectionSeparator />
       <ReadinessContact />
       <SectionSeparator />
