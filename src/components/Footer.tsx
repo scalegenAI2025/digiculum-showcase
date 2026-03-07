@@ -8,28 +8,28 @@ const Footer = () => {
           {/* Column 1: Navigation */}
           <div>
             <ul className="space-y-3">
-              <li>
+              {/* <li>
                 <a 
                   href="/individuals"
                   className="text-foreground hover:text-primary transition-colors"
                 >
                   Individuals
                 </a>
-              </li>
+              </li> */}
               <li>
                 <a
-                  href="/leaders"
+                  href="/reskilling"
                   className="text-foreground hover:text-primary transition-colors"
                 >
-                  Leaders
+                  Reskilling
                 </a>
               </li>
               <li>
                 <a
-                  href="/courses"
+                  href="/readiness"
                   className="text-foreground hover:text-primary transition-colors"
                 >
-                  Courses
+                  Readiness
                 </a>
               </li>
               <li>
